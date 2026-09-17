@@ -5,10 +5,15 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import "./globals.css";
 
 const montserrat = Montserrat({
-  subsets: ["latin", "vietnamese"],
+  subsets: [
+    "latin",
+    "vietnamese",
+  ],
+
   display: "swap",
 
-  variable: "--font-montserrat",
+  variable:
+    "--font-montserrat",
 
   weight: [
     "400",
@@ -20,10 +25,11 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "Bản đồ tìm kiếm hài cốt liệt sĩ",
+  title:
+    "500 ngày đêm | Interactive",
 
   description:
-    "Bản đồ tương tác về các địa điểm tìm kiếm và phát hiện hài cốt liệt sĩ tại Việt Nam.",
+    "Hành trình tìm kiếm, quy tập và xác định danh tính hài cốt liệt sĩ.",
 };
 
 export default function RootLayout({
@@ -34,9 +40,16 @@ export default function RootLayout({
   return (
     <html
       lang="vi"
-      className={montserrat.variable}
+      className={
+        montserrat.variable
+      }
+      suppressHydrationWarning
     >
-      <body>{children}</body>
+      <body
+        suppressHydrationWarning
+      >
+        {children}
+      </body>
     </html>
   );
 }

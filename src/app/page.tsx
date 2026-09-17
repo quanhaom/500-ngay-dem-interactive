@@ -1,5 +1,7 @@
-import VietnamRemainsMap from "../components/map/VietnamRemainsMap";
+import MagazineExperience from "../components/magazine/MagazineExperience";
 
 export default function Home() {
-  return <VietnamRemainsMap />;
+  return (
+    <MagazineExperience />
+  );
 }

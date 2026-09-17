@@ -25,6 +25,18 @@ import ProvinceTooltip from "./ProvinceTooltip";
 
 import styles from "./VietnamRemainsMap.module.css";
 
+/* =========================================================
+   PROPS
+========================================================= */
+
+interface VietnamRemainsMapProps {
+  embedded?: boolean;
+}
+
+/* =========================================================
+   TYPES
+========================================================= */
+
 type ExtendedProperties = GeoJsonProperties & {
   __provinceName?: string;
   __tracked?: boolean;
@@ -32,8 +44,12 @@ type ExtendedProperties = GeoJsonProperties & {
   __remainsFound?: number;
   __gravesFound?: number;
   __summary?: string;
-  __details?: string[];
+  __details?: string;
 };
+
+/* =========================================================
+   CONSTANTS
+========================================================= */
 
 const SOURCE_ID = "vietnam-provinces";
 const FILL_LAYER_ID = "province-fill";
@@ -110,6 +126,10 @@ const TRACKED_PROVINCE_LABELS = [
   },
 ];
 
+/* =========================================================
+   HELPERS
+========================================================= */
+
 function getProvinceName(
   properties: GeoJsonProperties
 ): string {
@@ -121,18 +141,24 @@ function getProvinceName(
     "province",
     "Province",
     "PROVINCE",
+
     "name",
     "Name",
     "NAME",
+
     "name_vi",
     "NAME_VI",
+
     "ten_tinh",
     "TEN_TINH",
+
     "NAME_1",
     "VARNAME_1",
+
     "full_name",
     "FULL_NAME",
     "fullname",
+
     "ADM1_VI",
     "ADM1_EN",
   ];
@@ -150,15 +176,19 @@ function getProvinceName(
     const normalized =
       normalizeProvinceName(value);
 
-    const matched =
-      NORMALIZED_PROVINCES.get(normalized);
+    const province =
+      NORMALIZED_PROVINCES.get(
+        normalized
+      );
 
-    if (matched) {
-      return matched;
+    if (province) {
+      return province;
     }
   }
 
-  for (const value of Object.values(properties)) {
+  for (const value of Object.values(
+    properties
+  )) {
     if (
       typeof value !== "string" ||
       value.trim().length === 0
@@ -169,11 +199,13 @@ function getProvinceName(
     const normalized =
       normalizeProvinceName(value);
 
-    const matched =
-      NORMALIZED_PROVINCES.get(normalized);
+    const province =
+      NORMALIZED_PROVINCES.get(
+        normalized
+      );
 
-    if (matched) {
-      return matched;
+    if (province) {
+      return province;
     }
   }
 
@@ -182,15 +214,19 @@ function getProvinceName(
 
 function calculateGeometryBounds(
   geometry: Geometry
-): [[number, number], [number, number]] | null {
+):
+  | [
+      [number, number],
+      [number, number],
+    ]
+  | null {
   let minLng = Infinity;
   let minLat = Infinity;
+
   let maxLng = -Infinity;
   let maxLat = -Infinity;
 
-  function walkCoordinates(
-    value: unknown
-  ): void {
+  function walk(value: unknown) {
     if (!Array.isArray(value)) {
       return;
     }
@@ -203,22 +239,36 @@ function calculateGeometryBounds(
       const lng = value[0];
       const lat = value[1];
 
-      minLng = Math.min(minLng, lng);
-      minLat = Math.min(minLat, lat);
+      minLng = Math.min(
+        minLng,
+        lng
+      );
 
-      maxLng = Math.max(maxLng, lng);
-      maxLat = Math.max(maxLat, lat);
+      minLat = Math.min(
+        minLat,
+        lat
+      );
+
+      maxLng = Math.max(
+        maxLng,
+        lng
+      );
+
+      maxLat = Math.max(
+        maxLat,
+        lat
+      );
 
       return;
     }
 
     for (const child of value) {
-      walkCoordinates(child);
+      walk(child);
     }
   }
 
   if ("coordinates" in geometry) {
-    walkCoordinates(geometry.coordinates);
+    walk(geometry.coordinates);
   }
 
   if (
@@ -236,16 +286,59 @@ function calculateGeometryBounds(
   ];
 }
 
-export default function VietnamRemainsMap() {
+function parseDetails(
+  value: unknown
+): string[] {
+  if (Array.isArray(value)) {
+    return value.map(String);
+  }
+
+  if (
+    typeof value !== "string" ||
+    value.length === 0
+  ) {
+    return [];
+  }
+
+  try {
+    const parsed =
+      JSON.parse(value);
+
+    if (
+      Array.isArray(parsed)
+    ) {
+      return parsed.map(String);
+    }
+  } catch {
+    return [];
+  }
+
+  return [];
+}
+
+/* =========================================================
+   COMPONENT
+========================================================= */
+
+export default function VietnamRemainsMap({
+  embedded = false,
+}: VietnamRemainsMapProps) {
   const mapContainerRef =
-    useRef<HTMLDivElement | null>(null);
+    useRef<HTMLDivElement | null>(
+      null
+    );
 
   const mapRef =
-    useRef<MapLibreMap | null>(null);
+    useRef<MapLibreMap | null>(
+      null
+    );
 
-  const markerRefs = useRef<
-    Array<{ remove: () => void }>
-  >([]);
+  const markerRefs =
+    useRef<
+      Array<{
+        remove: () => void;
+      }>
+    >([]);
 
   const [
     selectedProvince,
@@ -255,14 +348,29 @@ export default function VietnamRemainsMap() {
       null
     );
 
-  const [loading, setLoading] =
+  const [
+    loading,
+    setLoading,
+  ] =
     useState(true);
 
-  const [error, setError] =
-    useState<string | null>(null);
+  const [
+    error,
+    setError,
+  ] =
+    useState<string | null>(
+      null
+    );
+
+  /* =======================================================
+     MAP INITIALIZATION
+  ======================================================= */
 
   useEffect(() => {
-    if (!mapContainerRef.current) {
+    const container =
+      mapContainerRef.current;
+
+    if (!container) {
       return;
     }
 
@@ -275,7 +383,9 @@ export default function VietnamRemainsMap() {
     async function initializeMap() {
       try {
         const maplibre =
-          await import("maplibre-gl");
+          await import(
+            "maplibre-gl"
+          );
 
         if (
           disposed ||
@@ -301,16 +411,19 @@ export default function VietnamRemainsMap() {
 
                   paint: {
                     "background-color":
-                      MAP_CONFIG.colors
+                      MAP_CONFIG
+                        .colors
                         .background,
                   },
                 },
               ],
             },
 
-            center: MAP_CONFIG.center,
+            center:
+              MAP_CONFIG.center,
 
-            zoom: MAP_CONFIG.zoom,
+            zoom:
+              MAP_CONFIG.zoom,
 
             minZoom:
               MAP_CONFIG.minZoom,
@@ -318,10 +431,15 @@ export default function VietnamRemainsMap() {
             maxZoom:
               MAP_CONFIG.maxZoom,
 
-            attributionControl: false,
+            attributionControl:
+              false,
           });
 
         mapRef.current = map;
+
+        /* ===============================================
+           CONTROLS
+        =============================================== */
 
         map.addControl(
           new maplibre.NavigationControl({
@@ -331,770 +449,883 @@ export default function VietnamRemainsMap() {
           "top-right"
         );
 
-        map.on("load", async () => {
-          try {
-            const response =
-              await fetch(
-                "/data/map/vietnam-provinces.geojson"
-              );
+        /* ===============================================
+           MAP LOAD
+        =============================================== */
 
-            if (!response.ok) {
-              throw new Error(
-                `Không tải được GeoJSON: ${response.status}`
-              );
-            }
+        map.on(
+          "load",
+          async () => {
+            try {
+              const response =
+                await fetch(
+                  "/data/map/vietnam-provinces.geojson"
+                );
 
-            const geoJson =
-              (await response.json()) as FeatureCollection<
+              if (
+                !response.ok
+              ) {
+                throw new Error(
+                  `Không tải được GeoJSON: ${response.status}`
+                );
+              }
+
+              const geoJson =
+                (await response.json()) as FeatureCollection<
+                  Geometry,
+                  ExtendedProperties
+                >;
+
+              const remainsLookup =
+                new Map<
+                  string,
+                  ProvinceInteractiveData
+                >(
+                  remainsData.map(
+                    (item) => [
+                      normalizeProvinceName(
+                        item.province
+                      ),
+                      item,
+                    ]
+                  )
+                );
+
+              /* =========================================
+                 ENHANCE GEOJSON
+              ========================================= */
+
+              const enhancedGeoJson: FeatureCollection<
                 Geometry,
                 ExtendedProperties
-              >;
+              > = {
+                ...geoJson,
 
-            const remainsLookup =
-              new Map<
-                string,
-                ProvinceInteractiveData
-              >(
-                remainsData.map(
-                  (item) => [
-                    normalizeProvinceName(
-                      item.province
-                    ),
-                    item,
-                  ]
-                )
-              );
+                features:
+                  geoJson.features.map(
+                    (
+                      feature: Feature<
+                        Geometry,
+                        ExtendedProperties
+                      >
+                    ) => {
+                      const properties =
+                        feature.properties ??
+                        {};
 
-            const enhancedGeoJson: FeatureCollection<
-              Geometry,
-              ExtendedProperties
-            > = {
-              ...geoJson,
+                      const province =
+                        getProvinceName(
+                          properties
+                        );
 
-              features:
-                geoJson.features.map(
-                  (
-                    feature: Feature<
-                      Geometry,
-                      ExtendedProperties
-                    >
-                  ) => {
-                    const properties =
-                      feature.properties ??
-                      {};
+                      const normalized =
+                        normalizeProvinceName(
+                          province
+                        );
 
-                    const province =
-                      getProvinceName(
-                        properties
-                      );
+                      const data =
+                        remainsLookup.get(
+                          normalized
+                        );
 
-                    const normalized =
-                      normalizeProvinceName(
-                        province
-                      );
+                      return {
+                        ...feature,
 
-                    const data =
-                      remainsLookup.get(
-                        normalized
-                      );
+                        properties: {
+                          ...properties,
 
-                    return {
-                      ...feature,
+                          __provinceName:
+                            province,
 
-                      properties: {
-                        ...properties,
+                          __tracked:
+                            Boolean(
+                              data
+                            ),
 
-                        __provinceName:
-                          province,
+                          __siteName:
+                            data?.siteName ??
+                            "",
 
-                        __tracked:
-                          Boolean(data),
+                          __remainsFound:
+                            data?.remainsFound ??
+                            -1,
 
-                        __siteName:
-                          data?.siteName ??
-                          "",
+                          __gravesFound:
+                            data?.gravesFound ??
+                            -1,
 
-                        __remainsFound:
-                          data?.remainsFound ??
-                          -1,
+                          __summary:
+                            data?.summary ??
+                            "",
 
-                        __gravesFound:
-                          data?.gravesFound ??
-                          -1,
+                          __details:
+                            JSON.stringify(
+                              data?.details ??
+                                []
+                            ),
+                        },
+                      };
+                    }
+                  ),
+              };
 
-                        __summary:
-                          data?.summary ??
-                          "",
-
-                        __details:
-                          data?.details ??
-                          [],
-                      },
-                    };
-                  }
-                ),
-            };
-
-            console.log(
-              "Matched provinces:",
-              enhancedGeoJson.features
-                .filter(
-                  (feature) =>
-                    feature.properties
-                      ?.__tracked === true
-                )
-                .map(
-                  (feature) =>
-                    feature.properties
-                      ?.__provinceName
-                )
-            );
-
-            map.addSource(
-              SOURCE_ID,
-              {
-                type: "geojson",
-
-                data:
-                  enhancedGeoJson,
-
-                generateId: true,
-              }
-            );
-
-            map.addLayer({
-              id: FILL_LAYER_ID,
-
-              type: "fill",
-
-              source: SOURCE_ID,
-
-              paint: {
-                "fill-color": [
-                  "case",
-
-                  [
-                    "boolean",
-                    [
-                      "feature-state",
-                      "hover",
-                    ],
-                    false,
-                  ],
-
-                  MAP_CONFIG.colors
-                    .provinceHover,
-
-                  [
-                    "boolean",
-                    [
-                      "get",
-                      "__tracked",
-                    ],
-                    false,
-                  ],
-
-                  MAP_CONFIG.colors
-                    .provinceTracked,
-
-                  MAP_CONFIG.colors
-                    .provinceDefault,
-                ],
-
-                "fill-opacity": [
-                  "case",
-
-                  [
-                    "boolean",
-                    [
-                      "feature-state",
-                      "hover",
-                    ],
-                    false,
-                  ],
-
-                  0.98,
-
-                  0.9,
-                ],
-              },
-            });
-
-            map.addLayer({
-              id: BORDER_LAYER_ID,
-
-              type: "line",
-
-              source: SOURCE_ID,
-
-              paint: {
-                "line-color": [
-                  "case",
-
-                  [
-                    "boolean",
-                    [
-                      "feature-state",
-                      "hover",
-                    ],
-                    false,
-                  ],
-
-                  MAP_CONFIG.colors
-                    .borderHover,
-
-                  MAP_CONFIG.colors
-                    .border,
-                ],
-
-                "line-width": [
-                  "case",
-
-                  [
-                    "boolean",
-                    [
-                      "feature-state",
-                      "hover",
-                    ],
-                    false,
-                  ],
-
-                  2,
-
-                  0.8,
-                ],
-
-                "line-opacity": 1,
-              },
-            });
-
-            /*
-             * Hoàng Sa / Trường Sa
-             */
-            for (
-              const archipelago of
-              MAP_CONFIG.archipelagos
-            ) {
-              const element =
-                document.createElement(
-                  "div"
-                );
-
-              element.className =
-                styles.archipelagoMarker;
-
-              const dot =
-                document.createElement(
-                  "span"
-                );
-
-              dot.className =
-                styles.archipelagoDot;
-
-              const label =
-                document.createElement(
-                  "span"
-                );
-
-              label.className =
-                styles.archipelagoLabel;
-
-              label.textContent =
-                archipelago.shortName;
-
-              element.appendChild(dot);
-
-              element.appendChild(label);
-
-              element.title =
-                archipelago.name;
-
-              const marker =
-                new maplibre.Marker({
-                  element,
-                  anchor: "center",
-                })
-                  .setLngLat(
-                    archipelago.coordinates
+              console.log(
+                "Matched provinces:",
+                enhancedGeoJson.features
+                  .filter(
+                    (
+                      feature
+                    ) =>
+                      feature
+                        .properties
+                        ?.__tracked ===
+                      true
                   )
-                  .addTo(map);
-
-              markerRefs.current.push(
-                marker
-              );
-            }
-
-            /*
-             * Tên 6 tỉnh có dữ liệu
-             */
-            for (
-              const item of
-              TRACKED_PROVINCE_LABELS
-            ) {
-              const element =
-                document.createElement(
-                  "div"
-                );
-
-              element.className =
-                styles.provinceMapLabel;
-
-              element.textContent =
-                item.province;
-
-              const marker =
-                new maplibre.Marker({
-                  element,
-                  anchor: "center",
-                })
-                  .setLngLat(
-                    item.coordinates
+                  .map(
+                    (
+                      feature
+                    ) =>
+                      feature
+                        .properties
+                        ?.__provinceName
                   )
-                  .addTo(map);
-
-              markerRefs.current.push(
-                marker
               );
-            }
 
-            let hoveredFeatureId:
-              | string
-              | number
-              | null = null;
+              /* =========================================
+                 SOURCE
+              ========================================= */
 
-            const popup =
-              new maplibre.Popup({
-                closeButton: false,
+              map.addSource(
+                SOURCE_ID,
+                {
+                  type: "geojson",
 
-                closeOnClick: false,
+                  data:
+                    enhancedGeoJson,
 
-                offset: 12,
+                  generateId:
+                    true,
+                }
+              );
 
-                maxWidth: "290px",
+              /* =========================================
+                 FILL
+              ========================================= */
+
+              map.addLayer({
+                id:
+                  FILL_LAYER_ID,
+
+                type: "fill",
+
+                source:
+                  SOURCE_ID,
+
+                paint: {
+                  "fill-color":
+                    [
+                      "case",
+
+                      [
+                        "boolean",
+                        [
+                          "feature-state",
+                          "hover",
+                        ],
+                        false,
+                      ],
+
+                      MAP_CONFIG
+                        .colors
+                        .provinceHover,
+
+                      [
+                        "boolean",
+                        [
+                          "get",
+                          "__tracked",
+                        ],
+                        false,
+                      ],
+
+                      MAP_CONFIG
+                        .colors
+                        .provinceTracked,
+
+                      MAP_CONFIG
+                        .colors
+                        .provinceDefault,
+                    ],
+
+                  "fill-opacity":
+                    [
+                      "case",
+
+                      [
+                        "boolean",
+                        [
+                          "feature-state",
+                          "hover",
+                        ],
+                        false,
+                      ],
+
+                      0.98,
+
+                      0.9,
+                    ],
+                },
               });
 
-            /*
-             * Hover
-             */
-            map.on(
-              "mousemove",
-              FILL_LAYER_ID,
-              (event) => {
-                map.getCanvas().style.cursor =
-                  "pointer";
+              /* =========================================
+                 BORDERS
+              ========================================= */
 
-                const feature =
-                  event.features?.[0];
+              map.addLayer({
+                id:
+                  BORDER_LAYER_ID,
 
-                if (!feature) {
-                  return;
-                }
+                type: "line",
 
-                if (
-                  hoveredFeatureId !==
-                  null
-                ) {
-                  map.setFeatureState(
-                    {
-                      source: SOURCE_ID,
-                      id:
-                        hoveredFeatureId,
-                    },
-                    {
-                      hover: false,
-                    }
-                  );
-                }
+                source:
+                  SOURCE_ID,
 
-                if (
-                  feature.id !== undefined
-                ) {
-                  hoveredFeatureId =
-                    feature.id;
+                paint: {
+                  "line-color":
+                    [
+                      "case",
 
-                  map.setFeatureState(
-                    {
-                      source: SOURCE_ID,
-                      id: feature.id,
-                    },
-                    {
-                      hover: true,
-                    }
-                  );
-                }
+                      [
+                        "boolean",
+                        [
+                          "feature-state",
+                          "hover",
+                        ],
+                        false,
+                      ],
 
-                const province =
-                  String(
-                    feature.properties
-                      ?.__provinceName ??
-                      "Không xác định"
-                  );
+                      MAP_CONFIG
+                        .colors
+                        .borderHover,
 
-                const tracked =
-                  feature.properties
-                    ?.__tracked === true;
+                      MAP_CONFIG
+                        .colors
+                        .border,
+                    ],
 
-                const siteName =
-                  String(
-                    feature.properties
-                      ?.__siteName ?? ""
-                  );
+                  "line-width":
+                    [
+                      "case",
 
-                const remains =
-                  Number(
-                    feature.properties
-                      ?.__remainsFound ??
-                      -1
-                  );
+                      [
+                        "boolean",
+                        [
+                          "feature-state",
+                          "hover",
+                        ],
+                        false,
+                      ],
 
-                const graves =
-                  Number(
-                    feature.properties
-                      ?.__gravesFound ??
-                      -1
-                  );
+                      2,
 
-                const popupElement =
+                      0.8,
+                    ],
+
+                  "line-opacity":
+                    1,
+                },
+              });
+
+              /* =========================================
+                 ARCHIPELAGO LABELS
+              ========================================= */
+
+              for (
+                const archipelago of
+                MAP_CONFIG.archipelagos
+              ) {
+                const element =
                   document.createElement(
                     "div"
                   );
 
-                popupElement.className =
-                  styles.mapPopup;
+                element.className =
+                  styles.archipelagoMarker;
 
-                const title =
+                const dot =
                   document.createElement(
-                    "strong"
+                    "span"
                   );
 
-                title.textContent =
-                  province.toUpperCase();
+                dot.className =
+                  styles.archipelagoDot;
 
-                popupElement.appendChild(
-                  title
+                const label =
+                  document.createElement(
+                    "span"
+                  );
+
+                label.className =
+                  styles.archipelagoLabel;
+
+                label.textContent =
+                  archipelago.shortName;
+
+                element.appendChild(
+                  dot
                 );
 
-                if (tracked) {
-                  if (siteName) {
-                    const location =
-                      document.createElement(
-                        "div"
-                      );
+                element.appendChild(
+                  label
+                );
 
-                    location.className =
-                      styles.popupLocation;
+                element.title =
+                  archipelago.name;
 
-                    location.textContent =
-                      siteName;
+                const marker =
+                  new maplibre.Marker({
+                    element,
+                    anchor:
+                      "center",
+                  })
+                    .setLngLat(
+                      archipelago.coordinates
+                    )
+                    .addTo(map);
 
-                    popupElement.appendChild(
-                      location
-                    );
-                  }
-
-                  const remainsLine =
-                    document.createElement(
-                      "div"
-                    );
-
-                  remainsLine.className =
-                    styles.popupNumber;
-
-                  if (
-                    province ===
-                    "Tuyên Quang"
-                  ) {
-                    remainsLine.textContent =
-                      `Khoảng ${remains.toLocaleString(
-                        "vi-VN"
-                      )} hài cốt`;
-                  } else {
-                    remainsLine.textContent =
-                      `${remains.toLocaleString(
-                        "vi-VN"
-                      )} hài cốt`;
-                  }
-
-                  popupElement.appendChild(
-                    remainsLine
-                  );
-
-                  if (graves >= 0) {
-                    const gravesLine =
-                      document.createElement(
-                        "div"
-                      );
-
-                    gravesLine.textContent =
-                      `${graves} mộ tập thể`;
-
-                    popupElement.appendChild(
-                      gravesLine
-                    );
-                  }
-
-                  const hint =
-                    document.createElement(
-                      "span"
-                    );
-
-                  hint.className =
-                    styles.popupHint;
-
-                  hint.textContent =
-                    "Bấm để xem chi tiết";
-
-                  popupElement.appendChild(
-                    hint
-                  );
-                } else {
-                  const noData =
-                    document.createElement(
-                      "div"
-                    );
-
-                  noData.textContent =
-                    "Chưa có thông tin trong dữ liệu hiện tại";
-
-                  popupElement.appendChild(
-                    noData
-                  );
-                }
-
-                popup
-                  .setLngLat(
-                    event.lngLat
-                  )
-                  .setDOMContent(
-                    popupElement
-                  )
-                  .addTo(map);
+                markerRefs.current.push(
+                  marker
+                );
               }
-            );
 
-            /*
-             * Leave
-             */
-            map.on(
-              "mouseleave",
-              FILL_LAYER_ID,
-              () => {
-                map.getCanvas().style.cursor =
-                  "";
+              /* =========================================
+                 TRACKED PROVINCE LABELS
+              ========================================= */
 
-                popup.remove();
-
-                if (
-                  hoveredFeatureId !==
-                  null
-                ) {
-                  map.setFeatureState(
-                    {
-                      source: SOURCE_ID,
-                      id:
-                        hoveredFeatureId,
-                    },
-                    {
-                      hover: false,
-                    }
+              for (
+                const item of
+                TRACKED_PROVINCE_LABELS
+              ) {
+                const element =
+                  document.createElement(
+                    "div"
                   );
-                }
 
-                hoveredFeatureId =
-                  null;
+                element.className =
+                  styles.provinceMapLabel;
+
+                element.textContent =
+                  item.province;
+
+                const marker =
+                  new maplibre.Marker({
+                    element,
+                    anchor:
+                      "center",
+                  })
+                    .setLngLat(
+                      item.coordinates
+                    )
+                    .addTo(map);
+
+                markerRefs.current.push(
+                  marker
+                );
               }
-            );
 
-            /*
-             * Click
-             */
-            map.on(
-              "click",
-              FILL_LAYER_ID,
-              (event) => {
-                const feature =
-                  event.features?.[0];
+              /* =========================================
+                 POPUP
+              ========================================= */
 
-                if (!feature) {
-                  return;
-                }
+              let hoveredFeatureId:
+                | string
+                | number
+                | null =
+                null;
 
-                popup.remove();
+              const popup =
+                new maplibre.Popup({
+                  closeButton:
+                    false,
 
-                const province =
-                  String(
-                    feature.properties
-                      ?.__provinceName ??
-                      "Không xác định"
-                  );
+                  closeOnClick:
+                    false,
 
-                const tracked =
-                  feature.properties
-                    ?.__tracked === true;
+                  offset: 12,
 
-                const siteName =
-                  String(
-                    feature.properties
-                      ?.__siteName ?? ""
-                  );
-
-                const remains =
-                  Number(
-                    feature.properties
-                      ?.__remainsFound ??
-                      -1
-                  );
-
-                const graves =
-                  Number(
-                    feature.properties
-                      ?.__gravesFound ??
-                      -1
-                  );
-
-                const summary =
-                  String(
-                    feature.properties
-                      ?.__summary ?? ""
-                  );
-
-                let details:
-                  string[] = [];
-
-                const rawDetails =
-                  feature.properties
-                    ?.__details;
-
-                if (
-                  Array.isArray(
-                    rawDetails
-                  )
-                ) {
-                  details =
-                    rawDetails.map(
-                      String
-                    );
-                } else if (
-                  typeof rawDetails ===
-                  "string"
-                ) {
-                  try {
-                    const parsed =
-                      JSON.parse(
-                        rawDetails
-                      );
-
-                    if (
-                      Array.isArray(
-                        parsed
-                      )
-                    ) {
-                      details =
-                        parsed.map(
-                          String
-                        );
-                    }
-                  } catch {
-                    details = [];
-                  }
-                }
-
-                setSelectedProvince({
-                  province,
-
-                  tracked,
-
-                  siteName:
-                    tracked &&
-                    siteName
-                      ? siteName
-                      : undefined,
-
-                  remainsFound:
-                    tracked &&
-                    remains >= 0
-                      ? remains
-                      : undefined,
-
-                  gravesFound:
-                    tracked &&
-                    graves >= 0
-                      ? graves
-                      : undefined,
-
-                  summary:
-                    tracked &&
-                    summary
-                      ? summary
-                      : undefined,
-
-                  details:
-                    tracked
-                      ? details
-                      : [],
+                  maxWidth:
+                    "300px",
                 });
 
-                if (
-                  !feature.geometry
-                ) {
-                  return;
-                }
+              /* =========================================
+                 HOVER
+              ========================================= */
 
-                const bounds =
-                  calculateGeometryBounds(
-                    feature.geometry
+              map.on(
+                "mousemove",
+                FILL_LAYER_ID,
+                (
+                  event
+                ) => {
+                  map.getCanvas().style.cursor =
+                    "pointer";
+
+                  const feature =
+                    event
+                      .features?.[0];
+
+                  if (!feature) {
+                    return;
+                  }
+
+                  if (
+                    hoveredFeatureId !==
+                    null
+                  ) {
+                    map.setFeatureState(
+                      {
+                        source:
+                          SOURCE_ID,
+
+                        id:
+                          hoveredFeatureId,
+                      },
+
+                      {
+                        hover:
+                          false,
+                      }
+                    );
+                  }
+
+                  if (
+                    feature.id !==
+                    undefined
+                  ) {
+                    hoveredFeatureId =
+                      feature.id;
+
+                    map.setFeatureState(
+                      {
+                        source:
+                          SOURCE_ID,
+
+                        id:
+                          feature.id,
+                      },
+
+                      {
+                        hover:
+                          true,
+                      }
+                    );
+                  }
+
+                  const properties =
+                    feature.properties ??
+                    {};
+
+                  const province =
+                    String(
+                      properties.__provinceName ??
+                        "Không xác định"
+                    );
+
+                  const tracked =
+                    properties.__tracked ===
+                      true ||
+                    properties.__tracked ===
+                      "true";
+
+                  const siteName =
+                    String(
+                      properties.__siteName ??
+                        ""
+                    );
+
+                  const remains =
+                    Number(
+                      properties.__remainsFound ??
+                        -1
+                    );
+
+                  const graves =
+                    Number(
+                      properties.__gravesFound ??
+                        -1
+                    );
+
+                  const popupElement =
+                    document.createElement(
+                      "div"
+                    );
+
+                  popupElement.className =
+                    styles.mapPopup;
+
+                  const title =
+                    document.createElement(
+                      "strong"
+                    );
+
+                  title.textContent =
+                    province;
+
+                  popupElement.appendChild(
+                    title
                   );
 
-                if (!bounds) {
-                  return;
-                }
+                  if (
+                    tracked
+                  ) {
+                    if (
+                      siteName
+                    ) {
+                      const location =
+                        document.createElement(
+                          "div"
+                        );
 
-                const isMobile =
-                  window.innerWidth <=
-                  768;
+                      location.className =
+                        styles.popupLocation;
 
-                map.fitBounds(
-                  bounds,
-                  {
-                    padding:
-                      isMobile
-                        ? {
-                            top: 220,
-                            right: 40,
-                            bottom: 60,
-                            left: 40,
-                          }
-                        : {
-                            top: 80,
-                            right: 100,
-                            bottom: 80,
-                            left: 390,
-                          },
+                      location.textContent =
+                        siteName;
 
-                    maxZoom: 7.4,
+                      popupElement.appendChild(
+                        location
+                      );
+                    }
 
-                    duration: 750,
+                    if (
+                      remains >=
+                      0
+                    ) {
+                      const remainsLine =
+                        document.createElement(
+                          "div"
+                        );
+
+                      remainsLine.className =
+                        styles.popupNumber;
+
+                      if (
+                        province ===
+                        "Tuyên Quang"
+                      ) {
+                        remainsLine.textContent =
+                          `Khoảng ${remains.toLocaleString(
+                            "vi-VN"
+                          )} hài cốt`;
+                      } else {
+                        remainsLine.textContent =
+                          `${remains.toLocaleString(
+                            "vi-VN"
+                          )} hài cốt`;
+                      }
+
+                      popupElement.appendChild(
+                        remainsLine
+                      );
+                    }
+
+                    if (
+                      graves >=
+                      0
+                    ) {
+                      const gravesLine =
+                        document.createElement(
+                          "div"
+                        );
+
+                      gravesLine.textContent =
+                        `${graves} mộ tập thể`;
+
+                      popupElement.appendChild(
+                        gravesLine
+                      );
+                    }
+
+                    const hint =
+                      document.createElement(
+                        "span"
+                      );
+
+                    hint.className =
+                      styles.popupHint;
+
+                    hint.textContent =
+                      "Bấm để xem chi tiết";
+
+                    popupElement.appendChild(
+                      hint
+                    );
+                  } else {
+                    const noData =
+                      document.createElement(
+                        "div"
+                      );
+
+                    noData.textContent =
+                      "Chưa có thông tin trong dữ liệu hiện tại.";
+
+                    popupElement.appendChild(
+                      noData
+                    );
                   }
-                );
-              }
-            );
 
-            setLoading(false);
-          } catch (mapError) {
-            console.error(
+                  popup
+                    .setLngLat(
+                      event.lngLat
+                    )
+                    .setDOMContent(
+                      popupElement
+                    )
+                    .addTo(map);
+                }
+              );
+
+              /* =========================================
+                 MOUSE LEAVE
+              ========================================= */
+
+              map.on(
+                "mouseleave",
+                FILL_LAYER_ID,
+                () => {
+                  map.getCanvas().style.cursor =
+                    "";
+
+                  popup.remove();
+
+                  if (
+                    hoveredFeatureId !==
+                    null
+                  ) {
+                    map.setFeatureState(
+                      {
+                        source:
+                          SOURCE_ID,
+
+                        id:
+                          hoveredFeatureId,
+                      },
+
+                      {
+                        hover:
+                          false,
+                      }
+                    );
+                  }
+
+                  hoveredFeatureId =
+                    null;
+                }
+              );
+
+              /* =========================================
+                 CLICK
+              ========================================= */
+
+              map.on(
+                "click",
+                FILL_LAYER_ID,
+                (
+                  event
+                ) => {
+                  const feature =
+                    event
+                      .features?.[0];
+
+                  if (!feature) {
+                    return;
+                  }
+
+                  popup.remove();
+
+                  const properties =
+                    feature.properties ??
+                    {};
+
+                  const province =
+                    String(
+                      properties.__provinceName ??
+                        "Không xác định"
+                    );
+
+                  const tracked =
+                    properties.__tracked ===
+                      true ||
+                    properties.__tracked ===
+                      "true";
+
+                  const siteName =
+                    String(
+                      properties.__siteName ??
+                        ""
+                    );
+
+                  const remains =
+                    Number(
+                      properties.__remainsFound ??
+                        -1
+                    );
+
+                  const graves =
+                    Number(
+                      properties.__gravesFound ??
+                        -1
+                    );
+
+                  const summary =
+                    String(
+                      properties.__summary ??
+                        ""
+                    );
+
+                  const details =
+                    parseDetails(
+                      properties.__details
+                    );
+
+                  setSelectedProvince({
+                    province,
+
+                    tracked,
+
+                    siteName:
+                      tracked &&
+                      siteName
+                        ? siteName
+                        : undefined,
+
+                    remainsFound:
+                      tracked &&
+                      remains >=
+                        0
+                        ? remains
+                        : undefined,
+
+                    gravesFound:
+                      tracked &&
+                      graves >=
+                        0
+                        ? graves
+                        : undefined,
+
+                    summary:
+                      tracked &&
+                      summary
+                        ? summary
+                        : undefined,
+
+                    details:
+                      tracked
+                        ? details
+                        : [],
+                  });
+
+                  if (
+                    !feature.geometry
+                  ) {
+                    return;
+                  }
+
+                  const bounds =
+                    calculateGeometryBounds(
+                      feature.geometry
+                    );
+
+                  if (!bounds) {
+                    return;
+                  }
+
+                  const isMobile =
+                    window.innerWidth <=
+                    768;
+
+                  map.fitBounds(
+                    bounds,
+                    {
+                      padding:
+                        isMobile
+                          ? {
+                              top: 180,
+                              right: 35,
+                              bottom: 45,
+                              left: 35,
+                            }
+                          : {
+                              top: 70,
+                              right: 90,
+                              bottom: 70,
+                              left: 390,
+                            },
+
+                      maxZoom:
+                        7.4,
+
+                      duration:
+                        750,
+                    }
+                  );
+                }
+              );
+
+              /* =========================================
+                 READY
+              ========================================= */
+
+              setLoading(
+                false
+              );
+
+              requestAnimationFrame(
+                () => {
+                  map.resize();
+                }
+              );
+            } catch (
               mapError
-            );
+            ) {
+              console.error(
+                mapError
+              );
 
-            setError(
-              mapError instanceof
-                Error
-                ? mapError.message
-                : "Không thể tải bản đồ"
-            );
+              setError(
+                mapError instanceof
+                  Error
+                  ? mapError.message
+                  : "Không thể tải bản đồ."
+              );
 
-            setLoading(false);
+              setLoading(
+                false
+              );
+            }
           }
-        });
+        );
+
+        /* ===============================================
+           RESPONSIVE RESIZE
+        =============================================== */
+
+        const resizeMap =
+          () => {
+            map.resize();
+          };
+
+        window.addEventListener(
+          "resize",
+          resizeMap
+        );
+
+        return () => {
+          window.removeEventListener(
+            "resize",
+            resizeMap
+          );
+        };
       } catch (
         initializationError
       ) {
@@ -1106,7 +1337,7 @@ export default function VietnamRemainsMap() {
           initializationError instanceof
             Error
             ? initializationError.message
-            : "Không thể khởi tạo MapLibre"
+            : "Không thể khởi tạo bản đồ."
         );
 
         setLoading(false);
@@ -1118,34 +1349,45 @@ export default function VietnamRemainsMap() {
     return () => {
       disposed = true;
 
-      for (
-        const marker of
-        markerRefs.current
-      ) {
-        marker.remove();
-      }
+      markerRefs.current.forEach(
+        (marker) =>
+          marker.remove()
+      );
 
       markerRefs.current = [];
 
-      mapRef.current?.remove();
-
-      mapRef.current = null;
+      if (
+        mapRef.current
+      ) {
+        mapRef.current.remove();
+        mapRef.current = null;
+      }
     };
   }, []);
 
+  /* =======================================================
+     RESET MAP
+  ======================================================= */
+
   function resetMap() {
-    const map = mapRef.current;
+    const map =
+      mapRef.current;
 
     if (!map) {
       return;
     }
 
+    map.stop();
+
     map.easeTo({
-      center: MAP_CONFIG.center,
+      center:
+        MAP_CONFIG.center,
 
-      zoom: MAP_CONFIG.zoom,
+      zoom:
+        MAP_CONFIG.zoom,
 
-      duration: 700,
+      duration:
+        700,
     });
 
     setSelectedProvince(
@@ -1153,10 +1395,16 @@ export default function VietnamRemainsMap() {
     );
   }
 
+  /* =======================================================
+     RENDER
+  ======================================================= */
+
   return (
     <main
       className={
-        styles.fullscreen
+        embedded
+          ? styles.embedded
+          : styles.fullscreen
       }
     >
       <div
@@ -1190,7 +1438,9 @@ export default function VietnamRemainsMap() {
                 }
               />
 
-              Đang tải bản đồ...
+              <span>
+                Đang tải bản đồ...
+              </span>
             </div>
           </div>
         )}
@@ -1202,7 +1452,8 @@ export default function VietnamRemainsMap() {
             }
           >
             <strong>
-              Không thể hiển thị bản đồ
+              Không thể hiển thị
+              bản đồ
             </strong>
 
             <span>
@@ -1211,28 +1462,35 @@ export default function VietnamRemainsMap() {
           </div>
         )}
 
-        <button
-          type="button"
-          className={
-            styles.resetButton
-          }
-          onClick={resetMap}
-        >
-          Xem toàn quốc
-        </button>
+        {!loading &&
+          !error && (
+            <>
+              <button
+                type="button"
+                className={
+                  styles.resetButton
+                }
+                onClick={
+                  resetMap
+                }
+              >
+                Xem toàn quốc
+              </button>
 
-        <MapLegend />
+              <MapLegend />
 
-        <ProvinceTooltip
-          selectedProvince={
-            selectedProvince
-          }
-          onClose={() =>
-            setSelectedProvince(
-              null
-            )
-          }
-        />
+              <ProvinceTooltip
+                selectedProvince={
+                  selectedProvince
+                }
+                onClose={() =>
+                  setSelectedProvince(
+                    null
+                  )
+                }
+              />
+            </>
+          )}
       </div>
     </main>
   );
