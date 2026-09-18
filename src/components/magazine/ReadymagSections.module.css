@@ -1,5 +1,5 @@
 ﻿/* =========================================================
-   READYMAG COLOR SYSTEM
+   BASE
 ========================================================= */
 
 .paperSection,
@@ -9,21 +9,11 @@
 
   width: 100%;
 
-  background-color: #f2dfad !important;
+  margin: 0;
 
-  background-image:
-    radial-gradient(
-      circle at 18% 12%,
-      rgba(139, 105, 56, 0.055),
-      transparent 34%
-    ),
-    radial-gradient(
-      circle at 82% 78%,
-      rgba(139, 105, 56, 0.035),
-      transparent 36%
-    ) !important;
+  background-color: #f2dfad;
 
-  color: #342719 !important;
+  color: #000000;
 }
 
 /* =========================================================
@@ -39,7 +29,7 @@
 
   overflow: hidden;
 
-  background-color: #171b13;
+  background: #171b13;
 }
 
 .coverMedia {
@@ -55,7 +45,6 @@
 
 .coverImage {
   object-fit: cover;
-
   object-position: center center;
 }
 
@@ -63,7 +52,6 @@
   content: "";
 
   position: absolute;
-
   inset: 0;
 
   z-index: 2;
@@ -73,7 +61,7 @@
   background:
     linear-gradient(
       to bottom,
-      transparent 75%,
+      transparent 76%,
       rgba(0, 0, 0, 0.08) 100%
     );
 }
@@ -90,24 +78,28 @@
   margin: 0;
 
   padding:
-    clamp(90px, 9vw, 145px)
-    clamp(40px, 5vw, 90px)
-    clamp(100px, 10vw, 160px);
+    clamp(85px, 8vw, 130px)
+    0
+    clamp(90px, 9vw, 140px);
 
-  background-color: #f2dfad !important;
-
-  color: #342719 !important;
+  background: #f2dfad;
 }
 
-.intro p {
-  width: 100%;
+.introInner {
+  width:
+    min(
+      1120px,
+      calc(100% - 72px)
+    );
 
-  margin:
-    0
-    0
-    clamp(30px, 2.8vw, 44px);
+  margin: 0 auto;
+}
 
-  color: #342719 !important;
+.introLead,
+.introTail {
+  margin: 0;
+
+  color: #000000;
 
   font-family:
     var(--font-editorial),
@@ -118,7 +110,7 @@
     clamp(
       18px,
       1.55vw,
-      23px
+      22px
     );
 
   font-style: italic;
@@ -127,104 +119,546 @@
 
   line-height: 1.8;
 
-  letter-spacing: 0;
+  text-wrap: pretty;
+}
 
-  opacity: 1 !important;
+/* =========================================================
+   58 TRONG PARAGRAPH
+========================================================= */
+
+.intro58 {
+  display: inline;
+
+  color: #76551d;
+
+  font-family:
+    var(--font-editorial),
+    "Times New Roman",
+    serif;
+
+  font-size: 2.05em;
+
+  font-style: normal;
+
+  font-weight: 500;
+
+  line-height: 0;
+
+  letter-spacing: -0.05em;
+
+  vertical-align: -0.07em;
+
+  margin-right: 0.07em;
+}
+
+/* =========================================================
+   QUOTE
+   KHÔNG NỀN
+   CHỮ ĐEN
+========================================================= */
+
+.introQuote {
+  margin:
+    clamp(36px, 4vw, 55px)
+    0
+    clamp(38px, 4vw, 56px);
+
+  padding:
+    3px
+    0
+    3px
+    clamp(18px, 2vw, 26px);
+
+  border-left:
+    3px solid
+    rgba(0, 0, 0, 0.28);
+
+  background: transparent;
+
+  color: #000000;
+
+  font-family:
+    var(--font-editorial),
+    "Times New Roman",
+    serif;
+
+  font-size:
+    clamp(
+      19px,
+      1.65vw,
+      24px
+    );
+
+  font-style: italic;
+
+  font-weight: 700;
+
+  line-height: 1.72;
 
   text-wrap: pretty;
 }
 
-.intro p:last-child {
-  margin-bottom: 0;
+/* =========================================================
+   STORY SUBTITLE
+========================================================= */
+
+.storySubtitleSection {
+  width: 100%;
+
+  margin: 0;
+
+  padding:
+    clamp(46px, 5vw, 70px)
+    0
+    5px;
+
+  background: #f2dfad;
+}
+
+.storySubtitle {
+  width:
+    min(
+      1120px,
+      calc(100% - 72px)
+    );
+
+  margin: 0 auto;
+
+  text-align: center;
+}
+
+.storySubtitle p {
+  margin: 0;
+
+  color: #000000;
+
+  font-family:
+    var(--font-editorial),
+    "Times New Roman",
+    serif;
+
+  font-size:
+    clamp(
+      25px,
+      2.6vw,
+      40px
+    );
+
+  font-weight: 500;
+
+  line-height: 1.22;
+
+  text-wrap: balance;
+}
+
+.storySubtitle strong {
+  color: #76551d;
+
+  font-size: 1.3em;
+
+  font-style: italic;
+
+  font-weight: 500;
 }
 
 /* =========================================================
-   ARTICLE
+   STORY OPENING
 ========================================================= */
 
-.article {
-  position: relative;
+.storyOpening {
+  width: 100%;
+
+  padding:
+    16px
+    max(5vw, 40px)
+    42px;
+
+  background: #f2dfad;
+}
+
+.storyOpening p {
+  width:
+    min(
+      1120px,
+      100%
+    );
+
+  margin: 0 auto;
+
+  color: #000000;
+
+  font-family:
+    var(--font-editorial),
+    "Times New Roman",
+    serif;
+
+  font-size:
+    clamp(
+      18px,
+      1.55vw,
+      22px
+    );
+
+  font-weight: 400;
+
+  line-height: 1.8;
+
+  text-wrap: pretty;
+}
+
+/* =========================================================
+   STORY MAP SECTION
+
+   LEFT = CONTENT
+   RIGHT = MAP
+========================================================= */
+
+.storyMapSection {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 0.9fr)
+    minmax(480px, 1.1fr);
+
+  gap:
+    clamp(
+      44px,
+      5vw,
+      84px
+    );
+
+  align-items: start;
 
   width: 100%;
 
   margin: 0;
 
   padding:
-    clamp(100px, 10vw, 165px)
-    clamp(40px, 5vw, 90px)
-    clamp(110px, 11vw, 175px);
+    20px
+    max(5vw, 40px)
+    85px;
 
-  background-color: #f2dfad !important;
+  background: #f2dfad;
+}
 
-  color: #2e2216 !important;
+/* =========================================================
+   LEFT TEXT
+========================================================= */
+
+.storyMapCopy {
+  width: 100%;
+
+  min-width: 0;
+}
+
+.storyMapBlock {
+  position: relative;
+
+  width: 100%;
+
+  padding:
+    0
+    0
+    clamp(60px, 7vw, 100px);
+
+  border: 0;
+}
+
+.storyMapBlock + .storyMapBlock {
+  padding-top:
+    clamp(
+      35px,
+      5vw,
+      65px
+    );
+}
+
+.storyMapBlock p {
+  margin: 0;
+
+  color: #000000;
 
   font-family:
     var(--font-editorial),
     "Times New Roman",
     serif;
+
+  font-size:
+    clamp(
+      18px,
+      1.55vw,
+      22px
+    );
+
+  font-weight: 400;
+
+  line-height: 1.82;
+
+  letter-spacing: 0;
+
+  text-wrap: pretty;
 }
 
-.article p {
+/* =========================================================
+   RIGHT MAP
+========================================================= */
+
+.storyMapColumn {
+  position: relative;
+
+  width: 100%;
+
+  min-width: 0;
+}
+
+.storyMapSticky {
+  position: sticky;
+
+  top: 6vh;
+
+  width: 100%;
+}
+
+/*
+   Không border.
+   Không radius.
+   Không shadow.
+   Không header.
+*/
+
+.storyMapVisual {
+  position: relative;
+
+  width: 100%;
+
+  height: 82vh;
+
+  min-height: 590px;
+
+  max-height: 820px;
+
+  overflow: hidden;
+
+  border: 0;
+
+  border-radius: 0;
+
+  outline: 0;
+
+  box-shadow: none;
+
+  background: transparent;
+}
+
+/* =========================================================
+   STORY CLOSING
+========================================================= */
+
+/* =========================================================
+   FOREIGN STORY — LÀO / CAMPUCHIA
+========================================================= */
+
+.storyClosing {
+  width: 100%;
+
+  padding:
+    20px
+    max(5vw, 40px)
+    clamp(100px, 10vw, 150px);
+
+  background: #f2dfad;
+}
+
+.foreignStory {
+  width: min(1120px, 100%);
+
+  margin: 0 auto;
+}
+
+.foreignIntro {
+  margin:
+    0
+    0
+    clamp(28px, 3vw, 42px);
+
+  color: #000000;
+
+  font-family:
+    var(--font-editorial),
+    "Times New Roman",
+    serif;
+
+  font-size:
+    clamp(
+      18px,
+      1.55vw,
+      22px
+    );
+
+  font-weight: 400;
+
+  line-height: 1.8;
+}
+
+/* =========================================================
+   FIGURE
+========================================================= */
+
+.foreignFigure {
   width: 100%;
 
   margin:
     0
     0
-    clamp(30px, 3vw, 46px);
-
-  color: #2e2216 !important;
-
-  font-size:
-    clamp(
-      18px,
-      1.6vw,
-      24px
-    );
-
-  font-weight: 400;
-
-  line-height: 1.78;
-
-  letter-spacing: 0;
-
-  opacity: 1 !important;
-
-  text-wrap: pretty;
+    clamp(58px, 6vw, 90px);
 }
 
-.article p:last-child {
+.foreignFigure:last-child {
   margin-bottom: 0;
 }
 
 /* =========================================================
-   DROP CAP
+   2 IMAGES SIDE BY SIDE
 ========================================================= */
 
-.article p:first-child::first-letter {
-  float: left;
+.foreignImages {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 2px;
+
+  width: 100%;
+}
+
+.foreignImage {
+  position: relative;
+
+  width: 100%;
+
+  aspect-ratio: 1.5 / 1;
+
+  overflow: hidden;
+}
+
+.foreignImage img {
+  object-fit: cover;
+
+  object-position: center;
+}
+
+/* =========================================================
+   CAPTION
+========================================================= */
+
+.foreignFigure figcaption {
+  width: min(860px, 92%);
 
   margin:
-    0.04em
-    0.13em
-    0
+    12px
+    auto
     0;
 
-  color: #76551d !important;
+  color: #000000;
 
   font-family:
     var(--font-editorial),
     "Times New Roman",
     serif;
 
-  font-size: 4.15em;
+  font-size:
+    clamp(
+      16px,
+      1.35vw,
+      20px
+    );
+
+  font-style: italic;
 
   font-weight: 500;
 
-  line-height: 0.75;
+  line-height: 1.45;
+
+  text-align: center;
 }
 
 /* =========================================================
-   INFOGRAPHIC SECTION
+   MOBILE
+========================================================= */
+
+@media (max-width: 800px) {
+  .storyClosing {
+    padding:
+      10px
+      16px
+      80px;
+  }
+
+  .foreignIntro {
+    margin-bottom: 24px;
+
+    font-size: 15px;
+
+    line-height: 1.72;
+  }
+
+  .foreignImages {
+    grid-template-columns: 1fr;
+
+    gap: 4px;
+  }
+
+  .foreignImage {
+    aspect-ratio: 1.45 / 1;
+  }
+
+  .foreignFigure {
+    margin-bottom: 55px;
+  }
+
+  .foreignFigure figcaption {
+    width: 94%;
+
+    margin-top: 10px;
+
+    font-size: 14px;
+
+    line-height: 1.45;
+  }
+}
+.storyClosing p {
+  width:
+    min(
+      1120px,
+      100%
+    );
+
+  margin: 0 auto;
+
+  color: #000000;
+
+  font-family:
+    var(--font-editorial),
+    "Times New Roman",
+    serif;
+
+  font-size:
+    clamp(
+      18px,
+      1.55vw,
+      22px
+    );
+
+  font-weight: 400;
+
+  line-height: 1.8;
+
+  text-wrap: pretty;
+}
+
+/* =========================================================
+   INFOGRAPHIC
 ========================================================= */
 
 .clearanceSection {
@@ -234,9 +668,7 @@
 
   overflow: hidden;
 
-  background-color: #f2dfad !important;
-
-  color: #342719;
+  background: #f2dfad;
 }
 
 .clearanceInner {
@@ -249,9 +681,9 @@
   margin: 0 auto;
 
   padding:
-    clamp(45px, 5vw, 80px)
+    clamp(40px, 5vw, 75px)
     0
-    clamp(100px, 10vw, 160px);
+    clamp(100px, 10vw, 150px);
 }
 
 .clearanceImage {
@@ -273,7 +705,7 @@
 
   overflow: hidden;
 
-  background-color: transparent;
+  background: transparent;
 }
 
 .infographicImage {
@@ -299,12 +731,12 @@
 
   height:
     clamp(
-      100px,
+      90px,
       10vw,
-      170px
+      150px
     );
 
-  background-color: #f2dfad !important;
+  background: #f2dfad;
 }
 
 .mapDivider::after {
@@ -316,7 +748,7 @@
   bottom: 0;
   left: 0;
 
-  height: 70%;
+  height: 65%;
 
   pointer-events: none;
 
@@ -324,7 +756,7 @@
     linear-gradient(
       to bottom,
       rgba(242, 223, 173, 0),
-      rgba(11, 15, 12, 0.1)
+      rgba(11, 15, 12, 0.09)
     );
 }
 
@@ -334,65 +766,43 @@
   z-index: 2;
 
   width:
-    calc(100% - 10vw);
+    min(
+      1120px,
+      calc(100% - 72px)
+    );
 
   height: 1px;
 
-  margin-bottom: 44px;
+  margin-bottom: 40px;
 
   background:
     linear-gradient(
       90deg,
       transparent,
-      rgba(93, 67, 31, 0.24),
+      rgba(0, 0, 0, 0.17),
       transparent
     );
-}
-
-/* =========================================================
-   DESKTOP
-========================================================= */
-
-@media (min-width: 1400px) {
-  .intro,
-  .article {
-    padding-left:
-      max(
-        70px,
-        4.5vw
-      );
-
-    padding-right:
-      max(
-        70px,
-        4.5vw
-      );
-  }
-
-  .intro p {
-    font-size: 22px;
-  }
-
-  .article p {
-    font-size: 23px;
-  }
 }
 
 /* =========================================================
    TABLET
 ========================================================= */
 
-@media (max-width: 1000px) {
-  .intro,
-  .article {
-    padding-left: 40px;
+@media (max-width: 1100px) {
+  .storyMapSection {
+    grid-template-columns:
+      minmax(0, 0.85fr)
+      minmax(410px, 1.15fr);
 
-    padding-right: 40px;
+    gap: 36px;
+
+    padding-left: 32px;
+
+    padding-right: 32px;
   }
 
-  .clearanceInner {
-    width:
-      calc(100% - 40px);
+  .storyMapVisual {
+    min-height: 540px;
   }
 }
 
@@ -400,77 +810,138 @@
    MOBILE
 ========================================================= */
 
-@media (max-width: 700px) {
-  /* COVER */
-
-  .cover {
-    width: 100%;
-
-    height: 100svh;
-    min-height: 100svh;
-  }
-
-  .coverImage {
-    object-fit: cover;
-
-    object-position:
-      center center;
-  }
-
-  /* INTRO */
-
+@media (max-width: 800px) {
   .intro {
-    width: 100%;
-
     padding:
-      68px
-      18px
-      82px;
-
-    background-color:
-      #f2dfad !important;
+      65px
+      0
+      80px;
   }
 
-  .intro p {
-    margin-bottom: 25px;
+  .introInner {
+    width:
+      calc(100% - 30px);
+  }
 
-    color:
-      #342719 !important;
-
+  .introLead,
+  .introTail {
     font-size: 15px;
 
     line-height: 1.76;
   }
 
-  /* ARTICLE */
-
-  .article {
-    width: 100%;
-
-    padding:
-      76px
-      18px
-      86px;
-
-    background-color:
-      #f2dfad !important;
+  .intro58 {
+    font-size: 1.95em;
   }
 
-  .article p {
-    margin-bottom: 27px;
+  .introQuote {
+    margin:
+      28px
+      0
+      30px;
 
-    color:
-      #2e2216 !important;
+    padding:
+      2px
+      0
+      2px
+      15px;
 
+    border-left-width: 2px;
+
+    color: #000000;
+
+    font-size: 16px;
+
+    line-height: 1.68;
+  }
+
+  /* SUBTITLE */
+
+  .storySubtitleSection {
+    padding:
+      42px
+      0
+      4px;
+  }
+
+  .storySubtitle {
+    width:
+      calc(100% - 30px);
+  }
+
+  .storySubtitle p {
+    font-size: 23px;
+  }
+
+  /* OPEN */
+
+  .storyOpening {
+    padding:
+      14px
+      16px
+      38px;
+  }
+
+  .storyOpening p {
     font-size: 15px;
 
     line-height: 1.72;
   }
 
-  .article p:first-child::first-letter {
-    margin-right: 0.1em;
+  /* TEXT + MAP */
 
-    font-size: 3.55em;
+  .storyMapSection {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 22px;
+
+    padding:
+      10px
+      16px
+      65px;
+  }
+
+  .storyMapBlock {
+    padding-bottom: 35px;
+  }
+
+  .storyMapBlock + .storyMapBlock {
+    padding-top: 15px;
+  }
+
+  .storyMapBlock p {
+    font-size: 15px;
+
+    line-height: 1.72;
+  }
+
+  .storyMapSticky {
+    position: relative;
+
+    top: auto;
+  }
+
+  .storyMapVisual {
+    height: 67vh;
+
+    min-height: 480px;
+
+    max-height: none;
+  }
+
+  .storyClosing {
+    padding:
+      5px
+      16px
+      85px;
+  }
+
+  .storyClosing p {
+    font-size: 15px;
+
+    line-height: 1.72;
   }
 
   /* INFOGRAPHIC */
@@ -489,13 +960,6 @@
     aspect-ratio: 9 / 16;
   }
 
-  .infographicImage {
-    object-fit: contain;
-
-    object-position:
-      center top;
-  }
-
   /* MAP DIVIDER */
 
   .mapDivider {
@@ -504,7 +968,7 @@
 
   .mapDivider > div {
     width:
-      calc(100% - 34px);
+      calc(100% - 30px);
 
     margin-bottom: 28px;
   }
@@ -515,17 +979,529 @@
 ========================================================= */
 
 @media (max-width: 390px) {
-  .intro,
-  .article {
-    padding-left: 15px;
-
-    padding-right: 15px;
+  .introInner,
+  .storySubtitle {
+    width:
+      calc(100% - 26px);
   }
 
-  .intro p,
-  .article p {
+  .introLead,
+  .introTail,
+  .storyOpening p,
+  .storyMapBlock p,
+  .storyClosing p {
     font-size: 14px;
+  }
+
+  .storySubtitle p {
+    font-size: 21px;
+  }
+}
+
+/* =========================================================
+   MEMORY CLUES
+========================================================= */
+
+.memorySection {
+  position: relative;
+
+  width: 100%;
+
+  padding:
+    clamp(90px, 9vw, 140px)
+    0
+    clamp(100px, 10vw, 150px);
+
+  background: #f2dfad;
+
+  color: #000000;
+}
+
+.memoryInner {
+  width:
+    min(
+      1120px,
+      calc(100% - 72px)
+    );
+
+  margin: 0 auto;
+}
+
+.memoryTitle {
+  display: inline-block;
+
+  margin:
+    0
+    0
+    34px;
+
+  padding:
+    3px
+    8px;
+
+  background:
+    rgba(
+      190,
+      153,
+      30,
+      0.18
+    );
+
+  color: #000000;
+
+  font-family:
+    var(--font-editorial),
+    "Times New Roman",
+    serif;
+
+  font-size:
+    clamp(
+      26px,
+      2.6vw,
+      40px
+    );
+
+  font-weight: 700;
+
+  line-height: 1.2;
+}
+
+.memoryIntro {
+  width:
+    min(
+      900px,
+      100%
+    );
+
+  margin:
+    0
+    0
+    clamp(55px, 6vw, 85px);
+
+  color: #000000;
+
+  font-family:
+    var(--font-editorial),
+    "Times New Roman",
+    serif;
+
+  font-size:
+    clamp(
+      17px,
+      1.5vw,
+      21px
+    );
+
+  line-height: 1.8;
+}
+
+/* =========================================================
+   ROW
+========================================================= */
+
+.memoryRow {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 0.9fr)
+    minmax(0, 1.1fr);
+
+  gap:
+    clamp(
+      42px,
+      5vw,
+      80px
+    );
+
+  align-items: center;
+
+  margin-bottom:
+    clamp(
+      85px,
+      10vw,
+      140px
+    );
+}
+
+.memoryRow:last-child {
+  margin-bottom: 0;
+}
+
+.memoryRowReverse {
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 1fr);
+}
+
+/* =========================================================
+   TEXT PANEL
+========================================================= */
+
+.memoryTextPanel,
+.memoryQuotePanel {
+  position: relative;
+
+  min-height: 320px;
+
+  overflow: hidden;
+}
+
+.memoryOverlay {
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.18),
+      rgba(118, 85, 29, 0.05)
+    );
+}
+
+.memoryTextContent {
+  position: relative;
+
+  z-index: 2;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  height: 100%;
+
+  min-height: 320px;
+
+  padding:
+    clamp(30px, 4vw, 55px);
+}
+
+.memoryAccent {
+  display: block;
+
+  width: 6px;
+
+  height: 32px;
+
+  margin-bottom: 24px;
+
+  background:
+    rgba(
+      118,
+      85,
+      29,
+      0.32
+    );
+}
+
+.memoryTextContent p {
+  margin: 0;
+
+  color: #000000;
+
+  font-family:
+    var(--font-editorial),
+    "Times New Roman",
+    serif;
+
+  font-size:
+    clamp(
+      17px,
+      1.5vw,
+      21px
+    );
+
+  line-height: 1.82;
+}
+
+/* =========================================================
+   IMAGE
+========================================================= */
+
+.memoryFigure {
+  width: 100%;
+
+  margin: 0;
+}
+
+.memoryImage,
+.memoryPortrait {
+  position: relative;
+
+  width: 100%;
+
+  overflow: hidden;
+}
+
+.memoryImage {
+  aspect-ratio: 1.45 / 1;
+}
+
+.memoryPortrait {
+  aspect-ratio: 1.1 / 1;
+}
+
+.memoryImage img,
+.memoryPortrait img {
+  object-fit: cover;
+
+  object-position: center;
+}
+
+/* =========================================================
+   CAPTION INSIDE IMAGE
+========================================================= */
+
+.imageCaption {
+  position: absolute;
+
+  z-index: 3;
+
+  bottom: 14px;
+
+  max-width: 78%;
+
+  padding:
+    9px
+    12px;
+
+  background:
+    rgba(
+      242,
+      223,
+      173,
+      0.9
+    );
+
+  color: #000000;
+
+  font-family:
+    var(--font-editorial),
+    "Times New Roman",
+    serif;
+
+  font-size:
+    clamp(
+      13px,
+      1.05vw,
+      16px
+    );
+
+  font-style: italic;
+
+  font-weight: 500;
+
+  line-height: 1.4;
+
+  backdrop-filter:
+    blur(3px);
+}
+
+.captionRight {
+  right: 0;
+
+  text-align: right;
+}
+
+.captionLeft {
+  left: 0;
+
+  text-align: left;
+}
+
+/* =========================================================
+   INTERVIEW QUOTE
+========================================================= */
+
+.memoryQuoteContent {
+  position: relative;
+
+  z-index: 2;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  min-height: 320px;
+
+  padding:
+    clamp(35px, 5vw, 65px);
+}
+
+.quoteMark {
+  display: block;
+
+  height: 55px;
+
+  margin-bottom: 8px;
+
+  color:
+    rgba(
+      118,
+      85,
+      29,
+      0.42
+    );
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size:
+    100px;
+
+  line-height: 0.8;
+}
+
+.memoryQuoteContent blockquote {
+  margin: 0;
+
+  color: #000000;
+
+  font-family:
+    var(--font-editorial),
+    "Times New Roman",
+    serif;
+
+  font-size:
+    clamp(
+      20px,
+      1.85vw,
+      28px
+    );
+
+  font-style: italic;
+
+  font-weight: 600;
+
+  line-height: 1.55;
+}
+
+.quoteSource {
+  display: block;
+
+  margin-top: 24px;
+
+  color:
+    rgba(
+      0,
+      0,
+      0,
+      0.62
+    );
+
+  font-family:
+    var(--font-sans),
+    Arial,
+    sans-serif;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.06em;
+
+  text-transform: uppercase;
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 800px) {
+  .memorySection {
+    padding:
+      70px
+      0
+      85px;
+  }
+
+  .memoryInner {
+    width:
+      calc(100% - 30px);
+  }
+
+  .memoryTitle {
+    margin-bottom: 24px;
+
+    font-size: 25px;
+  }
+
+  .memoryIntro {
+    margin-bottom: 45px;
+
+    font-size: 15px;
 
     line-height: 1.72;
+  }
+
+  .memoryRow,
+  .memoryRowReverse {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 24px;
+
+    margin-bottom: 70px;
+  }
+
+  .memoryTextPanel,
+  .memoryQuotePanel {
+    width: 100%;
+
+    min-height: 0;
+  }
+
+  .memoryTextContent,
+  .memoryQuoteContent {
+    min-height: 0;
+
+    padding:
+      26px
+      20px;
+  }
+
+  .memoryTextContent p {
+    font-size: 15px;
+
+    line-height: 1.72;
+  }
+
+  .memoryImage,
+  .memoryPortrait {
+    aspect-ratio: 1.35 / 1;
+  }
+
+  .imageCaption {
+    right: 0;
+    left: 0;
+
+    bottom: 0;
+
+    max-width: 100%;
+
+    padding:
+      8px
+      10px;
+
+    font-size: 12px;
+
+    text-align: left;
+  }
+
+  .quoteMark {
+    height: 42px;
+
+    font-size: 78px;
+  }
+
+  .memoryQuoteContent blockquote {
+    font-size: 19px;
   }
 }

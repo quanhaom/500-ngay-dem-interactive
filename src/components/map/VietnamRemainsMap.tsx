@@ -1,6 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import type {
   Feature,
@@ -9,11 +13,19 @@ import type {
   GeoJsonProperties,
 } from "geojson";
 
-import type { Map as MapLibreMap } from "maplibre-gl";
+import type {
+  Map as MapLibreMap,
+} from "maplibre-gl";
 
 import { remainsData } from "../../data/remains";
-import { normalizeProvinceName } from "../../lib/map/normalizeProvinceName";
-import { MAP_CONFIG } from "../../lib/map/mapConfig";
+
+import {
+  normalizeProvinceName,
+} from "../../lib/map/normalizeProvinceName";
+
+import {
+  MAP_CONFIG,
+} from "../../lib/map/mapConfig";
 
 import type {
   ProvinceInteractiveData,
@@ -31,29 +43,67 @@ import styles from "./VietnamRemainsMap.module.css";
 
 interface VietnamRemainsMapProps {
   embedded?: boolean;
+
+  /*
+   * Khi true:
+   * map tự fit toàn bộ Việt Nam sau khi load.
+   */
+  autoFit?: boolean;
+
+  /*
+   * Dùng cho map nằm trong article:
+   * - không NavigationControl
+   * - không Reset button
+   * - không Legend
+   */
+  minimal?: boolean;
 }
 
 /* =========================================================
    TYPES
 ========================================================= */
 
-type ExtendedProperties = GeoJsonProperties & {
-  __provinceName?: string;
-  __tracked?: boolean;
-  __siteName?: string;
-  __remainsFound?: number;
-  __gravesFound?: number;
-  __summary?: string;
-  __details?: string;
-};
+type ExtendedProperties =
+  GeoJsonProperties & {
+    __provinceName?: string;
+
+    __tracked?: boolean;
+
+    __siteName?: string;
+
+    __remainsFound?: number;
+
+    __gravesFound?: number;
+
+    __summary?: string;
+
+    __details?: string;
+  };
 
 /* =========================================================
    CONSTANTS
 ========================================================= */
 
-const SOURCE_ID = "vietnam-provinces";
-const FILL_LAYER_ID = "province-fill";
-const BORDER_LAYER_ID = "province-border";
+const SOURCE_ID =
+  "vietnam-provinces";
+
+const FILL_LAYER_ID =
+  "province-fill";
+
+const BORDER_LAYER_ID =
+  "province-border";
+
+/*
+ * Bounds để map luôn hiển thị toàn bộ Việt Nam.
+ */
+
+const VIETNAM_BOUNDS: [
+  [number, number],
+  [number, number],
+] = [
+  [102.0, 8.0],
+  [110.8, 23.6],
+];
 
 const VIETNAM_PROVINCES = [
   "Hà Nội",
@@ -92,42 +142,89 @@ const VIETNAM_PROVINCES = [
   "Cà Mau",
 ];
 
-const NORMALIZED_PROVINCES = new Map(
-  VIETNAM_PROVINCES.map((province) => [
-    normalizeProvinceName(province),
-    province,
-  ])
-);
+const NORMALIZED_PROVINCES =
+  new Map(
+    VIETNAM_PROVINCES.map(
+      (province) => [
+        normalizeProvinceName(
+          province
+        ),
+
+        province,
+      ]
+    )
+  );
 
 const TRACKED_PROVINCE_LABELS = [
   {
-    province: "Tuyên Quang",
-    coordinates: [105.22, 22.13] as [number, number],
+    province:
+      "Tuyên Quang",
+
+    coordinates:
+      [105.22, 22.13] as [
+        number,
+        number,
+      ],
   },
+
   {
-    province: "Quảng Trị",
-    coordinates: [107.05, 16.75] as [number, number],
+    province:
+      "Quảng Trị",
+
+    coordinates:
+      [107.05, 16.75] as [
+        number,
+        number,
+      ],
   },
+
   {
-    province: "Quảng Ngãi",
-    coordinates: [108.75, 15.12] as [number, number],
+    province:
+      "Quảng Ngãi",
+
+    coordinates:
+      [108.75, 15.12] as [
+        number,
+        number,
+      ],
   },
+
   {
-    province: "Đắk Lắk",
-    coordinates: [108.05, 12.7] as [number, number],
+    province:
+      "Đắk Lắk",
+
+    coordinates:
+      [108.05, 12.7] as [
+        number,
+        number,
+      ],
   },
+
   {
-    province: "Đồng Nai",
-    coordinates: [107.15, 11.0] as [number, number],
+    province:
+      "Đồng Nai",
+
+    coordinates:
+      [107.15, 11.0] as [
+        number,
+        number,
+      ],
   },
+
   {
-    province: "Hồ Chí Minh",
-    coordinates: [106.65, 10.78] as [number, number],
+    province:
+      "Hồ Chí Minh",
+
+    coordinates:
+      [106.65, 10.78] as [
+        number,
+        number,
+      ],
   },
 ];
 
 /* =========================================================
-   HELPERS
+   GET PROVINCE NAME
 ========================================================= */
 
 function getProvinceName(
@@ -163,8 +260,11 @@ function getProvinceName(
     "ADM1_EN",
   ];
 
-  for (const key of possibleKeys) {
-    const value = properties[key];
+  for (
+    const key of possibleKeys
+  ) {
+    const value =
+      properties[key];
 
     if (
       typeof value !== "string" ||
@@ -174,7 +274,9 @@ function getProvinceName(
     }
 
     const normalized =
-      normalizeProvinceName(value);
+      normalizeProvinceName(
+        value
+      );
 
     const province =
       NORMALIZED_PROVINCES.get(
@@ -186,9 +288,11 @@ function getProvinceName(
     }
   }
 
-  for (const value of Object.values(
-    properties
-  )) {
+  for (
+    const value of Object.values(
+      properties
+    )
+  ) {
     if (
       typeof value !== "string" ||
       value.trim().length === 0
@@ -197,7 +301,9 @@ function getProvinceName(
     }
 
     const normalized =
-      normalizeProvinceName(value);
+      normalizeProvinceName(
+        value
+      );
 
     const province =
       NORMALIZED_PROVINCES.get(
@@ -211,6 +317,10 @@ function getProvinceName(
 
   return "Không xác định";
 }
+
+/* =========================================================
+   GEOMETRY BOUNDS
+========================================================= */
 
 function calculateGeometryBounds(
   geometry: Geometry
@@ -226,75 +336,117 @@ function calculateGeometryBounds(
   let maxLng = -Infinity;
   let maxLat = -Infinity;
 
-  function walk(value: unknown) {
+  function walk(
+    value: unknown
+  ) {
     if (!Array.isArray(value)) {
       return;
     }
 
     if (
       value.length >= 2 &&
-      typeof value[0] === "number" &&
-      typeof value[1] === "number"
+      typeof value[0] ===
+        "number" &&
+      typeof value[1] ===
+        "number"
     ) {
-      const lng = value[0];
-      const lat = value[1];
+      const lng =
+        value[0];
 
-      minLng = Math.min(
-        minLng,
-        lng
-      );
+      const lat =
+        value[1];
 
-      minLat = Math.min(
-        minLat,
-        lat
-      );
+      minLng =
+        Math.min(
+          minLng,
+          lng
+        );
 
-      maxLng = Math.max(
-        maxLng,
-        lng
-      );
+      minLat =
+        Math.min(
+          minLat,
+          lat
+        );
 
-      maxLat = Math.max(
-        maxLat,
-        lat
-      );
+      maxLng =
+        Math.max(
+          maxLng,
+          lng
+        );
+
+      maxLat =
+        Math.max(
+          maxLat,
+          lat
+        );
 
       return;
     }
 
-    for (const child of value) {
+    for (
+      const child of value
+    ) {
       walk(child);
     }
   }
 
-  if ("coordinates" in geometry) {
-    walk(geometry.coordinates);
+  if (
+    "coordinates" in
+    geometry
+  ) {
+    walk(
+      geometry.coordinates
+    );
   }
 
   if (
-    !Number.isFinite(minLng) ||
-    !Number.isFinite(minLat) ||
-    !Number.isFinite(maxLng) ||
-    !Number.isFinite(maxLat)
+    !Number.isFinite(
+      minLng
+    ) ||
+    !Number.isFinite(
+      minLat
+    ) ||
+    !Number.isFinite(
+      maxLng
+    ) ||
+    !Number.isFinite(
+      maxLat
+    )
   ) {
     return null;
   }
 
   return [
-    [minLng, minLat],
-    [maxLng, maxLat],
+    [
+      minLng,
+      minLat,
+    ],
+
+    [
+      maxLng,
+      maxLat,
+    ],
   ];
 }
+
+/* =========================================================
+   PARSE DETAILS
+========================================================= */
 
 function parseDetails(
   value: unknown
 ): string[] {
-  if (Array.isArray(value)) {
-    return value.map(String);
+  if (
+    Array.isArray(value)
+  ) {
+    return value.map(
+      String
+    );
   }
 
   if (
-    typeof value !== "string" ||
+    typeof value !==
+      "string" ||
     value.length === 0
   ) {
     return [];
@@ -305,9 +457,13 @@ function parseDetails(
       JSON.parse(value);
 
     if (
-      Array.isArray(parsed)
+      Array.isArray(
+        parsed
+      )
     ) {
-      return parsed.map(String);
+      return parsed.map(
+        String
+      );
     }
   } catch {
     return [];
@@ -317,11 +473,55 @@ function parseDetails(
 }
 
 /* =========================================================
+   FIT VIETNAM
+========================================================= */
+
+function fitVietnam(
+  map: MapLibreMap,
+  instant = false
+) {
+  const mobile =
+    window.innerWidth <=
+    800;
+
+  map.fitBounds(
+    VIETNAM_BOUNDS,
+    {
+      padding: mobile
+        ? {
+            top: 25,
+            right: 20,
+            bottom: 25,
+            left: 20,
+          }
+        : {
+            top: 45,
+            right: 35,
+            bottom: 45,
+            left: 35,
+          },
+
+      maxZoom:
+        mobile
+          ? 5.2
+          : 5.8,
+
+      duration:
+        instant
+          ? 0
+          : 1000,
+    }
+  );
+}
+
+/* =========================================================
    COMPONENT
 ========================================================= */
 
 export default function VietnamRemainsMap({
   embedded = false,
+  autoFit = false,
+  minimal = false,
 }: VietnamRemainsMapProps) {
   const mapContainerRef =
     useRef<HTMLDivElement | null>(
@@ -380,6 +580,10 @@ export default function VietnamRemainsMap({
 
     let disposed = false;
 
+    let cleanupResize:
+      | (() => void)
+      | null = null;
+
     async function initializeMap() {
       try {
         const maplibre =
@@ -406,15 +610,18 @@ export default function VietnamRemainsMap({
 
               layers: [
                 {
-                  id: "background",
-                  type: "background",
+                  id:
+                    "background",
+
+                  type:
+                    "background",
 
                   paint: {
-                    "background-color":
-                      MAP_CONFIG
-                        .colors
-                        .background,
-                  },
+                  "background-color":
+                    minimal
+                      ? "#f2dfad"
+                      : MAP_CONFIG.colors.background,
+                },
                 },
               ],
             },
@@ -435,19 +642,29 @@ export default function VietnamRemainsMap({
               false,
           });
 
-        mapRef.current = map;
+        mapRef.current =
+          map;
 
         /* ===============================================
            CONTROLS
+
+           Inline article map:
+           không hiện +/- control.
         =============================================== */
 
-        map.addControl(
-          new maplibre.NavigationControl({
-            showCompass: false,
-            visualizePitch: false,
-          }),
-          "top-right"
-        );
+        if (!minimal) {
+          map.addControl(
+            new maplibre.NavigationControl({
+              showCompass:
+                false,
+
+              visualizePitch:
+                false,
+            }),
+
+            "top-right"
+          );
+        }
 
         /* ===============================================
            MAP LOAD
@@ -455,6 +672,7 @@ export default function VietnamRemainsMap({
 
         map.on(
           "load",
+
           async () => {
             try {
               const response =
@@ -482,10 +700,13 @@ export default function VietnamRemainsMap({
                   ProvinceInteractiveData
                 >(
                   remainsData.map(
-                    (item) => [
+                    (
+                      item
+                    ) => [
                       normalizeProvinceName(
                         item.province
                       ),
+
                       item,
                     ]
                   )
@@ -569,36 +790,16 @@ export default function VietnamRemainsMap({
                   ),
               };
 
-              console.log(
-                "Matched provinces:",
-                enhancedGeoJson.features
-                  .filter(
-                    (
-                      feature
-                    ) =>
-                      feature
-                        .properties
-                        ?.__tracked ===
-                      true
-                  )
-                  .map(
-                    (
-                      feature
-                    ) =>
-                      feature
-                        .properties
-                        ?.__provinceName
-                  )
-              );
-
               /* =========================================
                  SOURCE
               ========================================= */
 
               map.addSource(
                 SOURCE_ID,
+
                 {
-                  type: "geojson",
+                  type:
+                    "geojson",
 
                   data:
                     enhancedGeoJson,
@@ -616,64 +817,69 @@ export default function VietnamRemainsMap({
                 id:
                   FILL_LAYER_ID,
 
-                type: "fill",
+                type:
+                  "fill",
 
                 source:
                   SOURCE_ID,
 
                 paint: {
-                  "fill-color":
+                  "fill-color": [
+                    "case",
+
                     [
-                      "case",
+                      "boolean",
 
                       [
-                        "boolean",
-                        [
-                          "feature-state",
-                          "hover",
-                        ],
-                        false,
+                        "feature-state",
+                        "hover",
                       ],
 
-                      MAP_CONFIG
-                        .colors
-                        .provinceHover,
-
-                      [
-                        "boolean",
-                        [
-                          "get",
-                          "__tracked",
-                        ],
-                        false,
-                      ],
-
-                      MAP_CONFIG
-                        .colors
-                        .provinceTracked,
-
-                      MAP_CONFIG
-                        .colors
-                        .provinceDefault,
+                      false,
                     ],
 
-                  "fill-opacity":
+                    MAP_CONFIG
+                      .colors
+                      .provinceHover,
+
                     [
-                      "case",
+                      "boolean",
 
                       [
-                        "boolean",
-                        [
-                          "feature-state",
-                          "hover",
-                        ],
-                        false,
+                        "get",
+                        "__tracked",
                       ],
 
-                      0.98,
-
-                      0.9,
+                      false,
                     ],
+
+                    MAP_CONFIG
+                      .colors
+                      .provinceTracked,
+
+                    MAP_CONFIG
+                      .colors
+                      .provinceDefault,
+                  ],
+
+                  "fill-opacity": [
+                    "case",
+
+                    [
+                      "boolean",
+
+                      [
+                        "feature-state",
+                        "hover",
+                      ],
+
+                      false,
+                    ],
+
+                    0.98,
+
+                    0.9,
+                  ],
                 },
               });
 
@@ -685,51 +891,54 @@ export default function VietnamRemainsMap({
                 id:
                   BORDER_LAYER_ID,
 
-                type: "line",
+                type:
+                  "line",
 
                 source:
                   SOURCE_ID,
 
                 paint: {
-                  "line-color":
+                  "line-color": [
+                    "case",
+
                     [
-                      "case",
+                      "boolean",
 
                       [
-                        "boolean",
-                        [
-                          "feature-state",
-                          "hover",
-                        ],
-                        false,
+                        "feature-state",
+                        "hover",
                       ],
 
-                      MAP_CONFIG
-                        .colors
-                        .borderHover,
-
-                      MAP_CONFIG
-                        .colors
-                        .border,
+                      false,
                     ],
 
-                  "line-width":
+                    MAP_CONFIG
+                      .colors
+                      .borderHover,
+
+                    MAP_CONFIG
+                      .colors
+                      .border,
+                  ],
+
+                  "line-width": [
+                    "case",
+
                     [
-                      "case",
+                      "boolean",
 
                       [
-                        "boolean",
-                        [
-                          "feature-state",
-                          "hover",
-                        ],
-                        false,
+                        "feature-state",
+                        "hover",
                       ],
 
-                      2,
-
-                      0.8,
+                      false,
                     ],
+
+                    2,
+
+                    0.8,
+                  ],
 
                   "line-opacity":
                     1,
@@ -737,7 +946,7 @@ export default function VietnamRemainsMap({
               });
 
               /* =========================================
-                 ARCHIPELAGO LABELS
+                 ARCHIPELAGOS
               ========================================= */
 
               for (
@@ -785,13 +994,16 @@ export default function VietnamRemainsMap({
                 const marker =
                   new maplibre.Marker({
                     element,
+
                     anchor:
                       "center",
                   })
                     .setLngLat(
                       archipelago.coordinates
                     )
-                    .addTo(map);
+                    .addTo(
+                      map
+                    );
 
                 markerRefs.current.push(
                   marker
@@ -820,13 +1032,16 @@ export default function VietnamRemainsMap({
                 const marker =
                   new maplibre.Marker({
                     element,
+
                     anchor:
                       "center",
                   })
                     .setLngLat(
                       item.coordinates
                     )
-                    .addTo(map);
+                    .addTo(
+                      map
+                    );
 
                 markerRefs.current.push(
                   marker
@@ -834,7 +1049,7 @@ export default function VietnamRemainsMap({
               }
 
               /* =========================================
-                 POPUP
+                 HOVER STATE
               ========================================= */
 
               let hoveredFeatureId:
@@ -851,19 +1066,18 @@ export default function VietnamRemainsMap({
                   closeOnClick:
                     false,
 
-                  offset: 12,
+                  offset:
+                    12,
 
                   maxWidth:
                     "300px",
                 });
 
-              /* =========================================
-                 HOVER
-              ========================================= */
-
               map.on(
                 "mousemove",
+
                 FILL_LAYER_ID,
+
                 (
                   event
                 ) => {
@@ -874,7 +1088,9 @@ export default function VietnamRemainsMap({
                     event
                       .features?.[0];
 
-                  if (!feature) {
+                  if (
+                    !feature
+                  ) {
                     return;
                   }
 
@@ -998,8 +1214,7 @@ export default function VietnamRemainsMap({
                     }
 
                     if (
-                      remains >=
-                      0
+                      remains >= 0
                     ) {
                       const remainsLine =
                         document.createElement(
@@ -1030,8 +1245,7 @@ export default function VietnamRemainsMap({
                     }
 
                     if (
-                      graves >=
-                      0
+                      graves >= 0
                     ) {
                       const gravesLine =
                         document.createElement(
@@ -1081,7 +1295,9 @@ export default function VietnamRemainsMap({
                     .setDOMContent(
                       popupElement
                     )
-                    .addTo(map);
+                    .addTo(
+                      map
+                    );
                 }
               );
 
@@ -1091,7 +1307,9 @@ export default function VietnamRemainsMap({
 
               map.on(
                 "mouseleave",
+
                 FILL_LAYER_ID,
+
                 () => {
                   map.getCanvas().style.cursor =
                     "";
@@ -1129,7 +1347,9 @@ export default function VietnamRemainsMap({
 
               map.on(
                 "click",
+
                 FILL_LAYER_ID,
+
                 (
                   event
                 ) => {
@@ -1137,7 +1357,9 @@ export default function VietnamRemainsMap({
                     event
                       .features?.[0];
 
-                  if (!feature) {
+                  if (
+                    !feature
+                  ) {
                     return;
                   }
 
@@ -1201,15 +1423,13 @@ export default function VietnamRemainsMap({
 
                     remainsFound:
                       tracked &&
-                      remains >=
-                        0
+                      remains >= 0
                         ? remains
                         : undefined,
 
                     gravesFound:
                       tracked &&
-                      graves >=
-                        0
+                      graves >= 0
                         ? graves
                         : undefined,
 
@@ -1236,7 +1456,9 @@ export default function VietnamRemainsMap({
                       feature.geometry
                     );
 
-                  if (!bounds) {
+                  if (
+                    !bounds
+                  ) {
                     return;
                   }
 
@@ -1246,24 +1468,55 @@ export default function VietnamRemainsMap({
 
                   map.fitBounds(
                     bounds,
+
                     {
                       padding:
-                        isMobile
+                        minimal
                           ? {
-                              top: 180,
-                              right: 35,
-                              bottom: 45,
-                              left: 35,
+                              top:
+                                35,
+
+                              right:
+                                30,
+
+                              bottom:
+                                35,
+
+                              left:
+                                30,
                             }
-                          : {
-                              top: 70,
-                              right: 90,
-                              bottom: 70,
-                              left: 390,
-                            },
+                          : isMobile
+                            ? {
+                                top:
+                                  180,
+
+                                right:
+                                  35,
+
+                                bottom:
+                                  45,
+
+                                left:
+                                  35,
+                              }
+                            : {
+                                top:
+                                  70,
+
+                                right:
+                                  90,
+
+                                bottom:
+                                  70,
+
+                                left:
+                                  390,
+                              },
 
                       maxZoom:
-                        7.4,
+                        minimal
+                          ? 6.8
+                          : 7.4,
 
                       duration:
                         750,
@@ -1273,7 +1526,7 @@ export default function VietnamRemainsMap({
               );
 
               /* =========================================
-                 READY
+                 READY + AUTO FIT
               ========================================= */
 
               setLoading(
@@ -1283,6 +1536,14 @@ export default function VietnamRemainsMap({
               requestAnimationFrame(
                 () => {
                   map.resize();
+
+                  if (
+                    autoFit
+                  ) {
+                    fitVietnam(
+                      map
+                    );
+                  }
                 }
               );
             } catch (
@@ -1317,15 +1578,35 @@ export default function VietnamRemainsMap({
 
         window.addEventListener(
           "resize",
+
           resizeMap
         );
 
-        return () => {
-          window.removeEventListener(
-            "resize",
-            resizeMap
+        const resizeObserver =
+          new ResizeObserver(
+            () => {
+              map.resize();
+            }
           );
-        };
+
+        if (
+          mapContainerRef.current
+        ) {
+          resizeObserver.observe(
+            mapContainerRef.current
+          );
+        }
+
+        cleanupResize =
+          () => {
+            window.removeEventListener(
+              "resize",
+
+              resizeMap
+            );
+
+            resizeObserver.disconnect();
+          };
       } catch (
         initializationError
       ) {
@@ -1340,34 +1621,69 @@ export default function VietnamRemainsMap({
             : "Không thể khởi tạo bản đồ."
         );
 
-        setLoading(false);
+        setLoading(
+          false
+        );
       }
     }
 
     initializeMap();
 
     return () => {
-      disposed = true;
+      disposed =
+        true;
+
+      cleanupResize?.();
 
       markerRefs.current.forEach(
-        (marker) =>
+        (
+          marker
+        ) =>
           marker.remove()
       );
 
-      markerRefs.current = [];
+      markerRefs.current =
+        [];
 
       if (
         mapRef.current
       ) {
         mapRef.current.remove();
-        mapRef.current = null;
+
+        mapRef.current =
+          null;
       }
     };
-  }, []);
+    }, []);
 
   /* =======================================================
      RESET MAP
   ======================================================= */
+
+  function closeDetails() {
+    setSelectedProvince(null);
+
+    const map =
+      mapRef.current;
+
+    if (!map) {
+      return;
+    }
+
+    map.stop();
+
+    if (autoFit) {
+      fitVietnam(map);
+      return;
+    }
+
+    map.easeTo({
+      center: MAP_CONFIG.center,
+      zoom: MAP_CONFIG.zoom,
+      duration: 700,
+    });
+  }
+
 
   function resetMap() {
     const map =
@@ -1379,16 +1695,24 @@ export default function VietnamRemainsMap({
 
     map.stop();
 
-    map.easeTo({
-      center:
-        MAP_CONFIG.center,
+    if (
+      autoFit
+    ) {
+      fitVietnam(
+        map
+      );
+    } else {
+      map.easeTo({
+        center:
+          MAP_CONFIG.center,
 
-      zoom:
-        MAP_CONFIG.zoom,
+        zoom:
+          MAP_CONFIG.zoom,
 
-      duration:
-        700,
-    });
+        duration:
+          700,
+      });
+    }
 
     setSelectedProvince(
       null
@@ -1465,28 +1789,30 @@ export default function VietnamRemainsMap({
         {!loading &&
           !error && (
             <>
-              <button
-                type="button"
-                className={
-                  styles.resetButton
-                }
-                onClick={
-                  resetMap
-                }
-              >
-                Xem toàn quốc
-              </button>
+              {!minimal && (
+                <>
+                  <button
+                    type="button"
+                    className={
+                      styles.resetButton
+                    }
+                    onClick={
+                      resetMap
+                    }
+                  >
+                    Xem toàn quốc
+                  </button>
 
-              <MapLegend />
+                  <MapLegend />
+                </>
+              )}
 
               <ProvinceTooltip
                 selectedProvince={
                   selectedProvince
                 }
-                onClose={() =>
-                  setSelectedProvince(
-                    null
-                  )
+                onClose={
+                  closeDetails
                 }
               />
             </>

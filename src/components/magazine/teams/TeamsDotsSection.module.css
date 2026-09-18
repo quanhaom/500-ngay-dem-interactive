@@ -1,0 +1,474 @@
+.section {
+  position: relative;
+
+  width: 100%;
+
+  overflow: hidden;
+
+  background-color: #f2dfad;
+
+  color: #2e2216;
+}
+
+.inner {
+  display: grid;
+
+  grid-template-columns:
+    minmax(260px, 0.7fr)
+    minmax(520px, 1.3fr);
+
+  gap:
+    clamp(60px, 8vw, 150px);
+
+  align-items: center;
+
+  width:
+    min(
+      1500px,
+      calc(100% - 10vw)
+    );
+
+  min-height: 100vh;
+
+  margin: 0 auto;
+
+  padding:
+    clamp(90px, 10vw, 170px)
+    0;
+}
+
+/* =========================================================
+   COPY
+========================================================= */
+
+.copy {
+  position: relative;
+
+  z-index: 5;
+}
+
+.eyebrow {
+  color:
+    rgba(88, 72, 42, 0.58);
+
+  font-family:
+    var(--font-sans),
+    Arial,
+    sans-serif;
+
+  font-size: 8px;
+
+  font-weight: 800;
+
+  letter-spacing: 0.2em;
+}
+
+.copy h2 {
+  margin:
+    20px
+    0
+    0;
+
+  color: #302419;
+
+  font-family:
+    var(--font-editorial),
+    serif;
+
+  font-size:
+    clamp(
+      80px,
+      10vw,
+      170px
+    );
+
+  font-weight: 400;
+
+  line-height: 0.85;
+
+  letter-spacing:
+    -0.07em;
+}
+
+.people {
+  margin:
+    24px
+    0
+    0;
+
+  color: #6d542c;
+
+  font-family:
+    var(--font-editorial),
+    serif;
+
+  font-size:
+    clamp(
+      27px,
+      3vw,
+      48px
+    );
+
+  font-style: italic;
+}
+
+.description {
+  max-width: 430px;
+
+  margin:
+    32px
+    0
+    0;
+
+  color:
+    rgba(46, 34, 22, 0.66);
+
+  font-family:
+    var(--font-editorial),
+    serif;
+
+  font-size: 15px;
+
+  line-height: 1.75;
+}
+
+/* =========================================================
+   FIELD
+========================================================= */
+
+.visual {
+  position: relative;
+
+  width: 100%;
+}
+
+.field {
+  position: relative;
+
+  width: 100%;
+
+  aspect-ratio: 1.15;
+
+  overflow: hidden;
+
+  border:
+    1px solid
+    rgba(78, 65, 42, 0.11);
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(255, 255, 255, 0.21),
+      transparent 62%
+    );
+}
+
+.field::before,
+.field::after {
+  content: "";
+
+  position: absolute;
+
+  pointer-events: none;
+}
+
+.field::before {
+  top: 0;
+  bottom: 0;
+  left: 50%;
+
+  width: 1px;
+
+  background:
+    linear-gradient(
+      transparent,
+      rgba(82, 70, 46, 0.08),
+      transparent
+    );
+}
+
+.field::after {
+  top: 50%;
+  right: 0;
+  left: 0;
+
+  height: 1px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(82, 70, 46, 0.08),
+      transparent
+    );
+}
+
+/* =========================================================
+   NODES
+========================================================= */
+
+.node {
+  position: absolute;
+
+  z-index: 4;
+
+  width: 12px;
+  height: 12px;
+
+  transform:
+    translate(-50%, -50%)
+    scale(0);
+
+  border-radius: 50%;
+
+  opacity: 0;
+
+  transition:
+    transform
+      0.7s
+      cubic-bezier(
+        0.22,
+        1,
+        0.36,
+        1
+      ),
+    opacity
+      0.5s
+      ease;
+}
+
+.active .node {
+  transform:
+    translate(-50%, -50%)
+    scale(1);
+
+  opacity: 1;
+
+  animation:
+    nodePulse
+    2.8s
+    ease-in-out
+    infinite;
+}
+
+.vietnam {
+  background: #395d45;
+
+  box-shadow:
+    0 0 0
+      6px
+      rgba(
+        57,
+        93,
+        69,
+        0.08
+      );
+}
+
+.laos {
+  background: #9a6e32;
+
+  box-shadow:
+    0 0 0
+      6px
+      rgba(
+        154,
+        110,
+        50,
+        0.08
+      );
+}
+
+.cambodia {
+  background: #87604d;
+
+  box-shadow:
+    0 0 0
+      6px
+      rgba(
+        135,
+        96,
+        77,
+        0.08
+      );
+}
+
+@keyframes nodePulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0
+      4px
+      rgba(
+        65,
+        83,
+        64,
+        0.05
+      );
+  }
+
+  50% {
+    box-shadow:
+      0 0 0
+      10px
+      rgba(
+        65,
+        83,
+        64,
+        0
+      );
+  }
+}
+
+/* =========================================================
+   LABELS
+========================================================= */
+
+.label {
+  position: absolute;
+
+  z-index: 6;
+
+  display: flex;
+
+  flex-direction: column;
+
+  color:
+    rgba(59, 47, 29, 0.42);
+
+  font-family:
+    var(--font-sans),
+    Arial,
+    sans-serif;
+
+  font-size: 7px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.14em;
+
+  pointer-events: none;
+}
+
+.label strong {
+  margin-top: 2px;
+
+  color:
+    rgba(53, 42, 26, 0.7);
+
+  font-size: 16px;
+
+  letter-spacing: 0;
+}
+
+.labelVietnam {
+  top: 8%;
+  left: 41%;
+}
+
+.labelLaos {
+  top: 14%;
+  left: 8%;
+}
+
+.labelCambodia {
+  top: 18%;
+  right: 5%;
+}
+
+/* =========================================================
+   LEGEND
+========================================================= */
+
+.legend {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap:
+    16px
+    30px;
+
+  margin-top: 22px;
+
+  color:
+    rgba(54, 43, 27, 0.58);
+
+  font-family:
+    var(--font-sans),
+    Arial,
+    sans-serif;
+
+  font-size: 9px;
+
+  font-weight: 600;
+}
+
+.legend span {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+}
+
+.legend i {
+  display: block;
+
+  width: 8px;
+  height: 8px;
+
+  border-radius: 50%;
+}
+
+.vietnamDot {
+  background: #395d45;
+}
+
+.laosDot {
+  background: #9a6e32;
+}
+
+.cambodiaDot {
+  background: #87604d;
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 900px) {
+  .inner {
+    grid-template-columns:
+      1fr;
+
+    gap: 55px;
+
+    width:
+      calc(100% - 34px);
+
+    min-height: 0;
+
+    padding:
+      90px
+      0;
+  }
+
+  .copy h2 {
+    font-size:
+      clamp(
+        84px,
+        24vw,
+        130px
+      );
+  }
+
+  .field {
+    aspect-ratio: 0.95;
+  }
+
+  .node {
+    width: 10px;
+    height: 10px;
+  }
+}
