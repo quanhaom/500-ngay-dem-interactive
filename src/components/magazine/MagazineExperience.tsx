@@ -1,24 +1,16 @@
-import ChapterNav from "./ChapterNav";
-
 import OpeningHero from "./OpeningHero";
 
 import ReadingProgress from "./navigation/ReadingProgress";
 
-import ScaleSection from "./sections/ScaleSection";
-
 import MapSection from "./sections/MapSection";
 
-import MapToMemorialTransition from "./sections/MapToMemorialTransition";
-
-import MemorialSection from "./sections/MemorialSection";
-
-import TeamsSection from "./sections/TeamsSection";
-
-import DNASection from "./sections/DNASection";
-
-import IdentityTransition from "./sections/IdentityTransition";
-
-import EndingSection from "./sections/EndingSection";
+import {
+  FinalMapIntro,
+  MineClearanceSection,
+  ReadymagCover,
+  ReadymagIntro,
+  ReadymagNarrative,
+} from "./ReadymagSections";
 
 import styles from "./MagazineExperience.module.css";
 
@@ -31,73 +23,76 @@ export default function MagazineExperience() {
     >
       <ReadingProgress />
 
-      <ChapterNav />
+      {/* =================================================
+          READYMAG COVER
 
-      {/* ================================================
-          01
-          SEARCH IN THE DARK
-          → DAY 001 → DAY 500
+          Giữ tinh thần của bản dựng gốc:
+          ảnh lớn + title 500 ngày đêm.
+      ================================================== */}
+
+      <ReadymagCover />
+
+      {/* =================================================
+          READYMAG SAPO
+      ================================================== */}
+
+      <ReadymagIntro />
+
+      {/* =================================================
+          INTERACTIVE FEATURE
+
+          THAY CHÍNH XÁC vị trí subtitle:
+
+          "1.863 cuộc trở về từ nhiều địa bàn"
+
+          Sequence:
+          tọa độ
+          → DAY 001
+          → DAY 500
           → 500
           → 1.863
-      ================================================= */}
+      ================================================== */}
 
       <OpeningHero />
 
-      {/* ================================================
-          02
-          1.863 → VN / LÀO / CAMPUCHIA
-      ================================================= */}
+      {/* =================================================
+          QUAY TRỞ LẠI BẢN READYMAG
 
-      <ScaleSection />
+          Không lặp lại heading "1.863 cuộc trở về..."
+          vì interactive đã thay nó.
+      ================================================== */}
 
-      {/* ================================================
-          03
-          INTERACTIVE MAP
-      ================================================= */}
+      <ReadymagNarrative />
+
+      {/* =================================================
+          READYMAG:
+          RÀ PHÁ BOM MÌN
+          51,9 / 91,39
+          NGUỒN LỰC
+      ================================================== */}
+
+      <MineClearanceSection />
+
+      {/*
+        ==================================================
+
+        CÁC SECTION READYMAG CÒN LẠI
+
+        sẽ tiếp tục được đặt tại đây,
+        giữ nguyên thứ tự bản dựng.
+
+        KHÔNG đưa map vào giữa nữa.
+
+        ==================================================
+      */}
+
+      {/* =================================================
+          CUỐI BÀI → MAP
+      ================================================== */}
+
+      <FinalMapIntro />
 
       <MapSection />
-
-      {/* ================================================
-          TRANSITION
-          MAP → ONE POINT
-      ================================================= */}
-
-      <MapToMemorialTransition />
-
-      {/* ================================================
-          04
-          418
-      ================================================= */}
-
-      <MemorialSection />
-
-      {/* ================================================
-          05
-          32 TEAMS / 1.559 PEOPLE
-      ================================================= */}
-
-      <TeamsSection />
-
-      {/* ================================================
-          06
-          DNA PIPELINE
-      ================================================= */}
-
-      <DNASection />
-
-      {/* ================================================
-          TRANSITION
-          DNA → IDENTITY
-      ================================================= */}
-
-      <IdentityTransition />
-
-      {/* ================================================
-          07
-          ONE NAME
-      ================================================= */}
-
-      <EndingSection />
     </main>
   );
 }

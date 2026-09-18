@@ -1,0 +1,554 @@
+﻿/* =========================================================
+   SHARED PAPER BACKGROUND
+
+   Intro + Narrative + Infographic + map transition
+   đều sử dụng cùng một background.
+========================================================= */
+
+.paperSection,
+.clearanceSection,
+.mapDivider {
+  position: relative;
+
+  width: 100%;
+
+  background:
+    radial-gradient(
+      circle at 18% 12%,
+      rgba(126, 92, 55, 0.055),
+      transparent 31%
+    ),
+    radial-gradient(
+      circle at 82% 75%,
+      rgba(92, 111, 72, 0.04),
+      transparent 34%
+    ),
+    repeating-radial-gradient(
+      circle at 30% 40%,
+      rgba(76, 55, 34, 0.015) 0,
+      rgba(76, 55, 34, 0.015) 1px,
+      transparent 1px,
+      transparent 5px
+    ),
+    #eee2c9;
+
+  color: #332f27;
+}
+
+/* =========================================================
+   COVER
+========================================================= */
+
+.cover {
+  position: relative;
+
+  width: 100%;
+  height: 100svh;
+  min-height: 100svh;
+
+  overflow: hidden;
+
+  background: #171b13;
+}
+
+.coverMedia {
+  position: absolute;
+
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+}
+
+.coverImage {
+  object-fit: cover;
+
+  object-position: center center;
+
+  background: #171b13;
+}
+
+/*
+   Rất nhẹ để cover hòa với trang.
+   Không đè lên typography có sẵn trong ảnh.
+*/
+
+.cover::after {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 2;
+
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      to bottom,
+      transparent 70%,
+      rgba(17, 20, 13, 0.13) 100%
+    );
+}
+
+/* =========================================================
+   INTRO
+
+   Không card.
+   Không border.
+   Không background riêng.
+
+   Text sử dụng gần toàn bộ chiều ngang.
+========================================================= */
+
+.intro {
+  position: relative;
+
+  width:
+    min(
+      1380px,
+      calc(100% - 11vw)
+    );
+
+  margin: 0 auto;
+
+  padding:
+    clamp(90px, 10vw, 155px)
+    0
+    clamp(100px, 11vw, 170px);
+}
+
+.intro p {
+  width: 100%;
+
+  margin:
+    0
+    0
+    clamp(26px, 2.7vw, 42px);
+
+  color: #3d392f;
+
+  font-family:
+    var(--font-editorial),
+    serif;
+
+  font-size:
+    clamp(
+      18px,
+      1.55vw,
+      23px
+    );
+
+  font-style: italic;
+
+  font-weight: 400;
+
+  line-height: 1.78;
+
+  letter-spacing: 0;
+
+  text-wrap: pretty;
+}
+
+.intro p:last-child {
+  margin-bottom: 0;
+}
+
+/* =========================================================
+   ARTICLE
+
+   Cùng background với Intro.
+   Không card.
+   Không heading phụ.
+========================================================= */
+
+.article {
+  position: relative;
+
+  width:
+    min(
+      1380px,
+      calc(100% - 11vw)
+    );
+
+  margin: 0 auto;
+
+  padding:
+    clamp(105px, 11vw, 175px)
+    0
+    clamp(110px, 12vw, 185px);
+
+  font-family:
+    var(--font-editorial),
+    serif;
+}
+
+.article p {
+  width: 100%;
+
+  margin:
+    0
+    0
+    clamp(28px, 3vw, 45px);
+
+  color: #342f27;
+
+  font-size:
+    clamp(
+      18px,
+      1.62vw,
+      24px
+    );
+
+  font-weight: 400;
+
+  line-height: 1.76;
+
+  letter-spacing: 0;
+
+  text-wrap: pretty;
+}
+
+.article p:last-child {
+  margin-bottom: 0;
+}
+
+/* =========================================================
+   OPTIONAL FIRST PARAGRAPH
+
+   Tạo cảm giác editorial mà không cần heading.
+========================================================= */
+
+.article p:first-child::first-letter {
+  float: left;
+
+  margin:
+    0.06em
+    0.12em
+    0
+    0;
+
+  color: #5c704c;
+
+  font-family:
+    var(--font-editorial),
+    serif;
+
+  font-size: 4.2em;
+
+  font-weight: 500;
+
+  line-height: 0.72;
+}
+
+/* =========================================================
+   INFOGRAPHIC
+
+   Giữ cùng nền với phần text.
+========================================================= */
+
+.clearanceSection {
+  overflow: hidden;
+}
+
+.clearanceInner {
+  width:
+    min(
+      1100px,
+      calc(100% - 8vw)
+    );
+
+  margin: 0 auto;
+
+  padding:
+    clamp(50px, 6vw, 90px)
+    0
+    clamp(100px, 11vw, 170px);
+}
+
+.clearanceImage {
+  position: relative;
+
+  width: 100%;
+
+  margin: 0;
+
+  padding: 0;
+}
+
+.infographicMedia {
+  position: relative;
+
+  width: 100%;
+
+  /*
+     Đang giả định in4 là ảnh dọc 9:16.
+
+     Nếu kích thước thật khác:
+     1200 x 1600 -> 3 / 4
+     1080 x 1920 -> 9 / 16
+  */
+
+  aspect-ratio: 9 / 16;
+
+  overflow: hidden;
+
+  background: transparent;
+}
+
+.infographicImage {
+  object-fit: contain;
+
+  object-position: center top;
+}
+
+/* =========================================================
+   MAP DIVIDER
+
+   Không có chữ hướng dẫn.
+   Chỉ giúp nền giấy chuyển sang map tối mượt hơn.
+========================================================= */
+
+.mapDivider {
+  display: flex;
+
+  align-items: flex-end;
+
+  justify-content: center;
+
+  height:
+    clamp(
+      100px,
+      12vw,
+      190px
+    );
+}
+
+.mapDivider::after {
+  content: "";
+
+  position: absolute;
+
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  height: 70%;
+
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      to bottom,
+      transparent,
+      rgba(11, 15, 12, 0.09)
+    );
+}
+
+.mapDivider > div {
+  position: relative;
+
+  z-index: 2;
+
+  width:
+    min(
+      1380px,
+      calc(100% - 11vw)
+    );
+
+  height: 1px;
+
+  margin-bottom:
+    48px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(62, 78, 56, 0.2),
+      transparent
+    );
+}
+
+/* =========================================================
+   LARGE SCREEN
+========================================================= */
+
+@media (min-width: 1600px) {
+  .intro,
+  .article {
+    width:
+      min(
+        1480px,
+        calc(100% - 12vw)
+      );
+  }
+
+  .intro p {
+    font-size: 23px;
+  }
+
+  .article p {
+    font-size: 24px;
+  }
+
+  .clearanceInner {
+    width: 1150px;
+  }
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+  .intro,
+  .article {
+    width:
+      calc(100% - 70px);
+  }
+
+  .clearanceInner {
+    width:
+      calc(100% - 50px);
+  }
+
+  .intro p,
+  .article p {
+    max-width: none;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+  /* =======================================================
+     COVER — FULL SCREEN
+  ======================================================= */
+
+  .cover {
+    width: 100%;
+
+    height: 100svh;
+    min-height: 100svh;
+  }
+
+  .coverImage {
+    object-fit: cover;
+
+    object-position: center center;
+  }
+
+  /* =======================================================
+     INTRO — FULL WIDTH
+  ======================================================= */
+
+  .intro {
+    width:
+      calc(100% - 34px);
+
+    padding:
+      72px
+      0
+      85px;
+  }
+
+  .intro p {
+    margin-bottom: 25px;
+
+    font-size: 15px;
+
+    line-height: 1.75;
+  }
+
+  /* =======================================================
+     ARTICLE
+  ======================================================= */
+
+  .article {
+    width:
+      calc(100% - 34px);
+
+    padding:
+      80px
+      0
+      90px;
+  }
+
+  .article p {
+    margin-bottom: 27px;
+
+    font-size: 15px;
+
+    line-height: 1.72;
+  }
+
+  .article p:first-child::first-letter {
+    margin-right: 0.1em;
+
+    font-size: 3.6em;
+  }
+
+  /* =======================================================
+     INFOGRAPHIC
+  ======================================================= */
+
+  .clearanceInner {
+    width:
+      calc(100% - 12px);
+
+    padding:
+      30px
+      0
+      85px;
+  }
+
+  .infographicMedia {
+    aspect-ratio: 9 / 16;
+  }
+
+  .infographicImage {
+    object-fit: contain;
+
+    object-position: center top;
+  }
+
+  /* =======================================================
+     MAP DIVIDER
+  ======================================================= */
+
+  .mapDivider {
+    height: 110px;
+  }
+
+  .mapDivider > div {
+    width:
+      calc(100% - 34px);
+
+    margin-bottom: 30px;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 390px) {
+  .intro,
+  .article {
+    width:
+      calc(100% - 28px);
+  }
+
+  .intro p,
+  .article p {
+    font-size: 14px;
+
+    line-height: 1.72;
+  }
+}

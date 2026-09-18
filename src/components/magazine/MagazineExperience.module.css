@@ -1,4 +1,4 @@
-/* =========================================================
+﻿/* =========================================================
    MAGAZINE ROOT
 ========================================================= */
 
@@ -20,8 +20,9 @@
   position: relative;
 
   width: 100%;
+  min-height: 100vh;
 
-  overflow: clip;
+  overflow-x: clip;
 
   background:
     var(--night);
@@ -30,7 +31,7 @@
     var(--ivory);
 
   font-family:
-    var(--font-montserrat),
+    var(--font-sans),
     Arial,
     sans-serif;
 }
@@ -51,12 +52,7 @@
   height: 2px;
 
   background:
-    rgba(
-      255,
-      255,
-      255,
-      0.05
-    );
+    rgba(255, 255, 255, 0.05);
 
   pointer-events: none;
 }
@@ -65,7 +61,8 @@
   width: 100%;
   height: 100%;
 
-  transform: scaleX(0);
+  transform:
+    scaleX(0);
 
   transform-origin:
     left center;
@@ -79,186 +76,10 @@
 
   box-shadow:
     0 0 15px
-      rgba(
-        142,
-        184,
-        155,
-        0.35
-      );
+    rgba(142, 184, 155, 0.35);
 
   will-change:
     transform;
-}
-
-/* =========================================================
-   CHAPTER NAV
-========================================================= */
-
-.chapterNav {
-  position: fixed;
-
-  top: 50%;
-  left: 24px;
-
-  z-index: 500;
-
-  display: flex;
-
-  flex-direction:
-    column;
-
-  gap: 17px;
-
-  transform:
-    translateY(-50%);
-}
-
-.chapterRail {
-  position: absolute;
-
-  top: 8px;
-  bottom: 8px;
-
-  left: 33px;
-
-  width: 1px;
-
-  background:
-    rgba(
-      255,
-      255,
-      255,
-      0.11
-    );
-}
-
-.chapterLink {
-  position: relative;
-
-  display: grid;
-
-  grid-template-columns:
-    23px
-    18px
-    auto;
-
-  align-items: center;
-
-  gap: 4px;
-
-  color:
-    rgba(
-      255,
-      255,
-      255,
-      0.3
-    );
-
-  text-decoration: none;
-
-  transition:
-    color 0.3s ease;
-}
-
-.chapterNumber {
-  font-size: 8px;
-
-  font-weight: 700;
-
-  letter-spacing:
-    0.08em;
-}
-
-.chapterDot {
-  position: relative;
-
-  z-index: 2;
-
-  width: 6px;
-  height: 6px;
-
-  justify-self:
-    center;
-
-  border: 1px solid
-    rgba(
-      255,
-      255,
-      255,
-      0.6
-    );
-
-  border-radius:
-    50%;
-
-  background:
-    var(--night);
-
-  transition:
-    background 0.3s ease,
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
-}
-
-.chapterLabel {
-  max-width: 0;
-
-  overflow: hidden;
-
-  opacity: 0;
-
-  transform:
-    translateX(-6px);
-
-  font-size: 9px;
-
-  font-weight: 700;
-
-  letter-spacing:
-    0.08em;
-
-  white-space:
-    nowrap;
-
-  transition:
-    max-width 0.3s ease,
-    opacity 0.3s ease,
-    transform 0.3s ease;
-}
-
-.chapterLink:hover
-.chapterLabel,
-.chapterLinkActive
-.chapterLabel {
-  max-width: 140px;
-
-  opacity: 1;
-
-  transform:
-    translateX(0);
-}
-
-.chapterLinkActive {
-  color:
-    #ffffff;
-}
-
-.chapterLinkActive
-.chapterDot {
-  background:
-    var(--green-light);
-
-  transform:
-    scale(1.45);
-
-  box-shadow:
-    0 0 14px
-      rgba(
-        156,
-        186,
-        165,
-        0.52
-      );
 }
 
 /* =========================================================
@@ -291,7 +112,7 @@
 }
 
 /* =========================================================
-   HERO CANVAS
+   CANVAS
 ========================================================= */
 
 .heroCanvas {
@@ -308,7 +129,7 @@
 }
 
 /* =========================================================
-   SEARCH BEAM
+   SEARCHLIGHT
 ========================================================= */
 
 .heroSearchBeam {
@@ -326,46 +147,24 @@
   background:
     radial-gradient(
       circle
-        125px
-        at
-        var(--beam-x)
-        var(--beam-y),
+      125px
+      at
+      var(--beam-x)
+      var(--beam-y),
 
-      rgba(
-        0,
-        0,
-        0,
-        0
-      )
-      0%,
+      rgba(0, 0, 0, 0) 0%,
 
-      rgba(
-        0,
-        0,
-        0,
-        0.03
-      )
-      45%,
+      rgba(0, 0, 0, 0.03) 45%,
 
-      rgba(
-        1,
-        3,
-        2,
-        0.65
-      )
-      72%,
+      rgba(1, 3, 2, 0.65) 72%,
 
-      rgba(
-        1,
-        3,
-        2,
-        0.91
-      )
-      100%
+      rgba(1, 3, 2, 0.92) 100%
     );
 
   transition:
-    opacity 0.18s linear;
+    opacity
+    0.18s
+    linear;
 
   will-change:
     opacity;
@@ -391,28 +190,15 @@
   width: 86px;
   height: 86px;
 
-  border: 1px solid
-    rgba(
-      159,
-      198,
-      170,
-      0.35
-    );
+  border:
+    1px solid
+    rgba(159, 198, 170, 0.35);
 
-  border-radius:
-    50%;
+  border-radius: 50%;
 
   box-shadow:
     0 0 30px
-      rgba(
-        129,
-        178,
-        145,
-        0.08
-      );
-
-  transform:
-    scale(1);
+    rgba(129, 178, 145, 0.08);
 
   animation:
     searchPulse
@@ -439,12 +225,7 @@
     );
 
   color:
-    rgba(
-      164,
-      202,
-      175,
-      0.64
-    );
+    rgba(164, 202, 175, 0.64);
 
   font-family:
     Arial,
@@ -494,19 +275,11 @@
     repeating-radial-gradient(
       circle at 0 0,
 
-      rgba(
-        255,
-        255,
-        255,
-        0.75
-      )
-      0,
+      rgba(255, 255, 255, 0.75) 0,
 
-      transparent
-      1px,
+      transparent 1px,
 
-      transparent
-      4px
+      transparent 4px
     );
 
   background-size:
@@ -522,42 +295,27 @@
 @keyframes magazineGrain {
   0% {
     transform:
-      translate(
-        0,
-        0
-      );
+      translate(0, 0);
   }
 
   25% {
     transform:
-      translate(
-        -1%,
-        1%
-      );
+      translate(-1%, 1%);
   }
 
   50% {
     transform:
-      translate(
-        1%,
-        -1%
-      );
+      translate(1%, -1%);
   }
 
   75% {
     transform:
-      translate(
-        1%,
-        1%
-      );
+      translate(1%, 1%);
   }
 
   100% {
     transform:
-      translate(
-        -1%,
-        -1%
-      );
+      translate(-1%, -1%);
   }
 }
 
@@ -578,24 +336,11 @@
     radial-gradient(
       ellipse at center,
 
-      transparent
-      30%,
+      transparent 30%,
 
-      rgba(
-        0,
-        0,
-        0,
-        0.08
-      )
-      56%,
+      rgba(0, 0, 0, 0.08) 56%,
 
-      rgba(
-        0,
-        0,
-        0,
-        0.67
-      )
-      100%
+      rgba(0, 0, 0, 0.68) 100%
     );
 
   box-shadow:
@@ -603,16 +348,11 @@
     0
     0
     160px
-    rgba(
-      0,
-      0,
-      0,
-      0.58
-    );
+    rgba(0, 0, 0, 0.58);
 }
 
 /* =========================================================
-   HERO CHROME
+   TOP CHROME
 ========================================================= */
 
 .heroChrome {
@@ -634,26 +374,18 @@
   align-items: center;
 
   color:
-    rgba(
-      228,
-      237,
-      230,
-      0.33
-    );
+    rgba(228, 237, 230, 0.33);
 
   font-size: 7px;
 
   font-weight: 700;
 
-  letter-spacing:
-    0.2em;
+  letter-spacing: 0.2em;
 
   pointer-events: none;
 }
 
-.heroChrome span:nth-child(
-    2
-  ) {
+.heroChrome span:nth-child(2) {
   text-align: center;
 }
 
@@ -676,20 +408,9 @@
     linear-gradient(
       90deg,
 
-      rgba(
-        255,
-        255,
-        255,
-        0.16
-      ),
+      rgba(255, 255, 255, 0.16),
 
-      rgba(
-        255,
-        255,
-        255,
-        0.025
-      )
-      55%,
+      rgba(255, 255, 255, 0.025) 55%,
 
       transparent
     );
@@ -697,6 +418,8 @@
 
 /* =========================================================
    OPENING STATEMENT
+
+   JS sẽ fade nó trước visual 500.
 ========================================================= */
 
 .heroOpeningStatement {
@@ -709,12 +432,17 @@
 
   display: flex;
 
-  flex-direction:
-    column;
+  flex-direction: column;
 
   align-items: center;
 
   gap: 12px;
+
+  width:
+    min(
+      800px,
+      calc(100% - 50px)
+    );
 
   transform:
     translate(
@@ -725,16 +453,19 @@
   text-align: center;
 
   pointer-events: none;
+
+  will-change:
+    opacity,
+    transform;
+
+  transition:
+    opacity 0.08s linear,
+    visibility 0.08s linear;
 }
 
 .heroOpeningStatement span {
   color:
-    rgba(
-      224,
-      234,
-      226,
-      0.27
-    );
+    rgba(224, 234, 226, 0.27);
 
   font-size:
     clamp(
@@ -751,12 +482,7 @@
 
 .heroOpeningStatement strong {
   color:
-    rgba(
-      239,
-      239,
-      230,
-      0.9
-    );
+    rgba(239, 239, 230, 0.91);
 
   font-size:
     clamp(
@@ -786,12 +512,7 @@
   z-index: 31;
 
   color:
-    rgba(
-      172,
-      199,
-      180,
-      0.48
-    );
+    rgba(172, 199, 180, 0.48);
 
   font-size: 8px;
 
@@ -806,7 +527,9 @@
   pointer-events: none;
 
   transition:
-    opacity 0.15s linear;
+    opacity
+    0.15s
+    linear;
 }
 
 /* =========================================================
@@ -823,8 +546,7 @@
 
   display: flex;
 
-  flex-direction:
-    column;
+  flex-direction: column;
 
   gap: 3px;
 
@@ -839,15 +561,9 @@
     0.35em;
 
   color:
-    rgba(
-      174,
-      198,
-      181,
-      0.44
-    );
+    rgba(174, 198, 181, 0.44);
 
-  font-size:
-    8px;
+  font-size: 8px;
 
   font-weight: 800;
 
@@ -856,16 +572,10 @@
 }
 
 .heroDayCounter strong {
-  min-width:
-    3ch;
+  min-width: 3ch;
 
   color:
-    rgba(
-      234,
-      239,
-      233,
-      0.83
-    );
+    rgba(234, 239, 233, 0.83);
 
   font-size:
     clamp(
@@ -876,8 +586,7 @@
 
   font-weight: 700;
 
-  line-height:
-    0.82;
+  line-height: 0.82;
 
   letter-spacing:
     -0.085em;
@@ -887,7 +596,7 @@
 }
 
 /* =========================================================
-   HUGE STAGE WORD
+   STAGE WORD
 ========================================================= */
 
 .heroStageWord {
@@ -899,12 +608,7 @@
   z-index: 2;
 
   color:
-    rgba(
-      214,
-      226,
-      217,
-      0.035
-    );
+    rgba(214, 226, 217, 0.035);
 
   font-size:
     clamp(
@@ -920,19 +624,20 @@
   letter-spacing:
     -0.08em;
 
-  white-space:
-    nowrap;
+  white-space: nowrap;
 
   pointer-events: none;
 
   user-select: none;
 
   transition:
-    opacity 0.15s linear;
+    opacity
+    0.15s
+    linear;
 }
 
 /* =========================================================
-   500 TITLE
+   500
 ========================================================= */
 
 .hero500Title {
@@ -945,18 +650,14 @@
 
   display: flex;
 
-  flex-direction:
-    column;
+  flex-direction: column;
 
   align-items: center;
 
   width:
     min(
       760px,
-      calc(
-        100% -
-        40px
-      )
+      calc(100% - 40px)
     );
 
   opacity: 0;
@@ -977,10 +678,6 @@
 }
 
 .hero500Title > span {
-  /*
-   * Canvas tạo hình số.
-   * Text này chủ yếu tăng chiều sâu bằng outline.
-   */
   position: absolute;
 
   top: 50%;
@@ -994,8 +691,7 @@
       -54%
     );
 
-  color:
-    transparent;
+  color: transparent;
 
   font-size:
     clamp(
@@ -1013,12 +709,7 @@
 
   -webkit-text-stroke:
     1px
-    rgba(
-      191,
-      214,
-      197,
-      0.11
-    );
+    rgba(191, 214, 197, 0.11);
 }
 
 .hero500Title strong {
@@ -1048,8 +739,7 @@
 }
 
 .hero500Title p {
-  max-width:
-    500px;
+  max-width: 500px;
 
   margin:
     27px
@@ -1057,15 +747,9 @@
     0;
 
   color:
-    rgba(
-      233,
-      238,
-      234,
-      0.48
-    );
+    rgba(233, 238, 234, 0.48);
 
-  font-size:
-    13px;
+  font-size: 13px;
 
   font-weight: 400;
 
@@ -1086,18 +770,14 @@
 
   display: flex;
 
-  flex-direction:
-    column;
+  flex-direction: column;
 
   align-items: center;
 
   width:
     min(
       1000px,
-      calc(
-        100% -
-        50px
-      )
+      calc(100% - 50px)
     );
 
   opacity: 0;
@@ -1126,8 +806,7 @@
   color:
     #91ac99;
 
-  font-size:
-    9px;
+  font-size: 9px;
 
   font-weight: 800;
 
@@ -1155,28 +834,17 @@
 
   text-shadow:
     0 0 80px
-      rgba(
-        120,
-        164,
-        133,
-        0.08
-      );
+    rgba(120, 164, 133, 0.08);
 
   font-variant-numeric:
     tabular-nums;
 }
 
 .heroFinalStat strong {
-  margin-top:
-    25px;
+  margin-top: 25px;
 
   color:
-    rgba(
-      239,
-      239,
-      231,
-      0.88
-    );
+    rgba(239, 239, 231, 0.88);
 
   font-size:
     clamp(
@@ -1192,19 +860,12 @@
 }
 
 .heroFinalStat small {
-  margin-top:
-    8px;
+  margin-top: 8px;
 
   color:
-    rgba(
-      231,
-      237,
-      232,
-      0.38
-    );
+    rgba(231, 237, 232, 0.38);
 
-  font-size:
-    11px;
+  font-size: 11px;
 
   font-weight: 400;
 
@@ -1215,18 +876,12 @@
   position: absolute;
 
   top:
-    calc(
-      100% +
-      60px
-    );
+    calc(100% + 60px);
+
+  width: 100%;
 
   color:
-    rgba(
-      218,
-      231,
-      220,
-      0.3
-    );
+    rgba(218, 231, 220, 0.3);
 
   font-size: 7px;
 
@@ -1252,8 +907,7 @@
 
   display: flex;
 
-  flex-direction:
-    column;
+  flex-direction: column;
 
   align-items: center;
 
@@ -1263,12 +917,7 @@
     translateX(-50%);
 
   color:
-    rgba(
-      225,
-      234,
-      227,
-      0.3
-    );
+    rgba(225, 234, 227, 0.3);
 
   text-align: center;
 
@@ -1300,12 +949,7 @@
   overflow: hidden;
 
   background:
-    rgba(
-      255,
-      255,
-      255,
-      0.11
-    );
+    rgba(255, 255, 255, 0.11);
 }
 
 .scrollCue i::after {
@@ -1332,336 +976,25 @@
 @keyframes scrollCueMove {
   to {
     transform:
-      translateY(
-        200%
-      );
+      translateY(200%);
   }
 }
 
 /* =========================================================
-   SCALE SECTION
-========================================================= */
-
-.scaleSection {
-  position: relative;
-
-  min-height:
-    115vh;
-
-  overflow: hidden;
-
-  padding:
-    130px
-    6vw
-    90px;
-
-  background:
-    var(--ivory);
-
-  color:
-    var(--ink);
-}
-
-.scaleSection::before {
-  content: "";
-
-  position: absolute;
-
-  top: 0;
-  left: 50%;
-
-  width: 1px;
-  height: 90px;
-
-  background:
-    linear-gradient(
-      to bottom,
-
-      rgba(
-        113,
-        144,
-        124,
-        0.8
-      ),
-
-      transparent
-    );
-}
-
-.eyebrow {
-  margin:
-    0
-    0
-    22px;
-
-  color:
-    var(--green);
-
-  font-size:
-    10px;
-
-  font-weight: 800;
-
-  letter-spacing:
-    0.18em;
-}
-
-.scaleHeading {
-  position: relative;
-
-  z-index: 5;
-
-  max-width:
-    750px;
-}
-
-.scaleNumber {
-  color:
-    var(--green);
-
-  font-size:
-    clamp(
-      88px,
-      15vw,
-      210px
-    );
-
-  font-weight: 800;
-
-  line-height: 0.8;
-
-  letter-spacing:
-    -0.09em;
-}
-
-.scaleHeading h2 {
-  max-width:
-    550px;
-
-  margin:
-    28px
-    0
-    0;
-
-  font-size:
-    clamp(
-      22px,
-      3vw,
-      40px
-    );
-
-  font-weight: 500;
-
-  line-height: 1.3;
-
-  letter-spacing:
-    -0.04em;
-}
-
-.dotVisual {
-  position: relative;
-
-  width: 100%;
-  height: 520px;
-
-  margin-top:
-    35px;
-}
-
-.scaleDot {
-  position: absolute;
-
-  left: var(--sx);
-  top: var(--sy);
-
-  width: 7px;
-  height: 7px;
-
-  border-radius:
-    50%;
-
-  opacity: 0.08;
-
-  transform:
-    translate(
-      -50%,
-      -50%
-    )
-    scale(0.4);
-
-  transition:
-    left 1.6s
-      cubic-bezier(
-        0.16,
-        1,
-        0.3,
-        1
-      )
-      var(--delay),
-
-    top 1.6s
-      cubic-bezier(
-        0.16,
-        1,
-        0.3,
-        1
-      )
-      var(--delay),
-
-    transform 1.2s ease
-      var(--delay),
-
-    opacity 1s ease
-      var(--delay);
-}
-
-.scaleActive
-.scaleDot {
-  left: var(--tx);
-  top: var(--ty);
-
-  opacity: 0.9;
-
-  transform:
-    translate(
-      -50%,
-      -50%
-    )
-    scale(1);
-}
-
-.scaleDot_vietnam {
-  background:
-    #315846;
-}
-
-.scaleDot_laos {
-  background:
-    #8a3b32;
-}
-
-.scaleDot_cambodia {
-  background:
-    #748875;
-}
-
-.countryStat {
-  position: absolute;
-
-  top: 73%;
-
-  display: flex;
-
-  flex-direction:
-    column;
-
-  opacity: 0;
-
-  transform:
-    translateY(20px);
-
-  transition:
-    opacity 0.8s ease
-      0.9s,
-
-    transform 0.8s ease
-      0.9s;
-}
-
-.scaleActive
-.countryStat {
-  opacity: 1;
-
-  transform:
-    translateY(0);
-}
-
-.countryStat strong {
-  color:
-    var(--ink);
-
-  font-size:
-    clamp(
-      28px,
-      3.8vw,
-      55px
-    );
-
-  font-weight: 800;
-
-  letter-spacing:
-    -0.06em;
-}
-
-.countryStat span {
-  margin-top:
-    3px;
-
-  color:
-    rgba(
-      21,
-      26,
-      23,
-      0.5
-    );
-
-  font-size: 10px;
-
-  font-weight: 700;
-
-  letter-spacing:
-    0.08em;
-
-  text-transform:
-    uppercase;
-}
-
-.countryVietnam {
-  left: 15%;
-}
-
-.countryLaos {
-  left: 46%;
-}
-
-.countryCambodia {
-  left: 74%;
-}
-
-.dotNote {
-  max-width:
-    560px;
-
-  margin:
-    0
-    0
-    0
-    auto;
-
-  color:
-    rgba(
-      21,
-      26,
-      23,
-      0.42
-    );
-
-  font-size: 10px;
-
-  line-height: 1.6;
-}
-
-/* =========================================================
-   MAP SECTION
+   FINAL MAP
 ========================================================= */
 
 .mapSection {
   position: relative;
 
+  width: 100%;
+
   padding:
-    150px
-    4vw
-    120px;
+    0
+    0
+    100px;
+
+  overflow: hidden;
 
   background:
     #0b0f0c;
@@ -1670,423 +1003,121 @@
     var(--ivory);
 }
 
-.mapIntroduction {
-  display: grid;
-
-  grid-template-columns:
-    minmax(
-      0,
-      1.2fr
-    )
-    minmax(
-      280px,
-      0.8fr
-    );
-
-  gap: 80px;
-
-  align-items: end;
-
-  width:
-    min(
-      1320px,
-      100%
-    );
-
-  margin:
-    0
-    auto
-    70px;
-}
-
-.mapIntroduction h2 {
-  max-width:
-    800px;
-
-  margin: 0;
-
-  font-size:
-    clamp(
-      42px,
-      6vw,
-      88px
-    );
-
-  font-weight: 600;
-
-  line-height: 1;
-
-  letter-spacing:
-    -0.065em;
-}
-
-.mapDescription {
-  margin: 0;
-
-  color:
-    rgba(
-      241,
-      238,
-      229,
-      0.54
-    );
-
-  font-size: 14px;
-
-  line-height: 1.8;
-}
-
 .mapMagazineFrame {
   position: relative;
 
-  width:
-    min(
-      1500px,
-      100%
-    );
+  width: 100%;
 
   height:
     min(
-      820px,
-      84vh
+      920px,
+      92vh
     );
 
-  min-height:
-    660px;
+  min-height: 650px;
 
-  margin: auto;
+  margin: 0;
 
   overflow: hidden;
 
-  border: 1px solid
-    rgba(
-      255,
-      255,
-      255,
-      0.08
-    );
+  border: 0;
 
-  border-radius:
-    28px;
+  border-radius: 0;
 
   background:
     #f5f8f3;
 
-  box-shadow:
-    0 45px 110px
-      rgba(
-        0,
-        0,
-        0,
-        0.38
-      );
+  box-shadow: none;
 }
 
-/* =========================================================
-   PHASE 1 ENDING
-========================================================= */
-
-.phaseOneEnding {
-  position: relative;
-
+.mapEndCaption {
   display: flex;
 
-  flex-direction:
-    column;
-
   align-items:
-    center;
+    flex-start;
 
   justify-content:
-    center;
+    space-between;
 
-  min-height:
-    110vh;
-
-  padding:
-    180px
-    30px;
-
-  overflow: hidden;
-
-  background:
-    #050806;
-
-  text-align:
-    center;
-}
-
-.phaseOneEnding::before {
-  content: "";
-
-  position: absolute;
-
-  top: 50%;
-  left: 50%;
+  gap: 40px;
 
   width:
     min(
-      75vw,
-      1000px
+      1200px,
+      calc(100% - 60px)
     );
 
-  aspect-ratio:
-    1;
+  margin:
+    45px
+    auto
+    0;
 
-  transform:
-    translate(
-      -50%,
-      -50%
-    );
+  padding-top: 28px;
 
-  border-radius:
-    50%;
-
-  background:
-    radial-gradient(
-      circle,
-
-      rgba(
-        81,
-        120,
-        94,
-        0.12
-      ),
-
-      transparent
-      66%
-    );
-
-  pointer-events:
-    none;
+  border-top:
+    1px solid
+    rgba(255, 255, 255, 0.1);
 }
 
-.phaseEndingIndex {
-  position: absolute;
-
-  top: 50%;
-  left: 50%;
-
+.mapEndCaption span {
   color:
-    rgba(
-      255,
-      255,
-      255,
-      0.025
-    );
-
-  font-size:
-    min(
-      48vw,
-      650px
-    );
-
-  font-weight: 800;
-
-  line-height: 0.7;
-
-  letter-spacing:
-    -0.12em;
-
-  transform:
-    translate(
-      -50%,
-      -50%
-    );
-
-  pointer-events:
-    none;
-}
-
-.phaseOneEnding > span {
-  position: relative;
-
-  z-index: 2;
-
-  color:
-    var(--green-light);
+    #91ac99;
 
   font-size: 8px;
 
   font-weight: 800;
 
-  line-height: 1.8;
-
   letter-spacing:
-    0.22em;
+    0.18em;
 }
 
-.phaseOneEnding h2 {
-  position: relative;
-
-  z-index: 2;
-
-  max-width:
-    1000px;
-
-  margin:
-    32px
-    0
-    25px;
-
-  color:
-    #f2f0e7;
-
-  font-size:
-    clamp(
-      45px,
-      7vw,
-      105px
-    );
-
-  font-weight: 500;
-
-  line-height: 0.98;
-
-  letter-spacing:
-    -0.065em;
-}
-
-.phaseOneEnding h2 em {
-  display: block;
-
-  margin-top:
-    12px;
-
-  color:
-    #8daf97;
-
-  font-style: normal;
-
-  font-weight: 600;
-}
-
-.phaseEndingLine {
-  position: relative;
-
-  z-index: 2;
-
-  width: 1px;
-  height: 60px;
-
-  margin:
-    20px
-    0
-    30px;
-
-  background:
-    linear-gradient(
-      to bottom,
-
-      #86a28e,
-
-      transparent
-    );
-}
-
-.phaseOneEnding > p {
-  position: relative;
-
-  z-index: 2;
-
-  max-width:
-    550px;
+.mapEndCaption p {
+  max-width: 430px;
 
   margin: 0;
 
   color:
-    rgba(
-      255,
-      255,
-      255,
-      0.38
-    );
+    rgba(255, 255, 255, 0.38);
 
-  font-size: 13px;
+  font-size: 11px;
 
-  line-height: 1.85;
+  line-height: 1.7;
 }
 
 /* =========================================================
    TABLET
 ========================================================= */
 
-@media (
-  max-width: 900px
-) {
-  .chapterNav {
-    left: 12px;
-  }
-
-  .chapterLabel {
-    display: none;
-  }
-
+@media (max-width: 900px) {
   .heroScene {
-    height:
-      500vh;
+    height: 500vh;
   }
 
   .heroChrome {
     left: 18px;
     right: 18px;
-  }
 
-  .heroChrome span:nth-child(
-      2
-    ) {
-    display: none;
-  }
-
-  .heroChrome {
     grid-template-columns:
       1fr
       1fr;
+  }
+
+  .heroChrome span:nth-child(2) {
+    display: none;
   }
 
   .heroDayCounter {
     left: 30px;
   }
 
-  .scaleSection {
-    padding:
-      100px
-      25px
-      70px;
-  }
-
-  .dotVisual {
-    height:
-      440px;
-  }
-
-  .mapSection {
-    padding:
-      110px
-      15px
-      70px;
-  }
-
-  .mapIntroduction {
-    grid-template-columns:
-      1fr;
-
-    gap: 30px;
-
-    padding:
-      0
-      15px;
+  .hero500Title strong {
+    margin-top: 150px;
   }
 
   .mapMagazineFrame {
-    height:
-      75vh;
+    height: 82vh;
 
-    min-height:
-      580px;
-
-    border-radius:
-      18px;
+    min-height: 580px;
   }
 }
 
@@ -2094,97 +1125,71 @@
    MOBILE
 ========================================================= */
 
-@media (
-  max-width: 600px
-) {
-  .chapterNav {
-    display: none;
-  }
-
+@media (max-width: 600px) {
   .heroScene {
-    height:
-      450vh;
+    height: 450vh;
   }
 
   .heroChrome {
     top: 20px;
+
+    left: 18px;
+    right: 18px;
 
     font-size: 6px;
   }
 
   .heroOpeningStatement {
     width:
-      calc(
-        100% -
-        48px
-      );
+      calc(100% - 48px);
+  }
+
+  .heroOpeningStatement span {
+    font-size: 7px;
   }
 
   .heroOpeningStatement strong {
-    font-size:
-      42px;
+    font-size: 42px;
   }
 
   .heroDayCounter {
     top: 23%;
+
     left: 20px;
 
     transform: none;
   }
 
+  .heroDayCounter span {
+    font-size: 6px;
+  }
+
   .heroDayCounter strong {
-    font-size:
-      68px;
+    font-size: 68px;
   }
 
   .heroStageWord {
-    bottom:
-      80px;
+    bottom: 80px;
 
-    font-size:
-      22vw;
+    font-size: 22vw;
   }
 
   .heroSearchBeam {
     background:
       radial-gradient(
         circle
-          100px
-          at
-          50%
-          50%,
+        105px
+        at
+        50%
+        50%,
 
-        rgba(
-          0,
-          0,
-          0,
-          0
-        )
-        0%,
+        rgba(0, 0, 0, 0) 0%,
 
-        rgba(
-          0,
-          0,
-          0,
-          0.05
-        )
-        42%,
+        rgba(0, 0, 0, 0.05) 42%,
 
-        rgba(
-          1,
-          3,
-          2,
-          0.74
-        )
-        72%,
+        rgba(1, 3, 2, 0.75) 72%,
 
-        rgba(
-          1,
-          3,
-          2,
-          0.93
-        )
-        100%
+        rgba(1, 3, 2, 0.94) 100%
       );
   }
 
@@ -2195,37 +1200,55 @@
 
   .heroCoordinate {
     right: 18px;
+    bottom: 20px;
 
     font-size: 6px;
   }
 
-  .hero500Title strong {
-    margin-top:
-      120px;
+  .hero500Title {
+    width:
+      calc(100% - 35px);
+  }
 
-    font-size:
-      34px;
+  .hero500Title > span {
+    font-size: 61vw;
+  }
+
+  .hero500Title strong {
+    margin-top: 115px;
+
+    font-size: 34px;
   }
 
   .hero500Title p {
-    max-width:
-      300px;
+    max-width: 300px;
 
-    font-size:
-      11px;
+    font-size: 11px;
+  }
+
+  .heroFinalStat {
+    width:
+      calc(100% - 35px);
   }
 
   .heroFinalStat > span {
-    font-size:
-      31vw;
+    font-size: 31vw;
   }
 
   .heroFinalStat strong {
-    font-size:
-      13px;
+    margin-top: 18px;
+
+    font-size: 13px;
+  }
+
+  .heroFinalStat small {
+    font-size: 9px;
   }
 
   .heroFinalStat i {
+    top:
+      calc(100% + 45px);
+
     width: 280px;
 
     line-height: 1.7;
@@ -2235,83 +1258,55 @@
     display: none;
   }
 
-  .scaleSection {
-    padding:
-      90px
-      21px
-      65px;
-  }
-
-  .dotVisual {
-    height:
-      360px;
-  }
-
-  .scaleDot {
-    width: 5px;
-    height: 5px;
-  }
-
-  .countryStat {
-    top: 78%;
-  }
-
-  .countryVietnam {
-    left: 7%;
-  }
-
-  .countryLaos {
-    left: 42%;
-  }
-
-  .countryCambodia {
-    left: 69%;
-  }
-
-  .countryStat strong {
-    font-size:
-      26px;
-  }
-
-  .countryStat span {
-    font-size:
-      7px;
+  .mapSection {
+    padding-bottom: 70px;
   }
 
   .mapMagazineFrame {
-    height:
-      70vh;
+    height: 76vh;
 
-    min-height:
-      520px;
+    min-height: 540px;
   }
 
-  .phaseOneEnding {
-    min-height:
-      100vh;
+  .mapEndCaption {
+    flex-direction: column;
 
-    padding:
-      130px
-      22px;
+    width:
+      calc(100% - 40px);
+
+    gap: 12px;
+
+    margin-top: 30px;
+  }
+}
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 390px) {
+  .heroOpeningStatement strong {
+    font-size: 36px;
   }
 
-  .phaseOneEnding h2 {
-    font-size:
-      45px;
+  .heroDayCounter strong {
+    font-size: 59px;
+  }
+
+  .hero500Title strong {
+    font-size: 30px;
+  }
+
+  .heroFinalStat > span {
+    font-size: 29vw;
   }
 }
 
 /* =========================================================
    REDUCED MOTION
-
-   Scope qua .magazine để CSS Module không báo
-   "Selector * is not pure".
 ========================================================= */
 
-@media (
-  prefers-reduced-motion:
-    reduce
-) {
+@media (prefers-reduced-motion: reduce) {
   .magazine,
   .magazine *,
   .magazine *::before,

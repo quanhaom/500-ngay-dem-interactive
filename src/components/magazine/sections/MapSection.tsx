@@ -6,50 +6,10 @@ export default function MapSection() {
   return (
     <section
       id="map"
-      data-chapter="map"
       className={
         styles.mapSection
       }
     >
-      <div
-        className={
-          styles.mapIntroduction
-        }
-      >
-        <div>
-          <p
-            className={
-              styles.eyebrow
-            }
-          >
-            02 · NHỮNG ĐIỂM
-            TÌM THẤY
-          </p>
-
-          <h2>
-            Mỗi vùng sáng là
-            một hành trình
-            tìm kiếm.
-          </h2>
-        </div>
-
-        <p
-          className={
-            styles.mapDescription
-          }
-        >
-          Từ Tuyên Quang đến
-          Quảng Trị, Quảng
-          Ngãi, Đắk Lắk,
-          Đồng Nai và Thành
-          phố Hồ Chí Minh.
-          Di chuyển trên bản
-          đồ và chọn từng
-          tỉnh để khám phá
-          thông tin hiện có.
-        </p>
-      </div>
-
       <div
         className={
           styles.mapMagazineFrame
@@ -58,6 +18,23 @@ export default function MapSection() {
         <VietnamRemainsMap
           embedded
         />
+      </div>
+
+      <div
+        className={
+          styles.mapEndCaption
+        }
+      >
+        <span>
+          BẢN ĐỒ TƯƠNG TÁC
+        </span>
+
+        <p>
+          Chọn từng tỉnh,
+          thành phố để xem
+          thông tin tìm kiếm
+          được ghi nhận.
+        </p>
       </div>
     </section>
   );

@@ -3,6 +3,7 @@
 import {
   useEffect,
   useRef,
+  useState,
 } from "react";
 
 import type {
@@ -13,6 +14,30 @@ import type {
 import styles from "./MagazineExperience.module.css";
 
 /* =========================================================
+   CONSTANTS
+========================================================= */
+
+const TRACE_COUNT = 500;
+
+const FINAL_PARTICLE_COUNT =
+  1863;
+
+/*
+  Bounds mainland Việt Nam dùng cho visual.
+
+  Không dùng như dữ liệu địa lý chính xác
+  cho marker/tọa độ thực tế.
+*/
+
+const MAINLAND_BOUNDS = {
+  minLng: 102,
+  maxLng: 110.8,
+
+  minLat: 8,
+  maxLat: 23.6,
+};
+
+/* =========================================================
    TYPES
 ========================================================= */
 
@@ -21,37 +46,10 @@ type Point = {
   y: number;
 };
 
-type LonLat = [
-  number,
-  number,
-];
-
-type Ring =
-  LonLat[];
-
-type CanvasData = {
-  mapSegments: Point[][];
+type HeroData = {
   traces: Point[];
-  textTargets: Point[];
-  field: Point[];
-};
-
-/* =========================================================
-   CONSTANTS
-========================================================= */
-
-const TRACE_COUNT =
-  500;
-
-const FINAL_PARTICLE_COUNT =
-  1863;
-
-const MAINLAND_BOUNDS = {
-  minLng: 102,
-  maxLng: 110.8,
-
-  minLat: 8,
-  maxLat: 23.6,
+  number500: Point[];
+  finalField: Point[];
 };
 
 /* =========================================================
@@ -73,49 +71,31 @@ function clamp(
 }
 
 function phase(
-  progress: number,
+  value: number,
   start: number,
   end: number
 ) {
-  if (
-    end === start
-  ) {
-    return 0;
-  }
-
   return clamp(
-    (progress -
-      start) /
-      (end -
-        start)
+    (value - start) /
+      (end - start)
   );
 }
 
-function lerp(
-  from: number,
-  to: number,
-  progress: number
-) {
-  return (
-    from +
-    (
-      to -
-      from
-    ) *
-      progress
-  );
-}
+/*
+  Deterministic PRNG.
 
-/* =========================================================
-   DETERMINISTIC SEEDED RANDOM
-========================================================= */
+  Không dùng Math.random() khi tạo
+  layout để tránh hydration mismatch.
+*/
 
 function seededRandom(
   seed: number
 ) {
   let value =
-    (seed +
-      0x6d2b79f5) |
+    (
+      seed +
+      0x6d2b79f5
+    ) |
     0;
 
   value =
@@ -143,241 +123,179 @@ function seededRandom(
     4294967296;
 }
 
-function collectRings(
-  geometry: Geometry
-): Ring[] {
+/* =========================================================
+   EASING
+========================================================= */
+
+function easeInOutCubic(
+  value: number
+) {
+  const t =
+    clamp(value);
+
+  return t < 0.5
+    ? 4 *
+        t *
+        t *
+        t
+    : 1 -
+        Math.pow(
+          -2 * t + 2,
+          3
+        ) /
+          2;
+}
+
+/* =========================================================
+   GEOJSON RING EXTRACTION
+========================================================= */
+
+function collectCoordinates(
+  geometry: Geometry,
+  output: number[][][]
+) {
   if (
     geometry.type ===
     "Polygon"
   ) {
-    return geometry.coordinates.map(
-      (ring) =>
-        ring as Ring
-    );
+    for (
+      const ring of geometry.coordinates
+    ) {
+      output.push(
+        ring as number[][]
+      );
+    }
+
+    return;
   }
 
   if (
     geometry.type ===
     "MultiPolygon"
   ) {
-    return geometry.coordinates.flatMap(
-      (polygon) =>
-        polygon.map(
-          (ring) =>
-            ring as Ring
-        )
-    );
+    for (
+      const polygon of geometry.coordinates
+    ) {
+      for (
+        const ring of polygon
+      ) {
+        output.push(
+          ring as number[][]
+        );
+      }
+    }
+
+    return;
   }
 
   if (
     geometry.type ===
     "GeometryCollection"
   ) {
-    return geometry.geometries.flatMap(
-      collectRings
-    );
+    for (
+      const child of geometry.geometries
+    ) {
+      collectCoordinates(
+        child,
+        output
+      );
+    }
   }
-
-  return [];
 }
 
-function projectPoint(
+/* =========================================================
+   PROJECT GEO COORDINATE
+========================================================= */
+
+function projectLngLat(
   lng: number,
-  lat: number,
-  width: number,
-  height: number
+  lat: number
 ): Point {
-  const boundsWidth =
-    MAINLAND_BOUNDS.maxLng -
-    MAINLAND_BOUNDS.minLng;
-
-  const boundsHeight =
-    MAINLAND_BOUNDS.maxLat -
-    MAINLAND_BOUNDS.minLat;
-
-  const normalizedX =
+  const x =
     (
       lng -
       MAINLAND_BOUNDS.minLng
     ) /
-    boundsWidth;
+    (
+      MAINLAND_BOUNDS.maxLng -
+      MAINLAND_BOUNDS.minLng
+    );
 
-  const normalizedY =
+  const y =
+    1 -
+    (
+      lat -
+      MAINLAND_BOUNDS.minLat
+    ) /
     (
       MAINLAND_BOUNDS.maxLat -
-      lat
-    ) /
-    boundsHeight;
-
-  const availableHeight =
-    height *
-    0.76;
-
-  const availableWidth =
-    width *
-    0.44;
-
-  const mapAspect =
-    boundsWidth /
-    boundsHeight;
-
-  let renderWidth =
-    availableWidth;
-
-  let renderHeight =
-    renderWidth /
-    mapAspect;
-
-  if (
-    renderHeight >
-    availableHeight
-  ) {
-    renderHeight =
-      availableHeight;
-
-    renderWidth =
-      renderHeight *
-      mapAspect;
-  }
-
-  const left =
-    width /
-      2 -
-    renderWidth /
-      2;
-
-  const top =
-    height /
-      2 -
-    renderHeight /
-      2;
+      MAINLAND_BOUNDS.minLat
+    );
 
   return {
-    x:
-      left +
-      normalizedX *
-        renderWidth,
-
-    y:
-      top +
-      normalizedY *
-        renderHeight,
+    x,
+    y,
   };
 }
 
-function buildMapSegments(
-  geoJson:
-    FeatureCollection<
-      Geometry
-    >,
-  width: number,
-  height: number
+/* =========================================================
+   BUILD TRACE POINTS
+========================================================= */
+
+function buildTracePoints(
+  rings: number[][][]
 ) {
-  const segments:
-    Point[][] = [];
+  const candidates:
+    Point[] = [];
 
   for (
-    const feature of
-    geoJson.features
+    const ring of rings
   ) {
-    if (
-      !feature.geometry
-    ) {
-      continue;
-    }
-
-    const rings =
-      collectRings(
-        feature.geometry
-      );
-
     for (
-      const ring of
-      rings
+      let i = 0;
+      i < ring.length;
+      i += 3
     ) {
-      const mainlandPoints =
-        ring.filter(
-          ([
-            lng,
-            lat,
-          ]) =>
-            lng >=
-              MAINLAND_BOUNDS.minLng &&
-            lng <=
-              MAINLAND_BOUNDS.maxLng &&
-            lat >=
-              MAINLAND_BOUNDS.minLat &&
-            lat <=
-              MAINLAND_BOUNDS.maxLat
-        );
+      const coordinate =
+        ring[i];
 
       if (
-        mainlandPoints.length <
-        3
+        !coordinate ||
+        coordinate.length < 2
       ) {
         continue;
       }
 
-      const step =
-        Math.max(
-          1,
-          Math.floor(
-            mainlandPoints.length /
-              100
-          )
-        );
+      const lng =
+        coordinate[0];
 
-      const projected:
-        Point[] = [];
-
-      for (
-        let index = 0;
-        index <
-        mainlandPoints.length;
-        index += step
-      ) {
-        const [
-          lng,
-          lat,
-        ] =
-          mainlandPoints[
-            index
-          ];
-
-        projected.push(
-          projectPoint(
-            lng,
-            lat,
-            width,
-            height
-          )
-        );
-      }
+      const lat =
+        coordinate[1];
 
       if (
-        projected.length >=
-        3
+        lng <
+          MAINLAND_BOUNDS.minLng ||
+        lng >
+          MAINLAND_BOUNDS.maxLng ||
+        lat <
+          MAINLAND_BOUNDS.minLat ||
+        lat >
+          MAINLAND_BOUNDS.maxLat
       ) {
-        segments.push(
-          projected
-        );
+        continue;
       }
+
+      candidates.push(
+        projectLngLat(
+          lng,
+          lat
+        )
+      );
     }
   }
 
-  return segments;
-}
-
-function buildTracePoints(
-  segments: Point[][],
-  width: number,
-  height: number
-) {
-  const pool =
-    segments.flat();
-
   if (
-    pool.length === 0
+    candidates.length === 0
   ) {
     return Array.from(
       {
@@ -386,26 +304,18 @@ function buildTracePoints(
       },
       (_, index) => ({
         x:
-          width *
-          (
-            0.4 +
-            seededRandom(
-              index +
-                20
-            ) *
-              0.2
-          ),
+          0.35 +
+          seededRandom(
+            index * 7 + 5
+          ) *
+            0.3,
 
         y:
-          height *
-          (
-            0.18 +
-            seededRandom(
-              index +
-                80
-            ) *
-              0.64
-          ),
+          0.08 +
+          seededRandom(
+            index * 11 + 9
+          ) *
+            0.84,
       })
     );
   }
@@ -416,99 +326,65 @@ function buildTracePoints(
         TRACE_COUNT,
     },
     (_, index) => {
-      const sourceIndex =
-        Math.floor(
-          seededRandom(
-            index +
-              17
-          ) *
-            pool.length
-        );
-
       const source =
-        pool[
-          Math.min(
-            sourceIndex,
-            pool.length -
-              1
-          )
+        candidates[
+          Math.floor(
+            (
+              index /
+              TRACE_COUNT
+            ) *
+              candidates.length
+          ) %
+            candidates.length
         ];
 
-      const angle =
-        seededRandom(
-          index +
-            1000
+      const jitterX =
+        (
+          seededRandom(
+            index * 17 + 3
+          ) -
+          0.5
         ) *
-        Math.PI *
-        2;
+        0.012;
 
-      const radius =
-        seededRandom(
-          index +
-            2000
+      const jitterY =
+        (
+          seededRandom(
+            index * 23 + 8
+          ) -
+          0.5
         ) *
-        9;
+        0.012;
 
       return {
         x:
           source.x +
-          Math.cos(
-            angle
-          ) *
-            radius,
+          jitterX,
 
         y:
           source.y +
-          Math.sin(
-            angle
-          ) *
-            radius,
+          jitterY,
       };
     }
   );
 }
 
-function buildTextTargets(
-  width: number,
-  height: number,
-  count: number
-) {
+/* =========================================================
+   BUILD 500 TARGET FROM OFFSCREEN CANVAS
+========================================================= */
+
+function build500Target() {
   const canvas =
     document.createElement(
       "canvas"
     );
 
-  const sampleWidth =
-    Math.max(
-      500,
-      Math.floor(
-        width *
-          0.58
-      )
-    );
-
-  const sampleHeight =
-    Math.max(
-      320,
-      Math.floor(
-        height *
-          0.58
-      )
-    );
-
-  canvas.width =
-    sampleWidth;
-
-  canvas.height =
-    sampleHeight;
+  canvas.width = 1200;
+  canvas.height = 600;
 
   const context =
     canvas.getContext(
-      "2d",
-      {
-        willReadFrequently:
-          true,
-      }
+      "2d"
     );
 
   if (!context) {
@@ -518,8 +394,8 @@ function buildTextTargets(
   context.clearRect(
     0,
     0,
-    sampleWidth,
-    sampleHeight
+    canvas.width,
+    canvas.height
   );
 
   context.fillStyle =
@@ -531,88 +407,67 @@ function buildTextTargets(
   context.textBaseline =
     "middle";
 
-  const fontSize =
-    Math.min(
-      sampleWidth *
-        0.47,
-      sampleHeight *
-        0.68
-    );
-
   context.font =
-    `800 ${fontSize}px Montserrat, Arial, sans-serif`;
+    "800 430px Arial";
 
   context.fillText(
     "500",
-    sampleWidth /
-      2,
-    sampleHeight /
-      2.03
+    canvas.width / 2,
+    canvas.height / 2
   );
 
   const image =
     context.getImageData(
       0,
       0,
-      sampleWidth,
-      sampleHeight
+      canvas.width,
+      canvas.height
     );
 
   const candidates:
     Point[] = [];
 
-  const step =
-    5;
+  const step = 7;
 
   for (
     let y = 0;
-    y <
-    sampleHeight;
+    y < canvas.height;
     y += step
   ) {
     for (
       let x = 0;
-      x <
-      sampleWidth;
+      x < canvas.width;
       x += step
     ) {
-      const pixelIndex =
-        (
-          y *
-            sampleWidth +
-          x
-        ) *
-        4;
+      const alpha =
+        image.data[
+          (
+            y *
+              canvas.width +
+            x
+          ) *
+            4 +
+          3
+        ];
 
       if (
-        image.data[
-          pixelIndex +
-            3
-        ] >
-        120
+        alpha > 120
       ) {
         candidates.push({
           x:
-            x *
-            (
-              width /
-              sampleWidth
-            ),
+            x /
+            canvas.width,
 
           y:
-            y *
-            (
-              height /
-              sampleHeight
-            ),
+            y /
+            canvas.height,
         });
       }
     }
   }
 
   if (
-    candidates.length ===
-    0
+    candidates.length === 0
   ) {
     return [];
   }
@@ -620,69 +475,101 @@ function buildTextTargets(
   return Array.from(
     {
       length:
-        count,
+        TRACE_COUNT,
     },
     (_, index) => {
-      const candidateIndex =
-        Math.floor(
-          (
-            index /
-            count
-          ) *
-            candidates.length
-        );
+      const source =
+        candidates[
+          Math.floor(
+            seededRandom(
+              index * 31 + 5
+            ) *
+              candidates.length
+          )
+        ];
 
-      return candidates[
-        Math.min(
-          candidateIndex,
-          candidates.length -
-            1
-        )
-      ];
+      return {
+        x:
+          0.08 +
+          source.x *
+            0.84,
+
+        y:
+          0.16 +
+          source.y *
+            0.68,
+      };
     }
   );
 }
 
-function buildFieldPoints(
-  width: number,
-  height: number
-) {
+/* =========================================================
+   FINAL 1.863 FIELD
+========================================================= */
+
+function buildFinalField() {
   return Array.from(
     {
       length:
         FINAL_PARTICLE_COUNT,
     },
     (_, index) => {
-      const randomX =
+      const angle =
         seededRandom(
-          index +
-            4000
+          index * 47 + 3
+        ) *
+        Math.PI *
+        2;
+
+      const radius =
+        Math.sqrt(
+          seededRandom(
+            index * 61 + 9
+          )
         );
 
-      const randomY =
-        seededRandom(
-          index +
-            8000
-        );
+      /*
+        Elliptical field:
+        particles disperse across viewport.
+      */
+
+      const x =
+        0.5 +
+        Math.cos(
+          angle
+        ) *
+          radius *
+          0.58;
+
+      const y =
+        0.5 +
+        Math.sin(
+          angle
+        ) *
+          radius *
+          0.44;
 
       return {
-        x:
-          width *
-          (
-            0.08 +
-            randomX *
-              0.84
-          ),
-
-        y:
-          height *
-          (
-            0.13 +
-            randomY *
-              0.74
-          ),
+        x,
+        y,
       };
     }
+  );
+}
+
+/* =========================================================
+   LERP
+========================================================= */
+
+function lerp(
+  a: number,
+  b: number,
+  amount: number
+) {
+  return (
+    a +
+    (b - a) *
+      amount
   );
 }
 
@@ -701,7 +588,7 @@ export default function OpeningHero() {
       null
     );
 
-  const spotlightRef =
+  const beamRef =
     useRef<HTMLDivElement | null>(
       null
     );
@@ -711,13 +598,23 @@ export default function OpeningHero() {
       null
     );
 
+  const openingRef =
+    useRef<HTMLDivElement | null>(
+      null
+    );
+
   const dayRef =
-    useRef<HTMLSpanElement | null>(
+    useRef<HTMLDivElement | null>(
+      null
+    );
+
+  const dayNumberRef =
+    useRef<HTMLElement | null>(
       null
     );
 
   const stageWordRef =
-    useRef<HTMLSpanElement | null>(
+    useRef<HTMLDivElement | null>(
       null
     );
 
@@ -741,274 +638,231 @@ export default function OpeningHero() {
       null
     );
 
+  const heroDataRef =
+    useRef<HeroData>({
+      traces: [],
+      number500: [],
+      finalField: [],
+    });
+
   const progressRef =
     useRef(0);
 
-  const geoJsonRef =
-    useRef<
-      FeatureCollection<
-        Geometry
-      > | null
-    >(null);
-
-  const canvasDataRef =
-    useRef<CanvasData>({
-      mapSegments: [],
-      traces: [],
-      textTargets: [],
-      field: [],
+  const pointerRef =
+    useRef({
+      x: 0.5,
+      y: 0.5,
     });
 
+  const [
+    ready,
+    setReady,
+  ] = useState(false);
+
   /* =======================================================
-     CANVAS DATA
+     BUILD HERO DATA
   ======================================================= */
 
   useEffect(() => {
-    let disposed =
+    let cancelled =
       false;
 
-    function rebuildCanvasData() {
-      const canvas =
-        canvasRef.current;
-
-      if (!canvas) {
-        return;
-      }
-
-      const width =
-        window.innerWidth;
-
-      const height =
-        window.innerHeight;
-
-      const dpr =
-        Math.min(
-          window.devicePixelRatio ||
-            1,
-          1.5
-        );
-
-      canvas.width =
-        Math.floor(
-          width *
-            dpr
-        );
-
-      canvas.height =
-        Math.floor(
-          height *
-            dpr
-        );
-
-      canvas.style.width =
-        `${width}px`;
-
-      canvas.style.height =
-        `${height}px`;
-
-      const context =
-        canvas.getContext(
-          "2d"
-        );
-
-      if (context) {
-        context.setTransform(
-          dpr,
-          0,
-          0,
-          dpr,
-          0,
-          0
-        );
-      }
-
-      const mapSegments =
-        geoJsonRef.current
-          ? buildMapSegments(
-              geoJsonRef.current,
-              width,
-              height
-            )
-          : [];
-
-      canvasDataRef.current =
-        {
-          mapSegments,
-
-          traces:
-            buildTracePoints(
-              mapSegments,
-              width,
-              height
-            ),
-
-          textTargets:
-            buildTextTargets(
-              width,
-              height,
-              TRACE_COUNT
-            ),
-
-          field:
-            buildFieldPoints(
-              width,
-              height
-            ),
-        };
-    }
-
-    async function loadGeoJson() {
+    async function build() {
       try {
         const response =
           await fetch(
             "/data/map/vietnam-provinces.geojson"
           );
 
-        if (
-          !response.ok
+        const geojson =
+          (
+            await response.json()
+          ) as FeatureCollection<
+            Geometry
+          >;
+
+        const rings:
+          number[][][] = [];
+
+        for (
+          const feature of geojson.features
         ) {
+          if (
+            feature.geometry
+          ) {
+            collectCoordinates(
+              feature.geometry,
+              rings
+            );
+          }
+        }
+
+        if (cancelled) {
           return;
         }
 
-        const geoJson =
-          (await response.json()) as FeatureCollection<Geometry>;
+        heroDataRef.current =
+          {
+            traces:
+              buildTracePoints(
+                rings
+              ),
 
-        if (
-          disposed
-        ) {
-          return;
-        }
+            number500:
+              build500Target(),
 
-        geoJsonRef.current =
-          geoJson;
+            finalField:
+              buildFinalField(),
+          };
 
-        rebuildCanvasData();
+        setReady(true);
       } catch (
         error
       ) {
-        console.warn(
-          "Opening map silhouette fallback:",
+        console.error(
+          "Opening hero data error:",
           error
         );
+
+        heroDataRef.current =
+          {
+            traces:
+              buildTracePoints(
+                []
+              ),
+
+            number500:
+              build500Target(),
+
+            finalField:
+              buildFinalField(),
+          };
+
+        setReady(true);
       }
     }
 
-    rebuildCanvasData();
-    loadGeoJson();
-
-    if (
-      document.fonts
-    ) {
-      document.fonts.ready.then(
-        () => {
-          if (
-            !disposed
-          ) {
-            rebuildCanvasData();
-          }
-        }
-      );
-    }
-
-    window.addEventListener(
-      "resize",
-      rebuildCanvasData
-    );
+    build();
 
     return () => {
-      disposed =
-        true;
-
-      window.removeEventListener(
-        "resize",
-        rebuildCanvasData
-      );
+      cancelled = true;
     };
   }, []);
 
   /* =======================================================
-     POINTER
+     POINTER SEARCHLIGHT
   ======================================================= */
 
   useEffect(() => {
-    function movePointer(
-      event: PointerEvent
+    const section =
+      sectionRef.current;
+
+    if (!section) {
+      return;
+    }
+
+    function updatePointer(
+      clientX: number,
+      clientY: number
     ) {
       const x =
         clamp(
-          event.clientX /
+          clientX /
             window.innerWidth
         );
 
       const y =
         clamp(
-          event.clientY /
+          clientY /
             window.innerHeight
         );
 
+      pointerRef.current =
+        {
+          x,
+          y,
+        };
+
       if (
-        spotlightRef.current
+        beamRef.current
       ) {
-        spotlightRef.current.style.setProperty(
+        beamRef.current.style.setProperty(
           "--beam-x",
-          `${event.clientX}px`
+          `${clientX}px`
         );
 
-        spotlightRef.current.style.setProperty(
+        beamRef.current.style.setProperty(
           "--beam-y",
-          `${event.clientY}px`
+          `${clientY}px`
         );
       }
-
-      const lng =
-        lerp(
-          MAINLAND_BOUNDS.minLng,
-          MAINLAND_BOUNDS.maxLng,
-          x
-        );
-
-      const lat =
-        lerp(
-          MAINLAND_BOUNDS.maxLat,
-          MAINLAND_BOUNDS.minLat,
-          y
-        );
 
       if (
         coordinateRef.current
       ) {
+        /*
+          Visual mapping only.
+          Không phải tọa độ marker thực.
+        */
+
+        const lng =
+          lerp(
+            MAINLAND_BOUNDS.minLng,
+            MAINLAND_BOUNDS.maxLng,
+            x
+          );
+
+        const lat =
+          lerp(
+            MAINLAND_BOUNDS.maxLat,
+            MAINLAND_BOUNDS.minLat,
+            y
+          );
+
         coordinateRef.current.textContent =
           `${lat.toFixed(
             3
-          )}°N / ${lng.toFixed(
+          )}° N / ${lng.toFixed(
             3
-          )}°E`;
+          )}° E`;
       }
     }
 
-    window.addEventListener(
+    function handlePointerMove(
+      event: PointerEvent
+    ) {
+      updatePointer(
+        event.clientX,
+        event.clientY
+      );
+    }
+
+    section.addEventListener(
       "pointermove",
-      movePointer,
-      {
-        passive: true,
-      }
+      handlePointerMove
     );
 
     return () => {
-      window.removeEventListener(
+      section.removeEventListener(
         "pointermove",
-        movePointer
+        handlePointerMove
       );
     };
   }, []);
 
   /* =======================================================
-     SCROLL
+     SCROLL UI
   ======================================================= */
 
   useEffect(() => {
-    let frame =
-      0;
+    const section =
+      sectionRef.current;
+
+    if (!section) {
+      return;
+    }
+
+    let frame = 0;
 
     function update() {
       cancelAnimationFrame(
@@ -1018,13 +872,6 @@ export default function OpeningHero() {
       frame =
         requestAnimationFrame(
           () => {
-            const section =
-              sectionRef.current;
-
-            if (!section) {
-              return;
-            }
-
             const rect =
               section.getBoundingClientRect();
 
@@ -1044,7 +891,59 @@ export default function OpeningHero() {
             progressRef.current =
               progress;
 
-            const searchProgress =
+            /* ===========================================
+               OPENING STATEMENT
+
+               Hiện ở đầu.
+               Fade sớm.
+               Biến mất HOÀN TOÀN trước DAY 500 / visual 500.
+            ============================================ */
+
+            const openingFade =
+              phase(
+                progress,
+                0.20,
+                0.36
+              );
+
+            if (
+              openingRef.current
+            ) {
+              const opacity =
+                1 -
+                openingFade;
+
+              openingRef.current.style.opacity =
+                String(
+                  opacity
+                );
+
+              openingRef.current.style.transform =
+                `
+                  translate(
+                    -50%,
+                    calc(
+                      -50% -
+                      ${
+                        openingFade *
+                        22
+                      }px
+                    )
+                  )
+                `;
+
+              openingRef.current.style.visibility =
+                opacity <
+                0.01
+                  ? "hidden"
+                  : "visible";
+            }
+
+            /* ===========================================
+               DAY 001 → DAY 500
+            ============================================ */
+
+            const dayProgress =
               phase(
                 progress,
                 0.07,
@@ -1054,16 +953,20 @@ export default function OpeningHero() {
             const day =
               Math.max(
                 1,
-                Math.round(
-                  searchProgress *
-                    500
+                Math.min(
+                  500,
+                  Math.round(
+                    1 +
+                    dayProgress *
+                      499
+                  )
                 )
               );
 
             if (
-              dayRef.current
+              dayNumberRef.current
             ) {
-              dayRef.current.textContent =
+              dayNumberRef.current.textContent =
                 String(
                   day
                 ).padStart(
@@ -1073,54 +976,190 @@ export default function OpeningHero() {
             }
 
             if (
+              dayRef.current
+            ) {
+              const fadeIn =
+                phase(
+                  progress,
+                  0.045,
+                  0.1
+                );
+
+              const fadeOut =
+                phase(
+                  progress,
+                  0.46,
+                  0.53
+                );
+
+              dayRef.current.style.opacity =
+                String(
+                  fadeIn *
+                    (
+                      1 -
+                      fadeOut
+                    )
+                );
+            }
+
+            /* ===========================================
+               SEARCH PHASE WORD
+            ============================================ */
+
+            if (
               stageWordRef.current
             ) {
+              let word =
+                "TÌM KIẾM";
+
               if (
-                day <
-                280
+                dayProgress >
+                0.38
               ) {
-                stageWordRef.current.textContent =
-                  "TÌM KIẾM";
-              } else if (
-                day <
-                430
-              ) {
-                stageWordRef.current.textContent =
+                word =
                   "QUY TẬP";
-              } else {
-                stageWordRef.current.textContent =
+              }
+
+              if (
+                dayProgress >
+                0.74
+              ) {
+                word =
                   "DANH TÍNH";
               }
+
+              stageWordRef.current.textContent =
+                word;
 
               stageWordRef.current.style.opacity =
                 String(
                   phase(
                     progress,
-                    0.05,
-                    0.14
+                    0.06,
+                    0.13
                   ) *
                     (
                       1 -
                       phase(
                         progress,
-                        0.58,
-                        0.67
+                        0.47,
+                        0.54
                       )
                     )
                 );
             }
 
+            /* ===========================================
+               500 TITLE
+            ============================================ */
+
+            const title500In =
+              phase(
+                progress,
+                0.50,
+                0.60
+              );
+
+            const title500Out =
+              phase(
+                progress,
+                0.68,
+                0.76
+              );
+
             if (
-              spotlightRef.current
+              title500Ref.current
             ) {
-              spotlightRef.current.style.opacity =
+              const opacity =
+                title500In *
+                (
+                  1 -
+                  title500Out
+                );
+
+              title500Ref.current.style.opacity =
+                String(
+                  opacity
+                );
+
+              title500Ref.current.style.transform =
+                `
+                  translate(
+                    -50%,
+                    ${
+                      30 -
+                      title500In *
+                        30
+                    }px
+                  )
+                `;
+            }
+
+            /* ===========================================
+               FINAL 1.863
+            ============================================ */
+
+            const finalIn =
+              phase(
+                progress,
+                0.76,
+                0.89
+              );
+
+            if (
+              finalStatRef.current
+            ) {
+              finalStatRef.current.style.opacity =
+                String(
+                  finalIn
+                );
+
+              finalStatRef.current.style.transform =
+                `
+                  translate(
+                    -50%,
+                    ${
+                      30 -
+                      finalIn *
+                        30
+                    }px
+                  )
+                `;
+            }
+
+            if (
+              finalNumberRef.current
+            ) {
+              const displayed =
+                Math.round(
+                  lerp(
+                    500,
+                    1863,
+                    finalIn
+                  )
+                );
+
+              finalNumberRef.current.textContent =
+                displayed.toLocaleString(
+                  "vi-VN"
+                );
+            }
+
+            /* ===========================================
+               SEARCHLIGHT VISIBILITY
+            ============================================ */
+
+            if (
+              beamRef.current
+            ) {
+              beamRef.current.style.opacity =
                 String(
                   1 -
-                    phase(
-                      progress,
-                      0.43,
-                      0.57
-                    )
+                  phase(
+                    progress,
+                    0.36,
+                    0.52
+                  )
                 );
             }
 
@@ -1129,105 +1168,18 @@ export default function OpeningHero() {
             ) {
               coordinateRef.current.style.opacity =
                 String(
+                  1 -
                   phase(
                     progress,
-                    0,
-                    0.06
-                  ) *
-                    (
-                      1 -
-                      phase(
-                        progress,
-                        0.4,
-                        0.52
-                      )
-                    )
-                );
-            }
-
-            if (
-              title500Ref.current
-            ) {
-              const appear =
-                phase(
-                  progress,
-                  0.58,
-                  0.68
-                );
-
-              const disappear =
-                phase(
-                  progress,
-                  0.76,
-                  0.83
-                );
-
-              title500Ref.current.style.opacity =
-                String(
-                  appear *
-                    (
-                      1 -
-                      disappear
-                    )
-                );
-
-              title500Ref.current.style.transform =
-                `translate3d(-50%, ${
-                  (
-                    1 -
-                    appear
-                  ) *
-                  30
-                }px, 0)`;
-            }
-
-            const finalProgress =
-              phase(
-                progress,
-                0.79,
-                0.96
-              );
-
-            if (
-              finalNumberRef.current
-            ) {
-              const count =
-                Math.round(
-                  500 +
-                    (
-                      1863 -
-                      500
-                    ) *
-                      finalProgress
-                );
-
-              finalNumberRef.current.textContent =
-                count.toLocaleString(
-                  "vi-VN"
-                );
-            }
-
-            if (
-              finalStatRef.current
-            ) {
-              finalStatRef.current.style.opacity =
-                String(
-                  phase(
-                    progress,
-                    0.8,
-                    0.9
+                    0.34,
+                    0.48
                   )
                 );
-
-              finalStatRef.current.style.transform =
-                `translate3d(-50%, ${
-                  (
-                    1 -
-                    finalProgress
-                  ) *
-                  36
-                }px, 0)`;
             }
+
+            /* ===========================================
+               SCROLL CUE
+            ============================================ */
 
             if (
               scrollCueRef.current
@@ -1235,11 +1187,11 @@ export default function OpeningHero() {
               scrollCueRef.current.style.opacity =
                 String(
                   1 -
-                    phase(
-                      progress,
-                      0,
-                      0.09
-                    )
+                  phase(
+                    progress,
+                    0.05,
+                    0.14
+                  )
                 );
             }
           }
@@ -1279,53 +1231,93 @@ export default function OpeningHero() {
   }, []);
 
   /* =======================================================
-     CANVAS RENDER
+     CANVAS RENDER LOOP
   ======================================================= */
 
   useEffect(() => {
+    if (!ready) {
+      return;
+    }
+
+    const canvas =
+      canvasRef.current;
+
+    if (!canvas) {
+      return;
+    }
+
+    const context =
+      canvas.getContext(
+        "2d"
+      );
+
+    if (!context) {
+      return;
+    }
+
     let animationFrame =
       0;
+
+    let width = 0;
+    let height = 0;
+    let dpr = 1;
+
+    function resize() {
+      width =
+        window.innerWidth;
+
+      height =
+        window.innerHeight;
+
+      dpr =
+        Math.min(
+          window.devicePixelRatio ||
+            1,
+          2
+        );
+
+      canvas.width =
+        Math.round(
+          width *
+            dpr
+        );
+
+      canvas.height =
+        Math.round(
+          height *
+            dpr
+        );
+
+      canvas.style.width =
+        `${width}px`;
+
+      canvas.style.height =
+        `${height}px`;
+
+      context.setTransform(
+        dpr,
+        0,
+        0,
+        dpr,
+        0,
+        0
+      );
+    }
+
+    resize();
 
     function render(
       time: number
     ) {
-      const canvas =
-        canvasRef.current;
-
-      if (!canvas) {
-        animationFrame =
-          requestAnimationFrame(
-            render
-          );
-
-        return;
-      }
-
-      const context =
-        canvas.getContext(
-          "2d"
-        );
-
-      if (!context) {
-        return;
-      }
-
-      const width =
-        window.innerWidth;
-
-      const height =
-        window.innerHeight;
+      const {
+        traces,
+        number500,
+        finalField,
+      } =
+        heroDataRef.current;
 
       const progress =
         progressRef.current;
-
-      const {
-        mapSegments,
-        traces,
-        textTargets,
-        field,
-      } =
-        canvasDataRef.current;
 
       context.clearRect(
         0,
@@ -1334,292 +1326,233 @@ export default function OpeningHero() {
         height
       );
 
-      context.fillStyle =
-        "#050806";
-
-      context.fillRect(
-        0,
-        0,
-        width,
-        height
-      );
-
-      /* DAY / NIGHT */
-
-      const dayProgress =
+      const mapPhase =
         phase(
           progress,
-          0.07,
-          0.49
-        );
-
-      const cycle =
-        (
-          Math.sin(
-            dayProgress *
-              500 *
-              0.13
-          ) +
-          1
-        ) /
-        2;
-
-      context.fillStyle =
-        `rgba(71,96,76,${
-          cycle *
-          0.08
-        })`;
-
-      context.fillRect(
-        0,
-        0,
-        width,
-        height
-      );
-
-      /* GRID */
-
-      const gridOpacity =
-        (
-          1 -
-          phase(
-            progress,
-            0.66,
-            0.78
-          )
-        ) *
-        0.09;
-
-      context.strokeStyle =
-        `rgba(185,205,189,${gridOpacity})`;
-
-      context.lineWidth =
-        1;
-
-      const gridSize =
-        74;
-
-      for (
-        let x = 0;
-        x <= width;
-        x += gridSize
-      ) {
-        context.beginPath();
-
-        context.moveTo(
-          x,
-          0
-        );
-
-        context.lineTo(
-          x,
-          height
-        );
-
-        context.stroke();
-      }
-
-      for (
-        let y = 0;
-        y <= height;
-        y += gridSize
-      ) {
-        context.beginPath();
-
-        context.moveTo(
-          0,
-          y
-        );
-
-        context.lineTo(
-          width,
-          y
-        );
-
-        context.stroke();
-      }
-
-      /* MAP OUTLINE */
-
-      const mapReveal =
-        phase(
-          progress,
-          0.13,
+          0.055,
           0.48
         );
 
-      const mapFade =
-        1 -
-        phase(
-          progress,
-          0.57,
-          0.72
+      const morph500 =
+        easeInOutCubic(
+          phase(
+            progress,
+            0.49,
+            0.67
+          )
         );
 
-      context.strokeStyle =
-        `rgba(140,178,151,${
-          mapReveal *
-          mapFade *
-          0.42
-        })`;
+      const dissolve =
+        easeInOutCubic(
+          phase(
+            progress,
+            0.70,
+            0.90
+          )
+        );
 
-      context.lineWidth =
-        0.8;
+      const mapWidth =
+        Math.min(
+          width *
+            0.43,
+          470
+        );
+
+      const mapHeight =
+        Math.min(
+          height *
+            0.74,
+          720
+        );
+
+      const mapLeft =
+        width *
+          0.5 -
+        mapWidth /
+          2;
+
+      const mapTop =
+        height *
+          0.5 -
+        mapHeight /
+          2;
+
+      const pointer =
+        pointerRef.current;
+
+      /* ===============================================
+         TRACE PARTICLES
+      ================================================ */
 
       for (
-        const segment of
-        mapSegments
+        let i = 0;
+        i < TRACE_COUNT;
+        i++
       ) {
-        if (
-          segment.length <
-          2
-        ) {
+        const source =
+          traces[i];
+
+        if (!source) {
           continue;
         }
 
-        context.beginPath();
+        const target500 =
+          number500[i] ||
+          source;
 
-        context.moveTo(
-          segment[0].x,
-          segment[0].y
-        );
+        const targetFinal =
+          finalField[i] ||
+          target500;
 
-        for (
-          let index =
-            1;
-          index <
-          segment.length;
-          index++
-        ) {
-          context.lineTo(
-            segment[index].x,
-            segment[index].y
-          );
-        }
+        /*
+          Initial search trace.
+        */
 
-        context.stroke();
-      }
+        const initialX =
+          mapLeft +
+          source.x *
+            mapWidth;
 
-      /* SEARCH TRACES */
+        const initialY =
+          mapTop +
+          source.y *
+            mapHeight;
 
-      const searchProgress =
-        phase(
-          progress,
-          0.07,
-          0.5
-        );
+        /*
+          500 position.
+        */
 
-      const visibleCount =
-        Math.floor(
-          searchProgress *
-            TRACE_COUNT
-        );
+        const numberX =
+          target500.x *
+          width;
 
-      const morphProgress =
-        phase(
-          progress,
-          0.5,
-          0.67
-        );
+        const numberY =
+          target500.y *
+          height;
 
-      const dissolveProgress =
-        phase(
-          progress,
-          0.75,
-          0.9
-        );
+        /*
+          Final dispersed field.
+        */
 
-      const baseCount =
-        morphProgress >
-        0
-          ? TRACE_COUNT
-          : visibleCount;
+        const finalX =
+          targetFinal.x *
+          width;
 
-      for (
-        let index = 0;
-        index <
-        baseCount;
-        index++
-      ) {
-        const trace =
-          traces[
-            index %
-              Math.max(
-                traces.length,
-                1
-              )
-          ];
-
-        if (!trace) {
-          continue;
-        }
-
-        const target =
-          textTargets[
-            index %
-              Math.max(
-                textTargets.length,
-                1
-              )
-          ] ??
-          trace;
-
-        const fieldPoint =
-          field[index] ??
-          target;
+        const finalY =
+          targetFinal.y *
+          height;
 
         let x =
           lerp(
-            trace.x,
-            target.x,
-            morphProgress
+            initialX,
+            numberX,
+            morph500
           );
 
         let y =
           lerp(
-            trace.y,
-            target.y,
-            morphProgress
+            initialY,
+            numberY,
+            morph500
           );
 
-        if (
-          dissolveProgress >
-          0
-        ) {
-          x =
-            lerp(
-              target.x,
-              fieldPoint.x,
-              dissolveProgress
-            );
+        x =
+          lerp(
+            x,
+            finalX,
+            dissolve
+          );
 
-          y =
-            lerp(
-              target.y,
-              fieldPoint.y,
-              dissolveProgress
-            );
-        }
+        y =
+          lerp(
+            y,
+            finalY,
+            dissolve
+          );
+
+        const revealIndex =
+          i /
+          TRACE_COUNT;
+
+        const reveal =
+          clamp(
+            (
+              mapPhase -
+              revealIndex *
+                0.78
+            ) *
+              5
+          );
 
         const pulse =
+          0.82 +
+          Math.sin(
+            time *
+              0.0013 +
+              i *
+                0.71
+          ) *
+            0.18;
+
+        let alpha =
+          reveal *
+          pulse;
+
+        alpha =
+          lerp(
+            alpha,
+            0.75,
+            morph500
+          );
+
+        alpha =
+          lerp(
+            alpha,
+            0.25,
+            dissolve
+          );
+
+        /*
+          Searchlight emphasis.
+        */
+
+        const dx =
+          x -
+          pointer.x *
+            width;
+
+        const dy =
+          y -
+          pointer.y *
+            height;
+
+        const distance =
+          Math.sqrt(
+            dx * dx +
+              dy * dy
+          );
+
+        const searchBoost =
+          1 -
+          clamp(
+            distance /
+              180
+          );
+
+        alpha +=
+          searchBoost *
           (
-            Math.sin(
-              time *
-                0.002 +
-                index *
-                  0.7
-            ) +
-            1
-          ) /
-          2;
+            1 -
+            morph500
+          ) *
+          0.8;
 
         const radius =
-          morphProgress >
-          0
-            ? 1.65
-            : 1.1 +
-              pulse *
-                0.55;
+          lerp(
+            1.1,
+            1.8,
+            morph500
+          );
 
         context.beginPath();
 
@@ -1633,166 +1566,114 @@ export default function OpeningHero() {
         );
 
         context.fillStyle =
-          `rgba(154,190,164,${
-            0.32 +
-            pulse *
-              0.5
-          })`;
+          `rgba(
+            169,
+            199,
+            178,
+            ${clamp(
+              alpha
+            )}
+          )`;
 
         context.fill();
-
-        if (
-          morphProgress <
-            0.15 &&
-          index %
-            17 ===
-            0
-        ) {
-          context.strokeStyle =
-            "rgba(160,191,169,0.24)";
-
-          context.lineWidth =
-            0.6;
-
-          context.beginPath();
-
-          context.moveTo(
-            x - 6,
-            y
-          );
-
-          context.lineTo(
-            x + 6,
-            y
-          );
-
-          context.moveTo(
-            x,
-            y - 6
-          );
-
-          context.lineTo(
-            x,
-            y + 6
-          );
-
-          context.stroke();
-        }
       }
 
-      /* EXTRA PARTICLES */
+      /* ===============================================
+         EXTRA PARTICLES AFTER 500 → 1863
+      ================================================ */
+
+      const extraReveal =
+        dissolve;
 
       if (
-        dissolveProgress >
+        extraReveal >
         0
       ) {
-        const extraCount =
-          Math.floor(
-            (
-              FINAL_PARTICLE_COUNT -
-              TRACE_COUNT
-            ) *
-              dissolveProgress
-          );
-
         for (
-          let offset =
-            0;
-          offset <
-          extraCount;
-          offset++
+          let i =
+            TRACE_COUNT;
+          i <
+          FINAL_PARTICLE_COUNT;
+          i++
         ) {
-          const index =
-            TRACE_COUNT +
-            offset;
-
           const point =
-            field[index];
+            finalField[i];
 
           if (!point) {
             continue;
           }
 
-          const pulse =
+          const threshold =
             (
-              Math.sin(
-                time *
-                  0.0015 +
-                  index *
-                    0.31
-              ) +
-              1
+              i -
+              TRACE_COUNT
             ) /
-            2;
+            (
+              FINAL_PARTICLE_COUNT -
+              TRACE_COUNT
+            );
+
+          const reveal =
+            clamp(
+              (
+                extraReveal -
+                threshold *
+                  0.55
+              ) *
+                4
+            );
+
+          if (
+            reveal <=
+            0
+          ) {
+            continue;
+          }
+
+          const x =
+            point.x *
+            width;
+
+          const y =
+            point.y *
+            height;
+
+          const pulse =
+            0.65 +
+            Math.sin(
+              time *
+                0.001 +
+                i *
+                  0.42
+            ) *
+              0.2;
 
           context.beginPath();
 
           context.arc(
-            point.x,
-            point.y,
-            0.65 +
-              pulse *
-                0.45,
+            x,
+            y,
+            1.1,
             0,
             Math.PI *
               2
           );
 
           context.fillStyle =
-            `rgba(138,174,148,${
-              dissolveProgress *
-              (
-                0.18 +
+            `rgba(
+              158,
+              190,
+              168,
+              ${
+                reveal *
                 pulse *
-                  0.32
-              )
-            })`;
+                0.55
+              }
+            )`;
 
           context.fill();
         }
       }
-
-      /* GLOW */
-
-      const glow =
-        context.createRadialGradient(
-          width / 2,
-          height / 2,
-          0,
-
-          width / 2,
-          height / 2,
-
-          Math.min(
-            width,
-            height
-          ) *
-            0.48
-        );
-
-      glow.addColorStop(
-        0,
-        `rgba(72,111,84,${
-          0.05 +
-          morphProgress *
-            0.07
-        })`
-      );
-
-      glow.addColorStop(
-        1,
-        "rgba(0,0,0,0)"
-      );
-
-      context.fillStyle =
-        glow;
-
-      context.fillRect(
-        0,
-        0,
-        width,
-        height
-      );
 
       animationFrame =
         requestAnimationFrame(
@@ -1805,17 +1686,32 @@ export default function OpeningHero() {
         render
       );
 
+    window.addEventListener(
+      "resize",
+      resize
+    );
+
     return () => {
       cancelAnimationFrame(
         animationFrame
       );
+
+      window.removeEventListener(
+        "resize",
+        resize
+      );
     };
-  }, []);
+  }, [
+    ready,
+  ]);
+
+  /* =======================================================
+     RENDER
+  ======================================================= */
 
   return (
     <section
       id="opening"
-      data-chapter="opening"
       ref={sectionRef}
       className={
         styles.heroScene
@@ -1826,31 +1722,51 @@ export default function OpeningHero() {
           styles.heroSticky
         }
       >
+        {/* ===============================================
+            PARTICLE CANVAS
+        ================================================ */}
+
         <canvas
           ref={canvasRef}
           className={
             styles.heroCanvas
           }
+          aria-hidden="true"
         />
 
+        {/* ===============================================
+            SEARCHLIGHT
+        ================================================ */}
+
         <div
-          ref={spotlightRef}
+          ref={beamRef}
           className={
             styles.heroSearchBeam
           }
+          aria-hidden="true"
         />
+
+        {/* ===============================================
+            FILM / ATMOSPHERE
+        ================================================ */}
 
         <div
           className={
             styles.heroNoise
           }
+          aria-hidden="true"
         />
 
         <div
           className={
             styles.heroVignette
           }
+          aria-hidden="true"
         />
+
+        {/* ===============================================
+            TOP CHROME
+        ================================================ */}
 
         <div
           className={
@@ -1862,8 +1778,7 @@ export default function OpeningHero() {
           </span>
 
           <span>
-            TÌM KIẾM · QUY TẬP
-            · DANH TÍNH
+            TÌM KIẾM · QUY TẬP · DANH TÍNH
           </span>
 
           <span>
@@ -1871,14 +1786,20 @@ export default function OpeningHero() {
           </span>
         </div>
 
+        {/* ===============================================
+            OPENING STATEMENT
+
+            Fade hoàn toàn trước visual 500.
+        ================================================ */}
+
         <div
+          ref={openingRef}
           className={
             styles.heroOpeningStatement
           }
         >
           <span>
-            CUỘC TÌM KIẾM
-            BẮT ĐẦU TỪ
+            CUỘC TÌM KIẾM BẮT ĐẦU TỪ
           </span>
 
           <strong>
@@ -1886,16 +1807,25 @@ export default function OpeningHero() {
           </strong>
         </div>
 
+        {/* ===============================================
+            COORDINATE
+        ================================================ */}
+
         <div
           ref={coordinateRef}
           className={
             styles.heroCoordinate
           }
         >
-          21.782°N / 105.221°E
+          21.028° N / 105.834° E
         </div>
 
+        {/* ===============================================
+            DAY
+        ================================================ */}
+
         <div
+          ref={dayRef}
           className={
             styles.heroDayCounter
           }
@@ -1905,20 +1835,31 @@ export default function OpeningHero() {
           </span>
 
           <strong
-            ref={dayRef}
+            ref={
+              dayNumberRef
+            }
           >
             001
           </strong>
         </div>
 
-        <span
+        {/* ===============================================
+            STAGE WORD
+        ================================================ */}
+
+        <div
           ref={stageWordRef}
           className={
             styles.heroStageWord
           }
+          aria-hidden="true"
         >
           TÌM KIẾM
-        </span>
+        </div>
+
+        {/* ===============================================
+            500
+        ================================================ */}
 
         <div
           ref={title500Ref}
@@ -1926,21 +1867,27 @@ export default function OpeningHero() {
             styles.hero500Title
           }
         >
-          <span>
+          <span
+            aria-hidden="true"
+          >
             500
           </span>
 
           <strong>
-            NGÀY ĐÊM
+            500 NGÀY ĐÊM
           </strong>
 
           <p>
-            500 ngày của những
-            dấu vết, tọa độ và
-            những cuộc tìm kiếm
-            chưa dừng lại.
+            Một hành trình tìm kiếm,
+            quy tập và từng bước
+            đưa những người đã nằm
+            lại trở về.
           </p>
         </div>
+
+        {/* ===============================================
+            1.863
+        ================================================ */}
 
         <div
           ref={finalStatRef}
@@ -1970,11 +1917,13 @@ export default function OpeningHero() {
           </small>
 
           <i>
-            CUỘN TIẾP ĐỂ THẤY
-            CÂU CHUYỆN PHÍA SAU
-            CON SỐ
+            DỮ LIỆU THEO MỐC 22.08.2026
           </i>
         </div>
+
+        {/* ===============================================
+            SCROLL
+        ================================================ */}
 
         <div
           ref={scrollCueRef}
@@ -1983,15 +1932,14 @@ export default function OpeningHero() {
           }
         >
           <span>
-            DI CHUYỂN CHUỘT ĐỂ
-            TÌM KIẾM
+            CUỘN ĐỂ ĐI QUA
+            500 NGÀY ĐÊM
           </span>
 
           <i />
 
           <small>
-            CUỘN ĐỂ ĐI QUA 500
-            NGÀY
+            SCROLL
           </small>
         </div>
       </div>
