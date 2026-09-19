@@ -1,474 +1,656 @@
+/* =========================================================
+   ROOT
+
+   Không sticky.
+   Không animation.
+   Không background riêng.
+========================================================= */
+
 .section {
   position: relative;
-
   width: 100%;
 
-  overflow: hidden;
+  padding:
+    clamp(45px, 5vw, 70px)
+    0
+    clamp(42px, 4.5vw, 68px);
 
-  background-color: #f2dfad;
-
-  color: #2e2216;
+  background: transparent;
+  color: #000000;
 }
 
+/* =========================================================
+   INNER
+========================================================= */
+
 .inner {
+  width:
+    min(
+      1380px,
+      calc(
+        100% -
+        80px
+      )
+    );
+
+  margin:
+    0
+    auto;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+
+  margin-bottom:
+    clamp(45px, 4.5vw, 65px);
+}
+
+/* =========================================================
+   TOTAL 32
+========================================================= */
+
+.total {
+  display: flex;
+
+  align-items:
+    flex-end;
+
+  gap:
+    clamp(
+      20px,
+      2.5vw,
+      38px
+    );
+}
+
+.total > strong {
+  color:
+    #765100;
+
+  font-family:
+    var(--font-editorial),
+    "Times New Roman",
+    serif;
+
+  font-size:
+    clamp(
+      105px,
+      11vw,
+      175px
+    );
+
+  font-weight:
+    700;
+
+  line-height:
+    0.7;
+
+  letter-spacing:
+    -0.075em;
+}
+
+.totalCopy {
+  padding-bottom:
+    3px;
+}
+
+.totalCopy span {
+  display: block;
+
+  max-width:
+    200px;
+
+  color:
+    rgba(
+      55,
+      43,
+      18,
+      0.62
+    );
+
+  font-family:
+    var(--font-sans),
+    Arial,
+    sans-serif;
+
+  font-size:
+    clamp(
+      9px,
+      0.75vw,
+      11px
+    );
+
+  font-weight:
+    700;
+
+  line-height:
+    1.45;
+
+  letter-spacing:
+    0.15em;
+}
+
+.totalCopy p {
+  margin:
+    8px
+    0
+    0;
+
+  color:
+    #000000;
+
+  font-family:
+    var(--font-editorial),
+    "Times New Roman",
+    serif;
+
+  font-size:
+    clamp(
+      24px,
+      2vw,
+      32px
+    );
+
+  font-weight:
+    600;
+}
+
+/* =========================================================
+   GROUPS
+========================================================= */
+
+.groups {
   display: grid;
 
   grid-template-columns:
-    minmax(260px, 0.7fr)
-    minmax(520px, 1.3fr);
-
-  gap:
-    clamp(60px, 8vw, 150px);
-
-  align-items: center;
-
-  width:
-    min(
-      1500px,
-      calc(100% - 10vw)
+    repeat(
+      3,
+      minmax(
+        0,
+        1fr
+      )
     );
 
-  min-height: 100vh;
+  gap:
+    clamp(
+      50px,
+      7vw,
+      110px
+    );
 
-  margin: 0 auto;
-
-  padding:
-    clamp(90px, 10vw, 170px)
-    0;
+  width: 100%;
 }
 
 /* =========================================================
-   COPY
+   GROUP
 ========================================================= */
 
-.copy {
-  position: relative;
-
-  z-index: 5;
+.group {
+  min-width: 0;
 }
 
-.eyebrow {
+/* =========================================================
+   GROUP TITLE
+========================================================= */
+
+.groupTitle {
+  display: flex;
+
+  align-items:
+    flex-start;
+
+  justify-content:
+    space-between;
+
+  gap:
+    20px;
+
+  margin-bottom:
+    clamp(
+      28px,
+      3vw,
+      44px
+    );
+}
+
+.groupTitle > span {
+  padding-top:
+    9px;
+
   color:
-    rgba(88, 72, 42, 0.58);
+    rgba(
+      55,
+      43,
+      18,
+      0.62
+    );
 
   font-family:
     var(--font-sans),
     Arial,
     sans-serif;
 
-  font-size: 8px;
-
-  font-weight: 800;
-
-  letter-spacing: 0.2em;
-}
-
-.copy h2 {
-  margin:
-    20px
-    0
-    0;
-
-  color: #302419;
-
-  font-family:
-    var(--font-editorial),
-    serif;
-
   font-size:
     clamp(
-      80px,
-      10vw,
-      170px
+      10px,
+      0.8vw,
+      12px
     );
 
-  font-weight: 400;
-
-  line-height: 0.85;
+  font-weight:
+    700;
 
   letter-spacing:
-    -0.07em;
+    0.16em;
 }
 
-.people {
-  margin:
-    24px
-    0
-    0;
+/* =========================================================
+   NUMBER
+========================================================= */
 
-  color: #6d542c;
+.number {
+  display: flex;
+
+  align-items:
+    baseline;
+
+  gap: 7px;
+}
+
+.number strong {
+  color:
+    #000000;
 
   font-family:
     var(--font-editorial),
+    "Times New Roman",
     serif;
 
   font-size:
     clamp(
-      27px,
-      3vw,
-      48px
+      58px,
+      5vw,
+      82px
     );
 
-  font-style: italic;
+  font-weight:
+    600;
+
+  line-height:
+    0.78;
+
+  letter-spacing:
+    -0.05em;
 }
 
-.description {
-  max-width: 430px;
-
-  margin:
-    32px
-    0
-    0;
-
+.number em {
   color:
-    rgba(46, 34, 22, 0.66);
+    rgba(
+      60,
+      47,
+      23,
+      0.68
+    );
 
   font-family:
     var(--font-editorial),
+    "Times New Roman",
     serif;
 
-  font-size: 15px;
+  font-size:
+    clamp(
+      14px,
+      1vw,
+      17px
+    );
 
-  line-height: 1.75;
+  font-style:
+    italic;
 }
 
 /* =========================================================
-   FIELD
+   DOT GRID
 ========================================================= */
 
-.visual {
-  position: relative;
+.dots {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      5,
+      1fr
+    );
+
+  gap:
+    clamp(
+      16px,
+      1.6vw,
+      24px
+    );
 
   width: 100%;
-}
 
-.field {
-  position: relative;
+  min-height:
+    170px;
 
-  width: 100%;
-
-  aspect-ratio: 1.15;
-
-  overflow: hidden;
-
-  border:
-    1px solid
-    rgba(78, 65, 42, 0.11);
-
-  background:
-    radial-gradient(
-      circle at center,
-      rgba(255, 255, 255, 0.21),
-      transparent 62%
-    );
-}
-
-.field::before,
-.field::after {
-  content: "";
-
-  position: absolute;
-
-  pointer-events: none;
-}
-
-.field::before {
-  top: 0;
-  bottom: 0;
-  left: 50%;
-
-  width: 1px;
-
-  background:
-    linear-gradient(
-      transparent,
-      rgba(82, 70, 46, 0.08),
-      transparent
-    );
-}
-
-.field::after {
-  top: 50%;
-  right: 0;
-  left: 0;
-
-  height: 1px;
-
-  background:
-    linear-gradient(
-      90deg,
-      transparent,
-      rgba(82, 70, 46, 0.08),
-      transparent
-    );
+  align-content:
+    start;
 }
 
 /* =========================================================
-   NODES
+   DOT
 ========================================================= */
 
-.node {
-  position: absolute;
+.dot {
+  display: block;
 
-  z-index: 4;
+  justify-self:
+    center;
 
-  width: 12px;
-  height: 12px;
+  width:
+    clamp(
+      18px,
+      1.55vw,
+      25px
+    );
 
-  transform:
-    translate(-50%, -50%)
-    scale(0);
+  aspect-ratio:
+    1;
 
-  border-radius: 50%;
-
-  opacity: 0;
-
-  transition:
-    transform
-      0.7s
-      cubic-bezier(
-        0.22,
-        1,
-        0.36,
-        1
-      ),
-    opacity
-      0.5s
-      ease;
+  border-radius:
+    50%;
 }
 
-.active .node {
-  transform:
-    translate(-50%, -50%)
-    scale(1);
-
-  opacity: 1;
-
-  animation:
-    nodePulse
-    2.8s
-    ease-in-out
-    infinite;
-}
+/* =========================================================
+   COLORS
+========================================================= */
 
 .vietnam {
-  background: #395d45;
-
-  box-shadow:
-    0 0 0
-      6px
-      rgba(
-        57,
-        93,
-        69,
-        0.08
-      );
+  background:
+    #765100;
 }
 
 .laos {
-  background: #9a6e32;
-
-  box-shadow:
-    0 0 0
-      6px
-      rgba(
-        154,
-        110,
-        50,
-        0.08
-      );
+  background:
+    #96701a;
 }
 
 .cambodia {
-  background: #87604d;
-
-  box-shadow:
-    0 0 0
-      6px
-      rgba(
-        135,
-        96,
-        77,
-        0.08
-      );
-}
-
-@keyframes nodePulse {
-  0%,
-  100% {
-    box-shadow:
-      0 0 0
-      4px
-      rgba(
-        65,
-        83,
-        64,
-        0.05
-      );
-  }
-
-  50% {
-    box-shadow:
-      0 0 0
-      10px
-      rgba(
-        65,
-        83,
-        64,
-        0
-      );
-  }
+  background:
+    #bd8d17;
 }
 
 /* =========================================================
-   LABELS
+   DESCRIPTION
 ========================================================= */
 
-.label {
-  position: absolute;
-
-  z-index: 6;
-
-  display: flex;
-
-  flex-direction: column;
+.description {
+  margin:
+    22px
+    0
+    0;
 
   color:
-    rgba(59, 47, 29, 0.42);
+    rgba(
+      55,
+      43,
+      18,
+      0.68
+    );
 
   font-family:
-    var(--font-sans),
-    Arial,
-    sans-serif;
+    var(--font-editorial),
+    "Times New Roman",
+    serif;
 
-  font-size: 7px;
+  font-size:
+    clamp(
+      16px,
+      1.1vw,
+      19px
+    );
 
-  font-weight: 700;
+  font-style:
+    italic;
 
-  letter-spacing: 0.14em;
+  font-weight:
+    500;
 
-  pointer-events: none;
-}
-
-.label strong {
-  margin-top: 2px;
-
-  color:
-    rgba(53, 42, 26, 0.7);
-
-  font-size: 16px;
-
-  letter-spacing: 0;
-}
-
-.labelVietnam {
-  top: 8%;
-  left: 41%;
-}
-
-.labelLaos {
-  top: 14%;
-  left: 8%;
-}
-
-.labelCambodia {
-  top: 18%;
-  right: 5%;
+  line-height:
+    1.5;
 }
 
 /* =========================================================
-   LEGEND
+   SUMMARY
 ========================================================= */
 
-.legend {
+.summary {
   display: flex;
 
-  flex-wrap: wrap;
+  align-items:
+    center;
+
+  justify-content:
+    center;
 
   gap:
-    16px
-    30px;
+    18px;
 
-  margin-top: 22px;
+  margin-top:
+    clamp(
+      80px,
+      8vw,
+      120px
+    );
 
   color:
-    rgba(54, 43, 27, 0.58);
+    rgba(
+      55,
+      43,
+      18,
+      0.6
+    );
 
   font-family:
     var(--font-sans),
     Arial,
     sans-serif;
 
-  font-size: 9px;
+  font-size:
+    10px;
 
-  font-weight: 600;
+  font-weight:
+    700;
+
+  letter-spacing:
+    0.13em;
+
+  text-transform:
+    uppercase;
 }
 
-.legend span {
-  display: flex;
-
-  align-items: center;
-
-  gap: 8px;
-}
-
-.legend i {
+.summary i {
   display: block;
 
-  width: 8px;
-  height: 8px;
+  width:
+    50px;
 
-  border-radius: 50%;
+  height:
+    1px;
+
+  background:
+    rgba(
+      70,
+      53,
+      25,
+      0.3
+    );
 }
 
-.vietnamDot {
-  background: #395d45;
-}
+/* =========================================================
+   TABLET
+========================================================= */
 
-.laosDot {
-  background: #9a6e32;
-}
+@media (
+  max-width: 1000px
+) {
+  .section {
+    padding:
+      80px
+      0
+      100px;
+  }
 
-.cambodiaDot {
-  background: #87604d;
+  .inner {
+    width:
+      calc(
+        100% -
+        40px
+      );
+  }
+
+  .header {
+    margin-bottom:
+      70px;
+  }
+
+  .groups {
+    gap:
+      30px;
+  }
+
+  .dots {
+    gap:
+      13px;
+  }
+
+  .number strong {
+    font-size:
+      58px;
+  }
 }
 
 /* =========================================================
    MOBILE
 ========================================================= */
 
-@media (max-width: 900px) {
-  .inner {
-    grid-template-columns:
-      1fr;
-
-    gap: 55px;
-
-    width:
-      calc(100% - 34px);
-
-    min-height: 0;
-
+@media (
+  max-width: 700px
+) {
+  .section {
     padding:
-      90px
-      0;
+      70px
+      0
+      80px;
   }
 
-  .copy h2 {
-    font-size:
-      clamp(
-        84px,
-        24vw,
-        130px
+  .inner {
+    width:
+      calc(
+        100% -
+        30px
       );
   }
 
-  .field {
-    aspect-ratio: 0.95;
+  .header {
+    justify-content:
+      flex-start;
+
+    margin-bottom:
+      65px;
   }
 
-  .node {
-    width: 10px;
-    height: 10px;
+  .total {
+    gap:
+      17px;
+  }
+
+  .total > strong {
+    font-size:
+      100px;
+  }
+
+  .totalCopy span {
+    font-size:
+      8px;
+  }
+
+  .totalCopy p {
+    font-size:
+      21px;
+  }
+
+  /* ===============================================
+     Các vùng xếp dọc trên mobile
+  ================================================ */
+
+  .groups {
+    grid-template-columns:
+      1fr;
+
+    gap:
+      70px;
+  }
+
+  .groupTitle {
+    margin-bottom:
+      24px;
+  }
+
+  .number strong {
+    font-size:
+      54px;
+  }
+
+  .dots {
+    grid-template-columns:
+      repeat(
+        7,
+        1fr
+      );
+
+    min-height:
+      auto;
+
+    gap:
+      13px;
+  }
+
+  .dot {
+    width:
+      17px;
+  }
+
+  .description {
+    margin-top:
+      16px;
+
+    font-size:
+      15px;
+  }
+
+  .summary {
+    gap:
+      9px;
+
+    margin-top:
+      70px;
+
+    font-size:
+      7px;
+
+    letter-spacing:
+      0.08em;
+  }
+
+  .summary i {
+    width:
+      25px;
   }
 }

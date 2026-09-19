@@ -1,0 +1,1125 @@
+/* =========================================================
+   SECTION
+========================================================= */
+
+.section {
+  position: relative;
+
+  width: 100%;
+
+  background: #f2dfad;
+
+  color: #000;
+}
+
+
+/* =========================================================
+   OPENING ARTICLE
+========================================================= */
+
+.article {
+  position: relative;
+
+  z-index: 5;
+
+  width:
+    min(
+      1280px,
+      calc(100% - 80px)
+    );
+
+  margin: 0 auto;
+
+  padding:
+    clamp(90px, 9vw, 140px)
+    0
+    clamp(95px, 9vw, 145px);
+
+  background: #f2dfad;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header {
+  width: 100%;
+
+  margin-bottom:
+    clamp(
+      50px,
+      5vw,
+      76px
+    );
+}
+
+.kicker {
+  display: block;
+
+  margin-bottom: 16px;
+
+  color:
+    rgba(
+      0,
+      0,
+      0,
+      0.48
+    );
+
+  font-family:
+    var(--font-sans),
+    "Segoe UI",
+    Arial,
+    sans-serif;
+
+  font-size: 10px;
+
+  font-weight: 800;
+
+  letter-spacing: 0.19em;
+
+  text-transform: uppercase;
+}
+
+.header h2 {
+  max-width: 1050px;
+
+  margin: 0;
+
+  color: #050505;
+
+  font-family:
+    var(--font-editorial),
+    "Times New Roman",
+    serif;
+
+  font-size:
+    clamp(
+      62px,
+      7vw,
+      108px
+    );
+
+  font-weight: 800;
+
+  line-height: 0.92;
+
+  letter-spacing: -0.055em;
+
+  text-wrap: balance;
+}
+
+
+/* =========================================================
+   BODY
+========================================================= */
+
+.body {
+  width:
+    min(
+      1180px,
+      100%
+    );
+
+  margin: 0 auto;
+}
+
+.body > p:not(.promiseQuote) {
+  width:
+    min(
+      940px,
+      100%
+    );
+
+  margin-left: auto;
+
+  margin-right: auto;
+}
+
+.body p {
+  margin-top: 0;
+
+  margin-bottom: 0;
+
+  color:
+    rgba(
+      0,
+      0,
+      0,
+      0.88
+    );
+
+  font-family:
+    var(--font-editorial),
+    "Times New Roman",
+    serif;
+
+  font-size:
+    clamp(
+      21px,
+      1.55vw,
+      26px
+    );
+
+  font-weight: 500;
+
+  line-height: 1.72;
+
+  letter-spacing: -0.012em;
+
+  text-wrap: pretty;
+}
+
+
+/* =========================================================
+   PROMISE QUOTE
+========================================================= */
+
+.promiseQuote {
+  display: block;
+
+  width: 100%;
+
+  margin:
+    clamp(
+      50px,
+      5vw,
+      74px
+    )
+    auto !important;
+
+  padding:
+    0
+    10px;
+
+  color:
+    #080808 !important;
+
+  font-family:
+    var(--font-editorial),
+    "Times New Roman",
+    serif !important;
+
+  font-size:
+    clamp(
+      31px,
+      2.65vw,
+      46px
+    ) !important;
+
+  font-style: italic;
+
+  font-weight:
+    800 !important;
+
+  line-height:
+    1.32 !important;
+
+  letter-spacing:
+    -0.035em !important;
+
+  text-align: center;
+
+  text-wrap: balance;
+}
+
+@media (min-width: 1180px) {
+  .promiseQuote {
+    white-space: nowrap;
+  }
+}
+
+
+/* =========================================================
+   STORY
+
+   ẢNH LÀ BACKGROUND CỦA TOÀN BỘ STORY.
+
+   background-attachment: fixed
+   => ảnh đứng yên trong viewport.
+
+   Các block con vẫn scroll bình thường.
+========================================================= */
+
+.story {
+  position: relative;
+
+  width: 100%;
+
+  /*
+   * Background image thật.
+   * Không còn <img> sticky.
+   */
+  background-image:
+    linear-gradient(
+      to bottom,
+
+      rgba(
+        0,
+        0,
+        0,
+        0.02
+      )
+      0%,
+
+      rgba(
+        0,
+        0,
+        0,
+        0.1
+      )
+      42%,
+
+      rgba(
+        0,
+        0,
+        0,
+        0.34
+      )
+      100%
+    ),
+
+    url("/images/readymag/ending/promise-waiting.jpg");
+
+  background-repeat:
+    no-repeat;
+
+  background-size:
+    cover;
+
+  background-position:
+    center center;
+
+  /*
+   * QUAN TRỌNG NHẤT.
+   * Ảnh background đứng yên.
+   */
+  background-attachment:
+    fixed;
+
+  background-color:
+    #7f775c;
+}
+
+
+/* =========================================================
+   IMAGE ONLY
+
+   Đầu story chỉ show ảnh.
+
+   100svh = ít nhất một màn hình hoàn chỉnh.
+========================================================= */
+
+.imageOnly {
+  position: relative;
+
+  width: 100%;
+
+  height: 100vh;
+  height: 100svh;
+
+  background: transparent;
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   QUOTE SCENE
+
+   QUOTE KHÔNG STICKY.
+
+   Nó scroll từ dưới lên trong khi background đứng yên.
+========================================================= */
+
+.quoteScene {
+  position: relative;
+
+  z-index: 2;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  width: 100%;
+
+  min-height: 110vh;
+  min-height: 110svh;
+
+  padding:
+    18vh
+    20px;
+
+  background: transparent;
+}
+
+
+/* =========================================================
+   QUOTE INNER
+========================================================= */
+
+.quoteInner {
+  width:
+    min(
+      1120px,
+      100%
+    );
+
+  margin:
+    0
+    auto;
+
+  text-align:
+    center;
+}
+
+
+/* =========================================================
+   WAITING QUOTE
+========================================================= */
+
+.waitingQuote {
+  margin: 0;
+
+  color:
+    #fffdf2;
+
+  font-family:
+    var(--font-editorial),
+    "Times New Roman",
+    serif;
+
+  font-size:
+    clamp(
+      48px,
+      4.6vw,
+      78px
+    );
+
+  font-style:
+    italic;
+
+  font-weight:
+    800;
+
+  line-height:
+    1.12;
+
+  letter-spacing:
+    -0.05em;
+
+  text-wrap:
+    balance;
+
+  text-shadow:
+    0
+    3px
+    26px
+    rgba(
+      0,
+      0,
+      0,
+      0.5
+    );
+}
+
+
+/* =========================================================
+   WAITING DESCRIPTION
+========================================================= */
+
+.waitingDescription {
+  width:
+    min(
+      900px,
+      100%
+    );
+
+  margin:
+    clamp(
+      28px,
+      3vw,
+      42px
+    )
+    auto
+    0;
+
+  color:
+    rgba(
+      255,
+      253,
+      243,
+      0.97
+    );
+
+  font-family:
+    var(--font-editorial),
+    "Times New Roman",
+    serif;
+
+  font-size:
+    clamp(
+      18px,
+      1.25vw,
+      22px
+    );
+
+  font-weight:
+    500;
+
+  line-height:
+    1.6;
+
+  letter-spacing:
+    -0.01em;
+
+  text-wrap:
+    pretty;
+
+  text-shadow:
+    0
+    2px
+    14px
+    rgba(
+      0,
+      0,
+      0,
+      0.48
+    );
+}
+
+
+/* =========================================================
+   AFTER QUOTE
+
+   Quote đi khỏi viewport.
+   Background vẫn còn hiện thêm một chút.
+========================================================= */
+
+.afterQuote {
+  position: relative;
+
+  width: 100%;
+
+  height: 22vh;
+  height: 22svh;
+
+  background:
+    transparent;
+
+  pointer-events:
+    none;
+}
+
+
+/* =========================================================
+   ARTICLE OVERLAY
+
+   Khối vàng này SCROLL BÌNH THƯỜNG.
+
+   Vì background nằm phía sau và fixed,
+   nó sẽ tạo cảm giác panel vàng
+   đi từ dưới lên và che dần ảnh.
+========================================================= */
+
+.articleOverlay {
+  position: relative;
+
+  z-index: 10;
+
+  width: 100%;
+
+  background:
+    #f2dfad;
+
+  box-shadow:
+    0
+    -12px
+    35px
+    rgba(
+      0,
+      0,
+      0,
+      0.035
+    );
+}
+
+
+/* tránh hairline */
+.articleOverlay::before {
+  content: "";
+
+  position: absolute;
+
+  top: -3px;
+
+  left: 0;
+
+  width: 100%;
+
+  height: 4px;
+
+  background:
+    #f2dfad;
+}
+
+
+/* =========================================================
+   OVERLAY INNER
+========================================================= */
+
+.overlayInner {
+  width:
+    min(
+      1280px,
+      calc(100% - 80px)
+    );
+
+  margin:
+    0
+    auto;
+
+  padding:
+    clamp(
+      105px,
+      10vw,
+      155px
+    )
+    0
+    clamp(
+      125px,
+      11vw,
+      180px
+    );
+}
+
+
+/* =========================================================
+   FIRST TEXT
+========================================================= */
+
+.overlayBody {
+  width:
+    min(
+      940px,
+      100%
+    );
+
+  margin:
+    0
+    auto;
+}
+
+.overlayBody p {
+  margin: 0;
+
+  color:
+    rgba(
+      0,
+      0,
+      0,
+      0.88
+    );
+
+  font-family:
+    var(--font-editorial),
+    "Times New Roman",
+    serif;
+
+  font-size:
+    clamp(
+      21px,
+      1.55vw,
+      26px
+    );
+
+  font-weight:
+    500;
+
+  line-height:
+    1.72;
+
+  letter-spacing:
+    -0.012em;
+
+  text-wrap:
+    pretty;
+}
+
+
+/* =========================================================
+   ENDING
+========================================================= */
+
+.endingText {
+  width:
+    min(
+      940px,
+      100%
+    );
+
+  margin:
+    clamp(
+      82px,
+      8vw,
+      130px
+    )
+    auto
+    0;
+
+  padding-top:
+    clamp(
+      44px,
+      5vw,
+      65px
+    );
+
+  border-top:
+    1px
+    solid
+    rgba(
+      65,
+      48,
+      17,
+      0.16
+    );
+}
+
+.endingText p {
+  margin: 0;
+
+  color:
+    rgba(
+      0,
+      0,
+      0,
+      0.88
+    );
+
+  font-family:
+    var(--font-editorial),
+    "Times New Roman",
+    serif;
+
+  font-size:
+    clamp(
+      21px,
+      1.55vw,
+      26px
+    );
+
+  font-weight:
+    500;
+
+  line-height:
+    1.72;
+
+  letter-spacing:
+    -0.012em;
+
+  text-wrap:
+    pretty;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+  .article {
+    width:
+      min(
+        calc(100% - 48px),
+        1000px
+      );
+
+    padding:
+      78px
+      0
+      105px;
+  }
+
+  .header h2 {
+    font-size:
+      clamp(
+        52px,
+        8vw,
+        78px
+      );
+  }
+
+  .body {
+    width:
+      100%;
+  }
+
+  .body > p:not(.promiseQuote) {
+    width:
+      min(
+        760px,
+        100%
+      );
+  }
+
+  .promiseQuote {
+    white-space:
+      normal;
+
+    font-size:
+      clamp(
+        30px,
+        4vw,
+        40px
+      ) !important;
+  }
+
+  /* story */
+
+  .imageOnly {
+    height:
+      90vh;
+
+    height:
+      90svh;
+  }
+
+  .quoteScene {
+    min-height:
+      105vh;
+
+    min-height:
+      105svh;
+
+    padding:
+      15vh
+      20px;
+  }
+
+  .quoteInner {
+    width:
+      min(
+        900px,
+        100%
+      );
+  }
+
+  .waitingQuote {
+    font-size:
+      clamp(
+        42px,
+        6vw,
+        62px
+      );
+  }
+
+  .afterQuote {
+    height:
+      18vh;
+
+    height:
+      18svh;
+  }
+
+  /* yellow */
+
+  .overlayInner {
+    width:
+      min(
+        calc(100% - 48px),
+        1000px
+      );
+
+    padding:
+      90px
+      0
+      125px;
+  }
+
+  .overlayBody,
+  .endingText {
+    width:
+      min(
+        760px,
+        100%
+      );
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+  /* -----------------------------
+     Article
+  ----------------------------- */
+
+  .article {
+    width:
+      calc(
+        100% - 32px
+      );
+
+    padding:
+      58px
+      0
+      78px;
+  }
+
+  .header {
+    margin-bottom:
+      42px;
+  }
+
+  .kicker {
+    margin-bottom:
+      12px;
+
+    font-size:
+      9px;
+
+    letter-spacing:
+      0.16em;
+  }
+
+  .header h2 {
+    font-size:
+      clamp(
+        42px,
+        12vw,
+        58px
+      );
+
+    line-height:
+      0.96;
+  }
+
+  .body > p:not(.promiseQuote) {
+    width:
+      100%;
+  }
+
+  .body p,
+  .overlayBody p,
+  .endingText p {
+    font-size:
+      19px;
+
+    line-height:
+      1.68;
+  }
+
+  /* -----------------------------
+     Promise quote
+  ----------------------------- */
+
+  .promiseQuote {
+    width:
+      100%;
+
+    margin:
+      38px
+      auto !important;
+
+    padding:
+      0
+      8px;
+
+    font-size:
+      clamp(
+        27px,
+        7vw,
+        34px
+      ) !important;
+
+    line-height:
+      1.38 !important;
+
+    white-space:
+      normal;
+
+    text-align:
+      center;
+  }
+
+  /* -----------------------------
+     Background
+  ----------------------------- */
+
+  .story {
+    /*
+     * Mobile browser thường xử lý
+     * background-attachment fixed không ổn định.
+     *
+     * Dùng local ở mobile để tránh giật.
+     */
+    background-attachment:
+      scroll;
+
+    background-position:
+      center center;
+  }
+
+  /*
+   * Trên desktop ảnh fixed đúng yêu cầu.
+   * Mobile ưu tiên ổn định.
+   */
+
+  .imageOnly {
+    height:
+      82vh;
+
+    height:
+      82svh;
+  }
+
+  /* -----------------------------
+     Quote
+  ----------------------------- */
+
+  .quoteScene {
+    min-height:
+      100vh;
+
+    min-height:
+      100svh;
+
+    padding:
+      12vh
+      16px;
+  }
+
+  .quoteInner {
+    width:
+      100%;
+  }
+
+  .waitingQuote {
+    font-size:
+      clamp(
+        34px,
+        9.5vw,
+        48px
+      );
+
+    line-height:
+      1.17;
+  }
+
+  .waitingDescription {
+    margin-top:
+      24px;
+
+    font-size:
+      17px;
+
+    line-height:
+      1.55;
+  }
+
+  .afterQuote {
+    height:
+      12vh;
+
+    height:
+      12svh;
+  }
+
+  /* -----------------------------
+     Yellow article
+  ----------------------------- */
+
+  .overlayInner {
+    width:
+      calc(
+        100% - 32px
+      );
+
+    padding:
+      75px
+      0
+      100px;
+  }
+
+  .overlayBody,
+  .endingText {
+    width:
+      100%;
+  }
+
+  .endingText {
+    margin-top:
+      60px;
+
+    padding-top:
+      35px;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 430px) {
+  .article {
+    width:
+      calc(
+        100% - 28px
+      );
+  }
+
+  .header h2 {
+    font-size:
+      clamp(
+        39px,
+        12vw,
+        52px
+      );
+  }
+
+  .body p,
+  .overlayBody p,
+  .endingText p {
+    font-size:
+      18px;
+
+    line-height:
+      1.66;
+  }
+
+  .promiseQuote {
+    font-size:
+      clamp(
+        25px,
+        7.4vw,
+        31px
+      ) !important;
+  }
+
+  .waitingQuote {
+    font-size:
+      clamp(
+        31px,
+        9vw,
+        42px
+      );
+  }
+
+  .waitingDescription {
+    font-size:
+      16px;
+  }
+
+  .overlayInner {
+    width:
+      calc(
+        100% - 28px
+      );
+  }
+}

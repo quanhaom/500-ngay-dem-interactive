@@ -1,0 +1,703 @@
+/* =========================================================
+   ROOT
+
+   Không background riêng.
+   Component nằm trực tiếp trên nền vàng của article.
+========================================================= */
+
+.section {
+  position: relative;
+
+  width:
+    min(
+      820px,
+      100%
+    );
+
+  margin:
+    clamp(48px, 5vw, 74px)
+    auto
+    clamp(52px, 5.5vw, 82px);
+
+  color: #294328;
+
+  background: transparent;
+}
+
+/* =========================================================
+   PROGRESS GRID
+========================================================= */
+
+.progressGrid {
+  display: grid;
+
+  grid-template-columns:
+    1fr;
+
+  gap:
+    clamp(
+      44px,
+      5vw,
+      66px
+    );
+}
+
+/* =========================================================
+   PROGRESS ITEM
+========================================================= */
+
+.progressItem {
+  position: relative;
+
+  width: 100%;
+}
+
+/* =========================================================
+   KICKER
+========================================================= */
+
+.progressKicker {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color:
+    rgba(
+      33,
+      63,
+      29,
+      0.88
+    );
+
+  font-family:
+    var(--font-sans),
+    Arial,
+    sans-serif;
+
+  font-size:
+    clamp(
+      11px,
+      0.9vw,
+      14px
+    );
+
+  font-weight: 800;
+
+  line-height: 1.25;
+
+  letter-spacing:
+    0.035em;
+}
+
+/* =========================================================
+   PERCENT
+========================================================= */
+
+.percent {
+  display: block;
+
+  margin: 0;
+
+  color: #365323;
+
+  font-family:
+    var(--font-editorial),
+    "Times New Roman",
+    serif;
+
+  font-size:
+    clamp(
+      54px,
+      5.7vw,
+      82px
+    );
+
+  font-style: italic;
+
+  font-weight: 500;
+
+  line-height: 0.88;
+
+  letter-spacing:
+    -0.055em;
+
+  -webkit-text-stroke: 0;
+
+  text-shadow: none;
+}
+
+/* =========================================================
+   COMPLETED
+========================================================= */
+
+.completed {
+  margin:
+    9px
+    0
+    16px;
+
+  color:
+    rgba(
+      35,
+      60,
+      29,
+      0.78
+    );
+
+  font-family:
+    var(--font-sans),
+    Arial,
+    sans-serif;
+
+  font-size:
+    clamp(
+      11px,
+      0.9vw,
+      14px
+    );
+
+  font-weight: 600;
+
+  line-height: 1.35;
+}
+
+/* =========================================================
+   PROGRESS TRACK
+
+   Không nền vàng / trắng bên trong.
+========================================================= */
+
+.progressTrack {
+  position: relative;
+
+  width: 100%;
+
+  height:
+    clamp(
+      18px,
+      1.7vw,
+      24px
+    );
+
+  overflow: hidden;
+
+  border:
+    1.5px solid
+    #34581b;
+
+  border-radius: 999px;
+
+  background: transparent;
+}
+
+/* =========================================================
+   PROGRESS FILL
+
+   Ban đầu = 0.
+========================================================= */
+
+.progressFill {
+  position: absolute;
+
+  inset:
+    0
+    auto
+    0
+    0;
+
+  display: block;
+
+  width: 0;
+
+  border-radius: inherit;
+
+  background: #234f0e;
+
+  transition:
+    width
+    1600ms
+    cubic-bezier(
+      0.16,
+      1,
+      0.3,
+      1
+    );
+
+  will-change: width;
+}
+
+/* =========================================================
+   FILL WHEN VISIBLE
+========================================================= */
+
+.progressActive
+  .progressFill {
+  width:
+    var(
+      --target-progress
+    );
+}
+
+/* =========================================================
+   NUMBERS BELOW
+========================================================= */
+
+.progressNumbers {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: flex-end;
+
+  gap: 2px;
+
+  margin-top: 6px;
+
+  padding-right: 4px;
+
+  color:
+    rgba(
+      38,
+      58,
+      31,
+      0.68
+    );
+
+  font-family:
+    var(--font-sans),
+    Arial,
+    sans-serif;
+
+  font-size:
+    9px;
+
+  font-weight: 600;
+
+  line-height: 1;
+}
+
+.progressNumbers i {
+  font-style: normal;
+}
+
+/* =========================================================
+   RESOURCES
+========================================================= */
+
+.resources {
+  margin-top:
+    clamp(
+      54px,
+      6vw,
+      82px
+    );
+}
+
+/* =========================================================
+   RESOURCES TITLE
+========================================================= */
+
+.resourcesTitle {
+  display: block;
+
+  margin-bottom:
+    clamp(
+      25px,
+      3vw,
+      36px
+    );
+
+  color:
+    rgba(
+      33,
+      63,
+      29,
+      0.88
+    );
+
+  font-family:
+    var(--font-sans),
+    Arial,
+    sans-serif;
+
+  font-size:
+    clamp(
+      12px,
+      1vw,
+      14px
+    );
+
+  font-weight: 800;
+
+  line-height: 1.2;
+
+  letter-spacing:
+    0.035em;
+}
+
+/* =========================================================
+   RESOURCE GRID
+========================================================= */
+
+.resourceGrid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      3,
+      minmax(0, 1fr)
+    );
+
+  gap:
+    clamp(
+      28px,
+      4vw,
+      52px
+    );
+}
+
+/* =========================================================
+   RESOURCE ITEM
+========================================================= */
+
+.resourceItem {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  min-width: 0;
+
+  text-align: center;
+
+  opacity: 0;
+
+  transform:
+    translateY(20px);
+
+  transition:
+    opacity
+      650ms
+      ease,
+    transform
+      800ms
+      cubic-bezier(
+        0.22,
+        1,
+        0.36,
+        1
+      );
+}
+
+.sectionActive
+  .resourceItem {
+  opacity: 1;
+
+  transform:
+    translateY(0);
+}
+
+.sectionActive
+  .resourceItem:nth-child(1) {
+  transition-delay:
+    450ms;
+}
+
+.sectionActive
+  .resourceItem:nth-child(2) {
+  transition-delay:
+    600ms;
+}
+
+.sectionActive
+  .resourceItem:nth-child(3) {
+  transition-delay:
+    750ms;
+}
+
+/* =========================================================
+   ICON
+
+   Không circle.
+   Không background.
+   Không shadow.
+========================================================= */
+
+.iconWrap {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  width:
+    clamp(
+      40px,
+      4vw,
+      56px
+    );
+
+  height:
+    clamp(
+      40px,
+      4vw,
+      56px
+    );
+
+  margin-bottom: 12px;
+
+  border: none;
+
+  background: transparent;
+
+  box-shadow: none;
+}
+
+/* =========================================================
+   SVG
+========================================================= */
+
+.icon {
+  display: block;
+
+  width: 100%;
+
+  height: 100%;
+
+  fill: none;
+
+  stroke: #527d3f;
+
+  stroke-width: 2.4;
+
+  stroke-linecap: round;
+
+  stroke-linejoin: round;
+}
+
+/* =========================================================
+   RESOURCE NUMBER
+========================================================= */
+
+.resourceItem
+  > strong {
+  display: block;
+
+  color: #365323;
+
+  font-family:
+    var(--font-editorial),
+    "Times New Roman",
+    serif;
+
+  font-size:
+    clamp(
+      38px,
+      3.8vw,
+      56px
+    );
+
+  font-style: italic;
+
+  font-weight: 500;
+
+  line-height: 0.88;
+
+  letter-spacing:
+    -0.05em;
+
+  -webkit-text-stroke: 0;
+
+  text-shadow: none;
+}
+
+/* =========================================================
+   RESOURCE DESCRIPTION
+========================================================= */
+
+.resourceItem p {
+  margin:
+    9px
+    0
+    0;
+
+  color:
+    rgba(
+      33,
+      63,
+      29,
+      0.86
+    );
+
+  font-family:
+    var(--font-sans),
+    Arial,
+    sans-serif;
+
+  font-size:
+    clamp(
+      11px,
+      0.85vw,
+      13px
+    );
+
+  font-weight: 600;
+
+  line-height: 1.35;
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (
+  max-width: 1000px
+) {
+  .section {
+    width:
+      min(
+        760px,
+        100%
+      );
+
+    margin:
+      44px
+      auto
+      62px;
+  }
+
+  .percent {
+    font-size:
+      66px;
+  }
+
+  .resourceGrid {
+    gap: 24px;
+  }
+
+  .resourceItem
+    > strong {
+    font-size:
+      44px;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (
+  max-width: 700px
+) {
+  .section {
+    width: 100%;
+
+    margin:
+      42px
+      auto
+      56px;
+  }
+
+  .progressGrid {
+    gap: 48px;
+  }
+
+  .progressKicker {
+    font-size: 11px;
+  }
+
+  .percent {
+    font-size: 58px;
+  }
+
+  .completed {
+    margin-bottom: 13px;
+
+    font-size: 11px;
+  }
+
+  .progressTrack {
+    height: 18px;
+  }
+
+  .resources {
+    margin-top: 58px;
+  }
+
+  .resourcesTitle {
+    margin-bottom: 28px;
+
+    font-size: 11px;
+  }
+
+  .resourceGrid {
+    gap: 14px;
+  }
+
+  .iconWrap {
+    width: 40px;
+
+    height: 40px;
+
+    margin-bottom: 10px;
+  }
+
+  .resourceItem
+    > strong {
+    font-size: 38px;
+  }
+
+  .resourceItem p {
+    font-size: 10px;
+  }
+}
+
+/* =========================================================
+   VERY SMALL
+========================================================= */
+
+@media (
+  max-width: 430px
+) {
+  .resourceGrid {
+    gap: 10px;
+  }
+
+  .resourceItem
+    > strong {
+    font-size: 34px;
+  }
+
+  .resourceItem p {
+    font-size: 9px;
+  }
+
+  .iconWrap {
+    width: 36px;
+
+    height: 36px;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  .progressFill {
+    transition: none;
+  }
+
+  .resourceItem {
+    opacity: 1;
+
+    transform: none;
+
+    transition: none;
+  }
+}
+

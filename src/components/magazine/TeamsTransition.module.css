@@ -1,0 +1,167 @@
+.transition {
+  position: relative;
+
+  width: 100%;
+
+  min-height:
+    clamp(
+      380px,
+      52vh,
+      650px
+    );
+
+  overflow: hidden;
+
+  /*
+   * Nếu chưa có ảnh background,
+   * nó sẽ tiếp tục dùng màu nền chung.
+   */
+  background: #f2dfad;
+}
+
+/* =========================================================
+   BACKGROUND
+========================================================= */
+
+.background {
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 0;
+
+  /*
+   * Sau này nếu có background riêng:
+   *
+   * background-image:
+   *   url("/images/readymag/teams/teams-transition-bg.jpg");
+   *
+   * background-size: cover;
+   * background-position: center;
+   */
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(
+        242,
+        223,
+        173,
+        1
+      )
+      0%,
+
+      rgba(
+        239,
+        223,
+        181,
+        1
+      )
+      42%,
+
+      rgba(
+        235,
+        221,
+        187,
+        1
+      )
+      100%
+    );
+}
+
+/* =========================================================
+   FLOWER
+========================================================= */
+
+.flowerArea {
+  position: relative;
+
+  z-index: 2;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  width: 100%;
+
+  min-height:
+    clamp(
+      380px,
+      52vh,
+      650px
+    );
+
+  padding:
+    clamp(
+      90px,
+      10vw,
+      150px
+    )
+    20px;
+}
+
+/*
+ * Placeholder hiện tại.
+ * Sau khi có ảnh hoa có thể xóa div này.
+ */
+
+.flowerPlaceholder {
+  width:
+    clamp(
+      90px,
+      9vw,
+      150px
+    );
+
+  aspect-ratio: 1;
+
+  opacity: 0;
+}
+
+/* =========================================================
+   FLOWER IMAGE
+========================================================= */
+
+.flower {
+  display: block;
+
+  width:
+    clamp(
+      100px,
+      10vw,
+      180px
+    );
+
+  height: auto;
+
+  object-fit: contain;
+
+  opacity: 0.92;
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+  .transition {
+    min-height:
+      330px;
+  }
+
+  .flowerArea {
+    min-height:
+      330px;
+
+    padding:
+      80px
+      16px;
+  }
+
+  .flower {
+    width:
+      110px;
+  }
+}
