@@ -1,0 +1,1445 @@
+/* =========================================================
+   ROOT
+========================================================= */
+
+.section {
+  position: relative;
+
+  width: 100%;
+
+  background:
+    #111111;
+
+  color:
+    #ffffff;
+}
+
+/* =========================================================
+   FULL SCREEN STICKY STAGE
+========================================================= */
+
+.stickyStage {
+  position: sticky;
+
+  top: 0;
+
+  z-index: 1;
+
+  width: 100%;
+
+  height: 100svh;
+
+  overflow: hidden;
+
+  background:
+    #111111;
+}
+
+/* =========================================================
+   IMAGE STACK
+========================================================= */
+
+.imageStack {
+  position: absolute;
+
+  inset: 0;
+
+  width: 100%;
+
+  height: 100%;
+}
+
+.imageLayer {
+  position: absolute;
+
+  inset: 0;
+
+  opacity: 0;
+
+  transform:
+    scale(1.06);
+
+  filter:
+    brightness(0.9);
+
+  transition:
+    opacity
+      900ms
+      cubic-bezier(
+        0.22,
+        1,
+        0.36,
+        1
+      ),
+    transform
+      1700ms
+      cubic-bezier(
+        0.22,
+        1,
+        0.36,
+        1
+      ),
+    filter
+      900ms
+      ease;
+
+  pointer-events:
+    none;
+}
+
+.imageLayerActive {
+  opacity: 1;
+
+  transform:
+    scale(1);
+
+  filter:
+    brightness(1);
+}
+
+.bgImage {
+  object-fit: cover;
+}
+
+/* =========================================================
+   DIRECTIONAL OVERLAY
+========================================================= */
+
+.stageOverlay {
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 3;
+
+  pointer-events: none;
+
+  transition:
+    opacity
+      600ms
+      ease,
+    background
+      750ms
+      ease;
+}
+
+/* =========================================================
+   TEXT LEFT
+   COLOR STRONG LEFT -> CLEAR RIGHT
+========================================================= */
+
+.overlayLeft {
+  background:
+    linear-gradient(
+      90deg,
+
+      rgba(
+        91,
+        9,
+        11,
+        0.96
+      )
+      0%,
+
+      rgba(
+        121,
+        11,
+        13,
+        0.93
+      )
+      14%,
+
+      rgba(
+        150,
+        16,
+        18,
+        0.86
+      )
+      28%,
+
+      rgba(
+        163,
+        21,
+        21,
+        0.69
+      )
+      42%,
+
+      rgba(
+        150,
+        18,
+        18,
+        0.46
+      )
+      54%,
+
+      rgba(
+        106,
+        11,
+        12,
+        0.24
+      )
+      67%,
+
+      rgba(
+        52,
+        5,
+        6,
+        0.08
+      )
+      80%,
+
+      rgba(
+        0,
+        0,
+        0,
+        0
+      )
+      100%
+    );
+}
+
+/* =========================================================
+   TEXT RIGHT
+   COLOR STRONG RIGHT -> CLEAR LEFT
+========================================================= */
+
+.overlayRight {
+  background:
+    linear-gradient(
+      270deg,
+
+      rgba(
+        91,
+        9,
+        11,
+        0.96
+      )
+      0%,
+
+      rgba(
+        121,
+        11,
+        13,
+        0.93
+      )
+      14%,
+
+      rgba(
+        150,
+        16,
+        18,
+        0.86
+      )
+      28%,
+
+      rgba(
+        163,
+        21,
+        21,
+        0.69
+      )
+      42%,
+
+      rgba(
+        150,
+        18,
+        18,
+        0.46
+      )
+      54%,
+
+      rgba(
+        106,
+        11,
+        12,
+        0.24
+      )
+      67%,
+
+      rgba(
+        52,
+        5,
+        6,
+        0.08
+      )
+      80%,
+
+      rgba(
+        0,
+        0,
+        0,
+        0
+      )
+      100%
+    );
+}
+
+/* =========================================================
+   GLOBAL SHADE
+
+   giữ độ sâu cho ảnh,
+   nhất là vùng trên và dưới màn hình
+========================================================= */
+
+.globalShade {
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 2;
+
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      to bottom,
+
+      rgba(
+        0,
+        0,
+        0,
+        0.1
+      )
+      0%,
+
+      rgba(
+        0,
+        0,
+        0,
+        0
+      )
+      28%,
+
+      rgba(
+        0,
+        0,
+        0,
+        0.02
+      )
+      62%,
+
+      rgba(
+        0,
+        0,
+        0,
+        0.32
+      )
+      100%
+    );
+}
+
+/* =========================================================
+   STEPS
+
+   kéo step đầu tiên lên trên sticky screen
+========================================================= */
+
+.steps {
+  position: relative;
+
+  z-index: 5;
+
+  width: 100%;
+
+  margin-top:
+    -100svh;
+}
+
+/* =========================================================
+   EACH STEP
+========================================================= */
+
+.step {
+  position: relative;
+
+  display: flex;
+
+  align-items:
+    flex-end;
+
+  width: 100%;
+
+  min-height:
+    108svh;
+
+  padding:
+    14svh
+    clamp(
+      30px,
+      5vw,
+      82px
+    )
+    12svh;
+
+  pointer-events:
+    none;
+}
+
+/* =========================================================
+   TEXT POSITION
+========================================================= */
+
+.stepLeft {
+  justify-content:
+    flex-start;
+}
+
+.stepRight {
+  justify-content:
+    flex-end;
+}
+
+/* =========================================================
+   COPY
+========================================================= */
+
+.copy {
+  position: relative;
+
+  width:
+    min(
+      630px,
+      44vw
+    );
+
+  opacity: 0;
+
+  transform:
+    translateY(
+      95px
+    );
+
+  transition:
+    opacity
+      620ms
+      cubic-bezier(
+        0.22,
+        1,
+        0.36,
+        1
+      ),
+    transform
+      820ms
+      cubic-bezier(
+        0.22,
+        1,
+        0.36,
+        1
+      );
+
+  pointer-events:
+    auto;
+}
+
+/*
+ * Quote cần rộng hơn body thường,
+ * đặc biệt màn KTS Nguyễn Xuân Thắng.
+ */
+
+.quoteCopy {
+  width:
+    min(
+      700px,
+      48vw
+    );
+}
+
+.copyActive {
+  opacity: 1;
+
+  transform:
+    translateY(
+      0
+    );
+}
+
+.stepLeft .copy {
+  margin-right:
+    auto;
+
+  text-align:
+    left;
+}
+
+.stepRight .copy {
+  margin-left:
+    auto;
+
+  text-align:
+    left;
+}
+
+/* =========================================================
+   EYEBROW
+========================================================= */
+
+.eyebrow {
+  display:
+    inline-block;
+
+  margin-bottom:
+    18px;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.84
+    );
+
+  font-family:
+    var(--font-sans),
+    "Segoe UI",
+    Arial,
+    sans-serif;
+
+  font-size:
+    clamp(
+      9px,
+      0.75vw,
+      11px
+    );
+
+  font-weight:
+    700;
+
+  line-height:
+    1.4;
+
+  letter-spacing:
+    0.16em;
+
+  text-transform:
+    uppercase;
+}
+
+/* =========================================================
+   NORMAL BODY
+========================================================= */
+
+.body {
+  margin: 0;
+
+  color:
+    #ffffff;
+
+  font-family:
+    var(--font-editorial),
+    "Times New Roman",
+    serif;
+
+  font-size:
+    clamp(
+      23px,
+      1.9vw,
+      32px
+    );
+
+  font-weight:
+    400;
+
+  line-height:
+    1.62;
+
+  letter-spacing:
+    -0.01em;
+
+  text-wrap:
+    pretty;
+
+  text-shadow:
+    0
+    2px
+    16px
+    rgba(
+      0,
+      0,
+      0,
+      0.2
+    );
+}
+
+/* =========================================================
+   QUOTE INTRO
+========================================================= */
+
+.quoteIntro {
+  margin:
+    0
+    0
+    6px;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.9
+    );
+
+  font-family:
+    var(--font-editorial),
+    "Times New Roman",
+    serif;
+
+  font-size:
+    clamp(
+      17px,
+      1.25vw,
+      21px
+    );
+
+  font-weight:
+    600;
+
+  line-height:
+    1.45;
+}
+
+/* =========================================================
+   QUOTE BOX
+========================================================= */
+
+.quoteBox {
+  position:
+    relative;
+
+  width:
+    100%;
+}
+
+/* =========================================================
+   BIG QUOTE MARK
+========================================================= */
+
+.quoteMark {
+  display:
+    block;
+
+  height:
+    clamp(
+      46px,
+      4.7vw,
+      66px
+    );
+
+  margin:
+    2px
+    0
+    7px;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.38
+    );
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size:
+    clamp(
+      92px,
+      7vw,
+      125px
+    );
+
+  font-weight:
+    400;
+
+  line-height:
+    0.78;
+
+  user-select:
+    none;
+}
+
+/* =========================================================
+   QUOTE TEXT
+========================================================= */
+
+.quote {
+  margin: 0;
+
+  color:
+    #ffffff;
+
+  font-family:
+    var(--font-editorial),
+    "Times New Roman",
+    serif;
+
+  font-size:
+    clamp(
+      25px,
+      1.95vw,
+      35px
+    );
+
+  font-style:
+    italic;
+
+  font-weight:
+    600;
+
+  line-height:
+    1.5;
+
+  letter-spacing:
+    -0.015em;
+
+  text-wrap:
+    pretty;
+
+  text-shadow:
+    0
+    2px
+    18px
+    rgba(
+      0,
+      0,
+      0,
+      0.22
+    );
+}
+
+/* =========================================================
+   QUOTE AUTHOR
+========================================================= */
+
+.quoteSource {
+  display:
+    block;
+
+  margin-top:
+    22px;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.72
+    );
+
+  font-family:
+    var(--font-sans),
+    "Segoe UI",
+    Arial,
+    sans-serif;
+
+  font-size:
+    10px;
+
+  font-weight:
+    700;
+
+  line-height:
+    1.4;
+
+  letter-spacing:
+    0.14em;
+
+  text-transform:
+    uppercase;
+}
+
+/* =========================================================
+   CAPTION WRAPPER
+========================================================= */
+
+.captionWrap {
+  position:
+    absolute;
+
+  inset:
+    0;
+
+  z-index:
+    6;
+
+  pointer-events:
+    none;
+}
+
+/* =========================================================
+   CAPTION LAYER
+========================================================= */
+
+.captionLayer {
+  position:
+    absolute;
+
+  bottom:
+    26px;
+
+  width:
+    min(
+      480px,
+      38vw
+    );
+
+  opacity:
+    0;
+
+  transform:
+    translateY(
+      18px
+    );
+
+  transition:
+    opacity
+      500ms
+      ease,
+    transform
+      650ms
+      cubic-bezier(
+        0.22,
+        1,
+        0.36,
+        1
+      );
+}
+
+.captionLayerActive {
+  opacity:
+    1;
+
+  transform:
+    translateY(
+      0
+    );
+}
+
+/*
+ * Text trái
+ * -> caption phải
+ */
+
+.captionRight {
+  right:
+    clamp(
+      22px,
+      3vw,
+      52px
+    );
+}
+
+/*
+ * Text phải
+ * -> caption trái
+ */
+
+.captionLeft {
+  left:
+    clamp(
+      22px,
+      3vw,
+      52px
+    );
+}
+
+/* =========================================================
+   CAPTION CONTENT
+========================================================= */
+
+.caption {
+  margin:
+    0;
+
+  padding:
+    10px
+    13px;
+
+  background:
+    rgba(
+      9,
+      9,
+      9,
+      0.43
+    );
+
+  color:
+    #ffffff;
+
+  font-family:
+    var(--font-editorial),
+    "Times New Roman",
+    serif;
+
+  font-size:
+    clamp(
+      12px,
+      0.95vw,
+      15px
+    );
+
+  font-style:
+    italic;
+
+  font-weight:
+    500;
+
+  line-height:
+    1.45;
+
+  backdrop-filter:
+    blur(
+      5px
+    );
+
+  -webkit-backdrop-filter:
+    blur(
+      5px
+    );
+}
+
+/* =========================================================
+   COUNTER
+========================================================= */
+
+.counter {
+  position:
+    absolute;
+
+  top:
+    28px;
+
+  right:
+    clamp(
+      22px,
+      3vw,
+      52px
+    );
+
+  z-index:
+    7;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  gap:
+    10px;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.72
+    );
+
+  font-family:
+    var(--font-sans),
+    "Segoe UI",
+    Arial,
+    sans-serif;
+
+  font-size:
+    9px;
+
+  font-weight:
+    700;
+
+  line-height:
+    1;
+
+  letter-spacing:
+    0.12em;
+
+  pointer-events:
+    none;
+}
+
+.counter i {
+  display:
+    block;
+
+  width:
+    36px;
+
+  height:
+    1px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.4
+    );
+}
+
+/* =========================================================
+   DESKTOP SMALLER
+========================================================= */
+
+@media (
+  max-width: 1200px
+) {
+  .copy {
+    width:
+      min(
+        600px,
+        47vw
+      );
+  }
+
+  .quoteCopy {
+    width:
+      min(
+        640px,
+        50vw
+      );
+  }
+
+  .body {
+    font-size:
+      clamp(
+        21px,
+        2vw,
+        28px
+      );
+  }
+
+  .quote {
+    font-size:
+      clamp(
+        23px,
+        2.1vw,
+        31px
+      );
+  }
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (
+  max-width: 900px
+) {
+  .step {
+    padding:
+      15svh
+      28px
+      12svh;
+  }
+
+  .copy,
+  .quoteCopy {
+    width:
+      min(
+        570px,
+        57vw
+      );
+  }
+
+  .captionLayer {
+    width:
+      min(
+        400px,
+        42vw
+      );
+  }
+
+  .body {
+    font-size:
+      21px;
+
+    line-height:
+      1.58;
+  }
+
+  .quote {
+    font-size:
+      24px;
+
+    line-height:
+      1.47;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (
+  max-width: 700px
+) {
+  .stickyStage {
+    height:
+      100svh;
+  }
+
+  .steps {
+    margin-top:
+      -100svh;
+  }
+
+  .step {
+    min-height:
+      105svh;
+
+    align-items:
+      flex-end;
+
+    padding:
+      16svh
+      16px
+      13svh;
+  }
+
+  /* =======================================================
+     COPY MOBILE
+  ======================================================= */
+
+  .copy,
+  .quoteCopy {
+    width:
+      min(
+        92%,
+        440px
+      );
+
+    transform:
+      translateY(
+        58px
+      );
+  }
+
+  .copyActive {
+    transform:
+      translateY(
+        0
+      );
+  }
+
+  .stepLeft {
+    justify-content:
+      flex-start;
+  }
+
+  .stepRight {
+    justify-content:
+      flex-end;
+  }
+
+  .stepLeft .copy {
+    margin-right:
+      auto;
+  }
+
+  .stepRight .copy {
+    margin-left:
+      auto;
+  }
+
+  /* =======================================================
+     OVERLAY MOBILE
+  ======================================================= */
+
+  .overlayLeft {
+    background:
+      linear-gradient(
+        90deg,
+
+        rgba(
+          91,
+          9,
+          11,
+          0.92
+        )
+        0%,
+
+        rgba(
+          127,
+          13,
+          15,
+          0.8
+        )
+        38%,
+
+        rgba(
+          125,
+          13,
+          14,
+          0.52
+        )
+        60%,
+
+        rgba(
+          72,
+          7,
+          8,
+          0.2
+        )
+        80%,
+
+        rgba(
+          0,
+          0,
+          0,
+          0
+        )
+        100%
+      );
+  }
+
+  .overlayRight {
+    background:
+      linear-gradient(
+        270deg,
+
+        rgba(
+          91,
+          9,
+          11,
+          0.92
+        )
+        0%,
+
+        rgba(
+          127,
+          13,
+          15,
+          0.8
+        )
+        38%,
+
+        rgba(
+          125,
+          13,
+          14,
+          0.52
+        )
+        60%,
+
+        rgba(
+          72,
+          7,
+          8,
+          0.2
+        )
+        80%,
+
+        rgba(
+          0,
+          0,
+          0,
+          0
+        )
+        100%
+      );
+  }
+
+  .globalShade {
+    background:
+      linear-gradient(
+        to bottom,
+
+        rgba(
+          0,
+          0,
+          0,
+          0.08
+        )
+        0%,
+
+        rgba(
+          0,
+          0,
+          0,
+          0
+        )
+        32%,
+
+        rgba(
+          0,
+          0,
+          0,
+          0.16
+        )
+        68%,
+
+        rgba(
+          0,
+          0,
+          0,
+          0.46
+        )
+        100%
+      );
+  }
+
+  /* =======================================================
+     TEXT MOBILE
+  ======================================================= */
+
+  .eyebrow {
+    margin-bottom:
+      11px;
+
+    font-size:
+      9px;
+  }
+
+  .body {
+    font-size:
+      18px;
+
+    line-height:
+      1.58;
+  }
+
+  .quoteIntro {
+    font-size:
+      15px;
+  }
+
+  .quoteMark {
+    height:
+      38px;
+
+    margin-bottom:
+      5px;
+
+    font-size:
+      76px;
+  }
+
+  .quote {
+    font-size:
+      20px;
+
+    line-height:
+      1.48;
+  }
+
+  .quoteSource {
+    margin-top:
+      17px;
+
+    font-size:
+      9px;
+  }
+
+  /* =======================================================
+     CAPTION MOBILE
+  ======================================================= */
+
+  .captionLayer {
+    bottom:
+      14px;
+
+    width:
+      min(
+        58%,
+        270px
+      );
+  }
+
+  .captionRight {
+    right:
+      14px;
+  }
+
+  .captionLeft {
+    left:
+      14px;
+  }
+
+  .caption {
+    padding:
+      8px
+      9px;
+
+    font-size:
+      10px;
+
+    line-height:
+      1.4;
+  }
+
+  /* =======================================================
+     COUNTER MOBILE
+  ======================================================= */
+
+  .counter {
+    top:
+      18px;
+
+    right:
+      16px;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (
+  max-width: 390px
+) {
+  .copy,
+  .quoteCopy {
+    width:
+      95%;
+  }
+
+  .body {
+    font-size:
+      17px;
+  }
+
+  .quote {
+    font-size:
+      18.5px;
+
+    line-height:
+      1.48;
+  }
+
+  .captionLayer {
+    width:
+      64%;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  .imageLayer,
+  .copy,
+  .captionLayer,
+  .stageOverlay {
+    transition:
+      none;
+  }
+
+  .imageLayer,
+  .imageLayerActive {
+    transform:
+      none;
+  }
+
+  .copy,
+  .copyActive {
+    transform:
+      none;
+  }
+}
