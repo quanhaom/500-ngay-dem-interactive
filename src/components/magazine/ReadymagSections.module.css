@@ -1,19 +1,11 @@
-﻿/* =========================================================
-   BASE
-========================================================= */
-
-.paperSection,
-.clearanceSection,
-.mapDivider {
+﻿.paperSection {
   position: relative;
 
   width: 100%;
 
-  margin: 0;
+  background: #f2dfad;
 
-  background-color: #f2dfad;
-
-  color: #000000;
+  color: #000;
 }
 
 /* =========================================================
@@ -24,8 +16,9 @@
   position: relative;
 
   width: 100%;
+
+  height: 100vh;
   height: 100svh;
-  min-height: 100svh;
 
   overflow: hidden;
 
@@ -36,34 +29,12 @@
   position: absolute;
 
   inset: 0;
-
-  width: 100%;
-  height: 100%;
-
-  overflow: hidden;
 }
 
 .coverImage {
   object-fit: cover;
-  object-position: center center;
-}
 
-.cover::after {
-  content: "";
-
-  position: absolute;
-  inset: 0;
-
-  z-index: 2;
-
-  pointer-events: none;
-
-  background:
-    linear-gradient(
-      to bottom,
-      transparent 76%,
-      rgba(0, 0, 0, 0.08) 100%
-    );
+  object-position: center;
 }
 
 /* =========================================================
@@ -71,24 +42,18 @@
 ========================================================= */
 
 .intro {
-  position: relative;
-
   width: 100%;
 
-  margin: 0;
-
   padding:
-    clamp(85px, 8vw, 130px)
+    clamp(80px, 7.5vw, 115px)
     0
-    clamp(90px, 9vw, 140px);
-
-  background: #f2dfad;
+    clamp(85px, 8vw, 125px);
 }
 
 .introInner {
   width:
     min(
-      1120px,
+      1080px,
       calc(100% - 72px)
     );
 
@@ -97,168 +62,107 @@
 
 .introLead,
 .introTail {
-  margin: 0;
-
-  color: #000000;
-
-  font-family:
-    var(--font-editorial),
-    "Times New Roman",
-    serif;
-
-  font-size:
-    clamp(
-      18px,
-      1.55vw,
-      22px
+  width:
+    min(
+      960px,
+      100%
     );
 
-  font-style: italic;
+  margin-left: auto;
+
+  margin-right: auto;
+
+  color: #000;
+
+  font-family:
+    "Merriweather",
+    Georgia,
+    serif;
+
+  font-size: 22px;
 
   font-weight: 400;
 
-  line-height: 1.8;
+  line-height: 1.78;
+
+  letter-spacing: -0.008em;
 
   text-wrap: pretty;
 }
 
-/* =========================================================
-   58 TRONG PARAGRAPH
-========================================================= */
+.introLead {
+  margin-top: 0;
+
+  margin-bottom: 0;
+}
+
+.introTail {
+  margin-top: 0;
+
+  margin-bottom: 0;
+}
 
 .intro58 {
   display: inline;
 
+  margin-right: 0.09em;
+
   color: #76551d;
 
   font-family:
-    var(--font-editorial),
-    "Times New Roman",
+    "Merriweather",
+    Georgia,
     serif;
 
   font-size: 2.05em;
 
-  font-style: normal;
-
-  font-weight: 500;
+  font-weight: 400;
 
   line-height: 0;
 
-  letter-spacing: -0.05em;
-
   vertical-align: -0.07em;
-
-  margin-right: 0.07em;
 }
 
-/* =========================================================
-   QUOTE
-   KHÔNG NỀN
-   CHỮ ĐEN
-========================================================= */
-
 .introQuote {
+  width:
+    min(
+      1020px,
+      100%
+    );
+
   margin:
-    clamp(36px, 4vw, 55px)
-    0
-    clamp(38px, 4vw, 56px);
+    clamp(42px, 4vw, 55px)
+    auto;
 
   padding:
-    3px
+    4px
     0
-    3px
-    clamp(18px, 2vw, 26px);
+    4px
+    clamp(22px, 2.2vw, 30px);
 
   border-left:
     3px solid
-    rgba(0, 0, 0, 0.28);
+    rgba(35, 89, 68, 0.42);
 
-  background: transparent;
-
-  color: #000000;
+  color: #080808;
 
   font-family:
-    var(--font-editorial),
-    "Times New Roman",
+    "Merriweather",
+    Georgia,
     serif;
 
   font-size:
     clamp(
-      19px,
-      1.65vw,
-      24px
+      26px,
+      2vw,
+      32px
     );
 
   font-style: italic;
 
   font-weight: 700;
 
-  line-height: 1.72;
-
-  text-wrap: pretty;
-}
-
-/* =========================================================
-   STORY SUBTITLE
-========================================================= */
-
-.storySubtitleSection {
-  width: 100%;
-
-  margin: 0;
-
-  padding:
-    clamp(46px, 5vw, 70px)
-    0
-    5px;
-
-  background: #f2dfad;
-}
-
-.storySubtitle {
-  width:
-    min(
-      1120px,
-      calc(100% - 72px)
-    );
-
-  margin: 0 auto;
-
-  text-align: center;
-}
-
-.storySubtitle p {
-  margin: 0;
-
-  color: #000000;
-
-  font-family:
-    var(--font-editorial),
-    "Times New Roman",
-    serif;
-
-  font-size:
-    clamp(
-      25px,
-      2.6vw,
-      40px
-    );
-
-  font-weight: 500;
-
-  line-height: 1.22;
-
-  text-wrap: balance;
-}
-
-.storySubtitle strong {
-  color: #76551d;
-
-  font-size: 1.3em;
-
-  font-style: italic;
-
-  font-weight: 500;
+  line-height: 1.62;
 }
 
 /* =========================================================
@@ -269,168 +173,93 @@
   width: 100%;
 
   padding:
-    16px
-    max(5vw, 40px)
-    42px;
-
-  background: #f2dfad;
+    6px
+    max(4vw, 32px)
+    48px;
 }
 
 .storyOpening p {
   width:
     min(
-      1120px,
+      960px,
       100%
     );
 
   margin: 0 auto;
 
-  color: #000000;
-
   font-family:
-    var(--font-editorial),
-    "Times New Roman",
+    "Merriweather",
+    Georgia,
     serif;
 
-  font-size:
-    clamp(
-      18px,
-      1.55vw,
-      22px
-    );
+  font-size: 22px;
 
-  font-weight: 400;
-
-  line-height: 1.8;
-
-  text-wrap: pretty;
+  line-height: 1.78;
 }
 
 /* =========================================================
-   STORY MAP SECTION
-
-   LEFT = CONTENT
-   RIGHT = MAP
+   MAP SECTION
 ========================================================= */
 
 .storyMapSection {
   display: grid;
 
   grid-template-columns:
-    minmax(0, 0.9fr)
-    minmax(480px, 1.1fr);
+    minmax(0, 0.86fr)
+    minmax(480px, 1.14fr);
 
   gap:
     clamp(
       44px,
       5vw,
-      84px
+      76px
     );
 
   align-items: start;
 
-  width: 100%;
+  width:
+    min(
+      1280px,
+      calc(100% - 80px)
+    );
 
-  margin: 0;
+  margin: 0 auto;
 
   padding:
-    20px
-    max(5vw, 40px)
-    85px;
-
-  background: #f2dfad;
-}
-
-/* =========================================================
-   LEFT TEXT
-========================================================= */
-
-.storyMapCopy {
-  width: 100%;
-
-  min-width: 0;
+    18px
+    0
+    clamp(68px, 7vw, 96px);
 }
 
 .storyMapBlock {
-  position: relative;
-
-  width: 100%;
-
-  padding:
-    0
-    0
-    clamp(60px, 7vw, 100px);
-
-  border: 0;
+  padding-bottom: 48px;
 }
 
-.storyMapBlock + .storyMapBlock {
-  padding-top:
-    clamp(
-      35px,
-      5vw,
-      65px
-    );
+.storyMapBlock +
+.storyMapBlock {
+  padding-top: 16px;
 }
 
 .storyMapBlock p {
   margin: 0;
 
-  color: #000000;
-
   font-family:
-    var(--font-editorial),
-    "Times New Roman",
+    "Merriweather",
+    Georgia,
     serif;
 
-  font-size:
-    clamp(
-      18px,
-      1.55vw,
-      22px
-    );
+  font-size: 22px;
 
-  font-weight: 400;
-
-  line-height: 1.82;
-
-  letter-spacing: 0;
-
-  text-wrap: pretty;
-}
-
-/* =========================================================
-   RIGHT MAP
-========================================================= */
-
-.storyMapColumn {
-  position: relative;
-
-  width: 100%;
-
-  min-width: 0;
+  line-height: 1.78;
 }
 
 .storyMapSticky {
   position: sticky;
 
   top: 6vh;
-
-  width: 100%;
 }
 
-/*
-   Không border.
-   Không radius.
-   Không shadow.
-   Không header.
-*/
-
 .storyMapVisual {
-  position: relative;
-
-  width: 100%;
-
   height: 82vh;
 
   min-height: 590px;
@@ -438,104 +267,74 @@
   max-height: 820px;
 
   overflow: hidden;
-
-  border: 0;
-
-  border-radius: 0;
-
-  outline: 0;
-
-  box-shadow: none;
-
-  background: transparent;
 }
 
 /* =========================================================
-   STORY CLOSING
-========================================================= */
-
-/* =========================================================
-   FOREIGN STORY — LÀO / CAMPUCHIA
+   FOREIGN
 ========================================================= */
 
 .storyClosing {
   width: 100%;
-
-  padding:
-    20px
-    max(5vw, 40px)
-    clamp(100px, 10vw, 150px);
-
-  background: #f2dfad;
 }
 
 .foreignStory {
-  width: min(1120px, 100%);
+  width:
+    min(
+      1120px,
+      calc(100% - 80px)
+    );
 
   margin: 0 auto;
+
+  padding:
+    24px
+    0
+    clamp(80px, 8vw, 120px);
 }
 
 .foreignIntro {
-  margin:
-    0
-    0
-    clamp(28px, 3vw, 42px);
-
-  color: #000000;
-
-  font-family:
-    var(--font-editorial),
-    "Times New Roman",
-    serif;
-
-  font-size:
-    clamp(
-      18px,
-      1.55vw,
-      22px
+  width:
+    min(
+      960px,
+      100%
     );
 
-  font-weight: 400;
+  margin:
+    0
+    auto
+    clamp(38px, 4vw, 52px);
 
-  line-height: 1.8;
+  font-family:
+    "Merriweather",
+    Georgia,
+    serif;
+
+  font-size: 22px;
+
+  line-height: 1.78;
 }
 
-/* =========================================================
-   FIGURE
-========================================================= */
-
 .foreignFigure {
-  width: 100%;
-
   margin:
     0
     0
-    clamp(58px, 6vw, 90px);
+    clamp(55px, 5vw, 72px);
 }
-
-.foreignFigure:last-child {
-  margin-bottom: 0;
-}
-
-/* =========================================================
-   2 IMAGES SIDE BY SIDE
-========================================================= */
 
 .foreignImages {
   display: grid;
 
   grid-template-columns:
-    repeat(2, minmax(0, 1fr));
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
 
-  gap: 2px;
-
-  width: 100%;
+  gap: 5px;
 }
 
 .foreignImage {
   position: relative;
-
-  width: 100%;
 
   aspect-ratio: 1.5 / 1;
 
@@ -544,41 +343,33 @@
 
 .foreignImage img {
   object-fit: cover;
-
-  object-position: center;
 }
 
-/* =========================================================
-   CAPTION
-========================================================= */
-
 .foreignFigure figcaption {
-  width: min(860px, 92%);
+  width:
+    min(
+      820px,
+      92%
+    );
 
   margin:
-    12px
+    14px
     auto
     0;
 
-  color: #000000;
+  color:
+    rgba(0, 0, 0, 0.68);
 
   font-family:
-    var(--font-editorial),
-    "Times New Roman",
+    "Merriweather",
+    Georgia,
     serif;
 
-  font-size:
-    clamp(
-      16px,
-      1.35vw,
-      20px
-    );
+  font-size: 15px;
 
   font-style: italic;
 
-  font-weight: 500;
-
-  line-height: 1.45;
+  line-height: 1.5;
 
   text-align: center;
 }
@@ -588,331 +379,64 @@
 ========================================================= */
 
 @media (max-width: 800px) {
-  .storyClosing {
-    padding:
-      10px
-      16px
-      80px;
-  }
-
-  .foreignIntro {
-    margin-bottom: 24px;
-
-    font-size: 15px;
-
-    line-height: 1.72;
-  }
-
-  .foreignImages {
-    grid-template-columns: 1fr;
-
-    gap: 4px;
-  }
-
-  .foreignImage {
-    aspect-ratio: 1.45 / 1;
-  }
-
-  .foreignFigure {
-    margin-bottom: 55px;
-  }
-
-  .foreignFigure figcaption {
-    width: 94%;
-
-    margin-top: 10px;
-
-    font-size: 14px;
-
-    line-height: 1.45;
-  }
-}
-.storyClosing p {
-  width:
-    min(
-      1120px,
-      100%
-    );
-
-  margin: 0 auto;
-
-  color: #000000;
-
-  font-family:
-    var(--font-editorial),
-    "Times New Roman",
-    serif;
-
-  font-size:
-    clamp(
-      18px,
-      1.55vw,
-      22px
-    );
-
-  font-weight: 400;
-
-  line-height: 1.8;
-
-  text-wrap: pretty;
-}
-
-/* =========================================================
-   INFOGRAPHIC
-========================================================= */
-
-.clearanceSection {
-  position: relative;
-
-  width: 100%;
-
-  overflow: hidden;
-
-  background: #f2dfad;
-}
-
-.clearanceInner {
-  width:
-    min(
-      1100px,
-      calc(100% - 8vw)
-    );
-
-  margin: 0 auto;
-
-  padding:
-    clamp(40px, 5vw, 75px)
-    0
-    clamp(100px, 10vw, 150px);
-}
-
-.clearanceImage {
-  position: relative;
-
-  width: 100%;
-
-  margin: 0;
-
-  padding: 0;
-}
-
-.infographicMedia {
-  position: relative;
-
-  width: 100%;
-
-  aspect-ratio: 9 / 16;
-
-  overflow: hidden;
-
-  background: transparent;
-}
-
-.infographicImage {
-  object-fit: contain;
-
-  object-position: center top;
-}
-
-/* =========================================================
-   MAP DIVIDER
-========================================================= */
-
-.mapDivider {
-  position: relative;
-
-  display: flex;
-
-  align-items: flex-end;
-
-  justify-content: center;
-
-  width: 100%;
-
-  height:
-    clamp(
-      90px,
-      10vw,
-      150px
-    );
-
-  background: #f2dfad;
-}
-
-.mapDivider::after {
-  content: "";
-
-  position: absolute;
-
-  right: 0;
-  bottom: 0;
-  left: 0;
-
-  height: 65%;
-
-  pointer-events: none;
-
-  background:
-    linear-gradient(
-      to bottom,
-      rgba(242, 223, 173, 0),
-      rgba(11, 15, 12, 0.09)
-    );
-}
-
-.mapDivider > div {
-  position: relative;
-
-  z-index: 2;
-
-  width:
-    min(
-      1120px,
-      calc(100% - 72px)
-    );
-
-  height: 1px;
-
-  margin-bottom: 40px;
-
-  background:
-    linear-gradient(
-      90deg,
-      transparent,
-      rgba(0, 0, 0, 0.17),
-      transparent
-    );
-}
-
-/* =========================================================
-   TABLET
-========================================================= */
-
-@media (max-width: 1100px) {
-  .storyMapSection {
-    grid-template-columns:
-      minmax(0, 0.85fr)
-      minmax(410px, 1.15fr);
-
-    gap: 36px;
-
-    padding-left: 32px;
-
-    padding-right: 32px;
-  }
-
-  .storyMapVisual {
-    min-height: 540px;
-  }
-}
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media (max-width: 800px) {
   .intro {
     padding:
-      65px
+      62px
       0
-      80px;
+      76px;
   }
 
   .introInner {
     width:
-      calc(100% - 30px);
+      calc(
+        100% - 32px
+      );
   }
 
   .introLead,
-  .introTail {
-    font-size: 15px;
+  .introTail,
+  .storyOpening p,
+  .foreignIntro {
+    width: 100%;
 
-    line-height: 1.76;
-  }
-
-  .intro58 {
-    font-size: 1.95em;
-  }
-
-  .introQuote {
-    margin:
-      28px
-      0
-      30px;
-
-    padding:
-      2px
-      0
-      2px
-      15px;
-
-    border-left-width: 2px;
-
-    color: #000000;
-
-    font-size: 16px;
-
-    line-height: 1.68;
-  }
-
-  /* SUBTITLE */
-
-  .storySubtitleSection {
-    padding:
-      42px
-      0
-      4px;
-  }
-
-  .storySubtitle {
-    width:
-      calc(100% - 30px);
-  }
-
-  .storySubtitle p {
-    font-size: 23px;
-  }
-
-  /* OPEN */
-
-  .storyOpening {
-    padding:
-      14px
-      16px
-      38px;
-  }
-
-  .storyOpening p {
-    font-size: 15px;
+    font-size: 19px;
 
     line-height: 1.72;
   }
 
-  /* TEXT + MAP */
+  .introQuote {
+    width: 100%;
+
+    margin:
+      34px
+      auto;
+
+    font-size: 24px;
+  }
+
+  .storyOpening {
+    padding:
+      0
+      16px
+      42px;
+  }
 
   .storyMapSection {
-    display: flex;
+    display: block;
 
-    flex-direction: column;
-
-    gap: 22px;
+    width:
+      calc(
+        100% - 32px
+      );
 
     padding:
       10px
-      16px
-      65px;
-  }
-
-  .storyMapBlock {
-    padding-bottom: 35px;
-  }
-
-  .storyMapBlock + .storyMapBlock {
-    padding-top: 15px;
+      0
+      60px;
   }
 
   .storyMapBlock p {
-    font-size: 15px;
+    font-size: 19px;
 
     line-height: 1.72;
   }
@@ -920,588 +444,30 @@
   .storyMapSticky {
     position: relative;
 
-    top: auto;
+    top: 0;
   }
 
   .storyMapVisual {
-    height: 67vh;
+    height: 70vh;
 
-    min-height: 480px;
+    min-height: 470px;
 
-    max-height: none;
+    margin-top: 30px;
   }
 
-  .storyClosing {
-    padding:
-      5px
-      16px
-      85px;
-  }
-
-  .storyClosing p {
-    font-size: 15px;
-
-    line-height: 1.72;
-  }
-
-  /* INFOGRAPHIC */
-
-  .clearanceInner {
+  .foreignStory {
     width:
-      calc(100% - 12px);
+      calc(
+        100% - 32px
+      );
 
     padding:
-      25px
+      10px
       0
-      80px;
+      74px;
   }
 
-  .infographicMedia {
-    aspect-ratio: 9 / 16;
-  }
-
-  /* MAP DIVIDER */
-
-  .mapDivider {
-    height: 100px;
-  }
-
-  .mapDivider > div {
-    width:
-      calc(100% - 30px);
-
-    margin-bottom: 28px;
-  }
-}
-
-/* =========================================================
-   SMALL MOBILE
-========================================================= */
-
-@media (max-width: 390px) {
-  .introInner,
-  .storySubtitle {
-    width:
-      calc(100% - 26px);
-  }
-
-  .introLead,
-  .introTail,
-  .storyOpening p,
-  .storyMapBlock p,
-  .storyClosing p {
-    font-size: 14px;
-  }
-
-  .storySubtitle p {
-    font-size: 21px;
-  }
-}
-
-/* =========================================================
-   MEMORY CLUES
-========================================================= */
-
-.memorySection {
-  position: relative;
-
-  width: 100%;
-
-  padding:
-    clamp(90px, 9vw, 140px)
-    0
-    clamp(100px, 10vw, 150px);
-
-  background: #f2dfad;
-
-  color: #000000;
-}
-
-.memoryInner {
-  width:
-    min(
-      1120px,
-      calc(100% - 72px)
-    );
-
-  margin: 0 auto;
-}
-
-.memoryTitle {
-  display: inline-block;
-
-  margin:
-    0
-    0
-    34px;
-
-  padding:
-    3px
-    8px;
-
-  background:
-    rgba(
-      190,
-      153,
-      30,
-      0.18
-    );
-
-  color: #000000;
-
-  font-family:
-    var(--font-editorial),
-    "Times New Roman",
-    serif;
-
-  font-size:
-    clamp(
-      26px,
-      2.6vw,
-      40px
-    );
-
-  font-weight: 700;
-
-  line-height: 1.2;
-}
-
-.memoryIntro {
-  width:
-    min(
-      900px,
-      100%
-    );
-
-  margin:
-    0
-    0
-    clamp(55px, 6vw, 85px);
-
-  color: #000000;
-
-  font-family:
-    var(--font-editorial),
-    "Times New Roman",
-    serif;
-
-  font-size:
-    clamp(
-      17px,
-      1.5vw,
-      21px
-    );
-
-  line-height: 1.8;
-}
-
-/* =========================================================
-   ROW
-========================================================= */
-
-.memoryRow {
-  display: grid;
-
-  grid-template-columns:
-    minmax(0, 0.9fr)
-    minmax(0, 1.1fr);
-
-  gap:
-    clamp(
-      42px,
-      5vw,
-      80px
-    );
-
-  align-items: center;
-
-  margin-bottom:
-    clamp(
-      85px,
-      10vw,
-      140px
-    );
-}
-
-.memoryRow:last-child {
-  margin-bottom: 0;
-}
-
-.memoryRowReverse {
-  grid-template-columns:
-    minmax(0, 1fr)
-    minmax(0, 1fr);
-}
-
-/* =========================================================
-   TEXT PANEL
-========================================================= */
-
-.memoryTextPanel,
-.memoryQuotePanel {
-  position: relative;
-
-  min-height: 320px;
-
-  overflow: hidden;
-}
-
-.memoryOverlay {
-  position: absolute;
-
-  inset: 0;
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.18),
-      rgba(118, 85, 29, 0.05)
-    );
-}
-
-.memoryTextContent {
-  position: relative;
-
-  z-index: 2;
-
-  display: flex;
-
-  flex-direction: column;
-
-  justify-content: center;
-
-  height: 100%;
-
-  min-height: 320px;
-
-  padding:
-    clamp(30px, 4vw, 55px);
-}
-
-.memoryAccent {
-  display: block;
-
-  width: 6px;
-
-  height: 32px;
-
-  margin-bottom: 24px;
-
-  background:
-    rgba(
-      118,
-      85,
-      29,
-      0.32
-    );
-}
-
-.memoryTextContent p {
-  margin: 0;
-
-  color: #000000;
-
-  font-family:
-    var(--font-editorial),
-    "Times New Roman",
-    serif;
-
-  font-size:
-    clamp(
-      17px,
-      1.5vw,
-      21px
-    );
-
-  line-height: 1.82;
-}
-
-/* =========================================================
-   IMAGE
-========================================================= */
-
-.memoryFigure {
-  width: 100%;
-
-  margin: 0;
-}
-
-.memoryImage,
-.memoryPortrait {
-  position: relative;
-
-  width: 100%;
-
-  overflow: hidden;
-}
-
-.memoryImage {
-  aspect-ratio: 1.45 / 1;
-}
-
-.memoryPortrait {
-  aspect-ratio: 1.1 / 1;
-}
-
-.memoryImage img,
-.memoryPortrait img {
-  object-fit: cover;
-
-  object-position: center;
-}
-
-/* =========================================================
-   CAPTION INSIDE IMAGE
-========================================================= */
-
-.imageCaption {
-  position: absolute;
-
-  z-index: 3;
-
-  bottom: 14px;
-
-  max-width: 78%;
-
-  padding:
-    9px
-    12px;
-
-  background:
-    rgba(
-      242,
-      223,
-      173,
-      0.9
-    );
-
-  color: #000000;
-
-  font-family:
-    var(--font-editorial),
-    "Times New Roman",
-    serif;
-
-  font-size:
-    clamp(
-      13px,
-      1.05vw,
-      16px
-    );
-
-  font-style: italic;
-
-  font-weight: 500;
-
-  line-height: 1.4;
-
-  backdrop-filter:
-    blur(3px);
-}
-
-.captionRight {
-  right: 0;
-
-  text-align: right;
-}
-
-.captionLeft {
-  left: 0;
-
-  text-align: left;
-}
-
-/* =========================================================
-   INTERVIEW QUOTE
-========================================================= */
-
-.memoryQuoteContent {
-  position: relative;
-
-  z-index: 2;
-
-  display: flex;
-
-  flex-direction: column;
-
-  justify-content: center;
-
-  min-height: 320px;
-
-  padding:
-    clamp(35px, 5vw, 65px);
-}
-
-.quoteMark {
-  display: block;
-
-  height: 55px;
-
-  margin-bottom: 8px;
-
-  color:
-    rgba(
-      118,
-      85,
-      29,
-      0.42
-    );
-
-  font-family:
-    Georgia,
-    "Times New Roman",
-    serif;
-
-  font-size:
-    100px;
-
-  line-height: 0.8;
-}
-
-.memoryQuoteContent blockquote {
-  margin: 0;
-
-  color: #000000;
-
-  font-family:
-    var(--font-editorial),
-    "Times New Roman",
-    serif;
-
-  font-size:
-    clamp(
-      20px,
-      1.85vw,
-      28px
-    );
-
-  font-style: italic;
-
-  font-weight: 600;
-
-  line-height: 1.55;
-}
-
-.quoteSource {
-  display: block;
-
-  margin-top: 24px;
-
-  color:
-    rgba(
-      0,
-      0,
-      0,
-      0.62
-    );
-
-  font-family:
-    var(--font-sans),
-    Arial,
-    sans-serif;
-
-  font-size: 11px;
-
-  font-weight: 700;
-
-  letter-spacing: 0.06em;
-
-  text-transform: uppercase;
-}
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media (max-width: 800px) {
-  .memorySection {
-    padding:
-      70px
-      0
-      85px;
-  }
-
-  .memoryInner {
-    width:
-      calc(100% - 30px);
-  }
-
-  .memoryTitle {
-    margin-bottom: 24px;
-
-    font-size: 25px;
-  }
-
-  .memoryIntro {
-    margin-bottom: 45px;
-
-    font-size: 15px;
-
-    line-height: 1.72;
-  }
-
-  .memoryRow,
-  .memoryRowReverse {
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 24px;
-
-    margin-bottom: 70px;
-  }
-
-  .memoryTextPanel,
-  .memoryQuotePanel {
-    width: 100%;
-
-    min-height: 0;
-  }
-
-  .memoryTextContent,
-  .memoryQuoteContent {
-    min-height: 0;
-
-    padding:
-      26px
-      20px;
-  }
-
-  .memoryTextContent p {
-    font-size: 15px;
-
-    line-height: 1.72;
-  }
-
-  .memoryImage,
-  .memoryPortrait {
-    aspect-ratio: 1.35 / 1;
-  }
-
-  .imageCaption {
-    right: 0;
-    left: 0;
-
-    bottom: 0;
-
-    max-width: 100%;
-
-    padding:
-      8px
-      10px;
-
-    font-size: 12px;
-
-    text-align: left;
-  }
-
-  .quoteMark {
-    height: 42px;
-
-    font-size: 78px;
-  }
-
-  .memoryQuoteContent blockquote {
-    font-size: 19px;
+  .foreignImages {
+    grid-template-columns: 1fr;
   }
 }

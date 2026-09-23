@@ -1,11 +1,7 @@
 .section {
-  position: relative;
-
   width: 100%;
 
   background: #f2dfad;
-
-  color: #000;
 }
 
 .inner {
@@ -18,248 +14,80 @@
   margin: 0 auto;
 
   padding:
-    clamp(80px, 8vw, 125px)
     0
-    clamp(95px, 9vw, 145px);
+    0
+    100px;
 }
 
-/* =========================================================
-   HEADER
-========================================================= */
-
-.header {
-  width: 100%;
-
-  margin-bottom:
-    clamp(
-      48px,
-      5vw,
-      75px
-    );
-}
-
-.kicker {
-  display: block;
-
-  margin-bottom: 17px;
-
-  color:
-    rgba(
-      0,
-      0,
-      0,
-      0.5
-    );
-
-  font-family:
-    var(--font-sans),
-    "Segoe UI",
-    Arial,
-    sans-serif;
-
-  font-size: 10px;
-
-  font-weight: 800;
-
-  letter-spacing: 0.19em;
-
-  text-transform: uppercase;
-}
-
-.header h2 {
-  max-width: 1000px;
-
-  margin: 0;
-
-  color: #050505;
-
-  font-family:
-    var(--font-editorial),
-    "Times New Roman",
-    serif;
-
-  font-size:
-    clamp(
-      60px,
-      6.8vw,
-      104px
-    );
-
-  font-weight: 800;
-
-  line-height: 0.92;
-
-  letter-spacing: -0.055em;
-
-  text-wrap: balance;
-}
-
-/* =========================================================
-   OPENING
-========================================================= */
-
-.opening {
+.body {
   width:
     min(
-      980px,
+      860px,
       100%
     );
 
   margin: 0 auto;
 }
 
-.dropCapParagraph {
-  display: flow-root;
-
+.body p {
   margin: 0;
 
-  color:
-    rgba(
-      0,
-      0,
-      0,
-      0.88
-    );
-
   font-family:
-    var(--font-editorial),
-    "Times New Roman",
+    "Merriweather",
+    Georgia,
     serif;
 
-  font-size:
-    clamp(
-      21px,
-      1.55vw,
-      26px
-    );
+  font-size: 22px;
 
-  font-weight: 500;
+  line-height: 1.78;
+}
 
-  line-height: 1.7;
+.body p + p {
+  margin-top: 26px;
+}
 
-  letter-spacing: -0.012em;
-
-  text-wrap: pretty;
+.dropParagraph {
+  display: flow-root;
 }
 
 .dropCap {
   float: left;
 
   margin:
-    0.055em
-    0.12em
-    -0.06em
+    .05em
+    .12em
+    -.04em
     0;
 
-  color: #765100;
+  color: #235944;
 
-  font-family:
-    var(--font-editorial),
-    "Times New Roman",
-    serif;
-
-  font-size: 5.3em;
+  font-size: 4.7em;
 
   font-weight: 700;
 
-  line-height: 0.72;
-
-  letter-spacing: -0.08em;
+  line-height: .72;
 }
 
-/* =========================================================
-   BODY TEXT
-========================================================= */
-
-.bodyText {
+.infographic {
   width:
     min(
-      980px,
+      1080px,
       100%
     );
 
   margin:
-    clamp(
-      58px,
-      6vw,
-      88px
-    )
+    55px
     auto
-    0;
+    45px;
 }
 
-.bodyText p {
-  margin: 0;
-
-  color:
-    rgba(
-      0,
-      0,
-      0,
-      0.88
-    );
-
-  font-family:
-    var(--font-editorial),
-    "Times New Roman",
-    serif;
-
-  font-size:
-    clamp(
-      21px,
-      1.55vw,
-      26px
-    );
-
-  font-weight: 500;
-
-  line-height: 1.7;
-
-  letter-spacing: -0.012em;
-
-  text-wrap: pretty;
-}
-
-/* =========================================================
-   IN4 INFOGRAPHIC
-========================================================= */
-
-.infographicFigure {
-  width:
-    min(
-      1120px,
-      100%
-    );
-
-  margin:
-    clamp(
-      68px,
-      7vw,
-      110px
-    )
-    auto
-    clamp(
-      54px,
-      5vw,
-      78px
-    );
-
-  padding: 0;
-}
-
-.infographicImage {
+.infographic img {
   display: block;
 
   width: 100%;
 
   height: auto;
-
-  object-fit: contain;
 }
-
-/* =========================================================
-   STATS
-========================================================= */
 
 .stats {
   width:
@@ -270,495 +98,89 @@
 
   margin:
     0
-    auto;
+    auto
+    55px;
 }
 
-/* =========================================================
-   PROGRESS
-========================================================= */
-
-.progressBlock {
-  width: 100%;
+.progressItem +
+.progressItem {
+  margin-top: 42px;
 }
 
-.progressBlock
-  + .progressBlock {
-  margin-top:
-    clamp(
-      44px,
-      5vw,
-      66px
-    );
-}
+.progressItem > span {
+  color: #235944;
 
-.statsLabel {
-  display: block;
-
-  margin-bottom: 11px;
-
-  color:
-    rgba(
-      35,
-      79,
-      14,
-      0.78
-    );
-
-  font-family:
-    var(--font-sans),
-    "Segoe UI",
-    Arial,
-    sans-serif;
-
-  font-size:
-    clamp(
-      11px,
-      0.9vw,
-      14px
-    );
+  font-size: 12px;
 
   font-weight: 800;
-
-  line-height: 1.35;
-
-  letter-spacing: 0.13em;
-
-  text-transform: uppercase;
 }
 
-.percent {
+.progressItem > strong {
   display: block;
+
+  margin-top: 8px;
 
   color: #365323;
 
   font-family:
-    var(--font-editorial),
-    "Times New Roman",
+    "Merriweather",
+    Georgia,
     serif;
 
-  font-size:
-    clamp(
-      54px,
-      5.7vw,
-      82px
-    );
+  font-size: 62px;
 
   font-style: italic;
-
-  font-weight: 500;
-
-  line-height: 0.88;
-
-  letter-spacing: -0.05em;
 }
 
-.statsSub {
-  margin:
-    9px
-    0
-    16px;
-
-  color:
-    rgba(
-      0,
-      0,
-      0,
-      0.7
-    );
-
-  font-family:
-    var(--font-sans),
-    "Segoe UI",
-    Arial,
-    sans-serif;
-
-  font-size:
-    clamp(
-      11px,
-      0.9vw,
-      14px
-    );
-
-  font-weight: 600;
-
-  line-height: 1.4;
-}
-
-.progressTrack {
-  position: relative;
-
-  width: 100%;
-
-  height:
-    clamp(
-      18px,
-      1.7vw,
-      24px
-    );
+.track {
+  height: 20px;
 
   overflow: hidden;
 
   border:
-    1.5px
-    solid
+    1px solid
     #34581b;
 
-  border-radius: 999px;
-
-  background: transparent;
+  border-radius: 99px;
 }
 
-.progressFill {
+.fill {
   height: 100%;
 
   background: #234f0e;
-
-  border-radius: inherit;
 }
-
-.progressNumbers {
-  display: flex;
-
-  align-items: center;
-
-  justify-content: space-between;
-
-  margin-top: 7px;
-
-  color:
-    rgba(
-      0,
-      0,
-      0,
-      0.46
-    );
-
-  font-family:
-    var(--font-sans),
-    "Segoe UI",
-    Arial,
-    sans-serif;
-
-  font-size: 9px;
-
-  font-weight: 700;
-
-  letter-spacing: 0.04em;
-}
-
-/* =========================================================
-   RESOURCES
-========================================================= */
 
 .resources {
-  margin-top:
-    clamp(
-      54px,
-      6vw,
-      82px
-    );
-}
-
-.resourcesHeader {
-  margin-bottom:
-    clamp(
-      26px,
-      3vw,
-      38px
-    );
-
-  color:
-    rgba(
-      35,
-      79,
-      14,
-      0.72
-    );
-
-  font-family:
-    var(--font-sans),
-    "Segoe UI",
-    Arial,
-    sans-serif;
-
-  font-size:
-    clamp(
-      11px,
-      1vw,
-      14px
-    );
-
-  font-weight: 800;
-
-  letter-spacing: 0.15em;
-
-  text-align: center;
-
-  text-transform: uppercase;
-}
-
-.resourceGrid {
   display: grid;
 
   grid-template-columns:
     repeat(
       3,
-      minmax(0, 1fr)
+      1fr
     );
 
-  gap:
-    clamp(
-      28px,
-      4vw,
-      52px
-    );
-}
+  gap: 24px;
 
-.resourceItem {
-  min-width: 0;
+  margin-top: 50px;
 
   text-align: center;
 }
 
-.iconWrap {
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  width:
-    clamp(
-      40px,
-      4vw,
-      56px
-    );
-
-  height:
-    clamp(
-      40px,
-      4vw,
-      56px
-    );
-
-  margin:
-    0
-    auto
-    12px;
-}
-
-.icon {
-  width: 100%;
-
-  height: 100%;
-
-  fill: none;
-
-  stroke: #527d3f;
-
-  stroke-width: 2.4;
-
-  stroke-linecap: round;
-
-  stroke-linejoin: round;
-}
-
-.resourceItem strong {
+.resources strong {
   display: block;
 
   color: #365323;
 
-  font-family:
-    var(--font-editorial),
-    "Times New Roman",
-    serif;
-
-  font-size:
-    clamp(
-      38px,
-      3.8vw,
-      56px
-    );
-
-  font-style: italic;
-
-  font-weight: 500;
-
-  line-height: 0.95;
-
-  letter-spacing: -0.04em;
+  font-size: 40px;
 }
 
-.resourceItem p {
-  margin:
-    11px
-    0
-    0;
+.resources span {
+  display: block;
 
-  color:
-    rgba(
-      0,
-      0,
-      0,
-      0.66
-    );
+  margin-top: 6px;
 
-  font-family:
-    var(--font-sans),
-    "Segoe UI",
-    Arial,
-    sans-serif;
-
-  font-size:
-    clamp(
-      11px,
-      0.85vw,
-      13px
-    );
-
-  font-weight: 600;
-
-  line-height: 1.5;
+  font-size: 12px;
 }
-
-/* =========================================================
-   CLOSING
-========================================================= */
-
-.closing {
-  width:
-    min(
-      980px,
-      100%
-    );
-
-  margin:
-    clamp(
-      62px,
-      6vw,
-      92px
-    )
-    auto
-    0;
-
-  padding-top:
-    clamp(
-      35px,
-      4vw,
-      55px
-    );
-
-  border-top:
-    1px
-    solid
-    rgba(
-      67,
-      50,
-      20,
-      0.16
-    );
-}
-
-.closing p {
-  margin: 0;
-
-  color:
-    rgba(
-      0,
-      0,
-      0,
-      0.88
-    );
-
-  font-family:
-    var(--font-editorial),
-    "Times New Roman",
-    serif;
-
-  font-size:
-    clamp(
-      21px,
-      1.55vw,
-      26px
-    );
-
-  font-weight: 500;
-
-  line-height: 1.7;
-
-  letter-spacing: -0.012em;
-
-  text-wrap: pretty;
-}
-
-/* =========================================================
-   TABLET
-========================================================= */
-
-@media (max-width: 1000px) {
-  .inner {
-    width:
-      min(
-        calc(100% - 48px),
-        1000px
-      );
-
-    padding:
-      74px
-      0
-      105px;
-  }
-
-  .header {
-    margin-bottom: 52px;
-  }
-
-  .header h2 {
-    font-size:
-      clamp(
-        54px,
-        8vw,
-        80px
-      );
-  }
-
-  .opening,
-  .bodyText,
-  .closing {
-    width:
-      min(
-        760px,
-        100%
-      );
-  }
-
-  .infographicFigure {
-    margin:
-      64px
-      auto
-      50px;
-  }
-
-  .stats {
-    width:
-      min(
-        760px,
-        100%
-      );
-  }
-
-  .percent {
-    font-size: 66px;
-  }
-
-  .resourceItem strong {
-    font-size: 44px;
-  }
-}
-
-/* =========================================================
-   MOBILE
-========================================================= */
 
 @media (max-width: 700px) {
   .inner {
@@ -766,202 +188,18 @@
       calc(
         100% - 32px
       );
-
-    padding:
-      58px
-      0
-      78px;
   }
 
-  .header {
-    margin-bottom: 40px;
-  }
-
-  .kicker {
-    margin-bottom: 12px;
-
-    font-size: 9px;
-
-    letter-spacing: 0.17em;
-  }
-
-  .header h2 {
-    font-size:
-      clamp(
-        44px,
-        13vw,
-        62px
-      );
-
-    line-height: 0.94;
-
-    letter-spacing: -0.05em;
-  }
-
-  .dropCapParagraph,
-  .bodyText p,
-  .closing p {
+  .body p {
     font-size: 19px;
-
-    line-height: 1.68;
   }
 
-  .dropCap {
-    font-size: 4.8em;
-  }
-
-  .bodyText {
-    margin-top: 46px;
-  }
-
-  /* -------------------------
-     in4 full bleed mobile
-  ------------------------- */
-
-  .infographicFigure {
+  .infographic {
     width:
       calc(
         100% + 32px
       );
 
-    margin:
-      52px
-      0
-      44px
-      -16px;
-  }
-
-  .infographicImage {
-    width: 100%;
-
-    height: auto;
-  }
-
-  /* -------------------------
-     Stats
-  ------------------------- */
-
-  .stats {
-    width: 100%;
-  }
-
-  .progressBlock
-    + .progressBlock {
-    margin-top: 48px;
-  }
-
-  .percent {
-    font-size: 58px;
-  }
-
-  .progressTrack {
-    height: 18px;
-  }
-
-  .resources {
-    margin-top: 58px;
-  }
-
-  .resourcesHeader {
-    margin-bottom: 26px;
-
-    font-size: 10px;
-  }
-
-  .resourceGrid {
-    gap: 14px;
-  }
-
-  .iconWrap {
-    width: 40px;
-
-    height: 40px;
-
-    margin-bottom: 10px;
-  }
-
-  .resourceItem strong {
-    font-size: 38px;
-  }
-
-  .resourceItem p {
-    margin-top: 9px;
-
-    font-size: 10px;
-
-    line-height: 1.42;
-  }
-
-  .closing {
-    margin-top: 56px;
-
-    padding-top: 32px;
-  }
-}
-
-/* =========================================================
-   SMALL MOBILE
-========================================================= */
-
-@media (max-width: 430px) {
-  .inner {
-    width:
-      calc(
-        100% - 28px
-      );
-  }
-
-  .header h2 {
-    font-size:
-      clamp(
-        40px,
-        12.5vw,
-        54px
-      );
-  }
-
-  .dropCapParagraph,
-  .bodyText p,
-  .closing p {
-    font-size: 18px;
-
-    line-height: 1.66;
-  }
-
-  .bodyText {
-    margin-top: 42px;
-  }
-
-  .infographicFigure {
-    width:
-      calc(
-        100% + 28px
-      );
-
-    margin-left: -14px;
-  }
-
-  .resourceGrid {
-    grid-template-columns:
-      repeat(
-        3,
-        minmax(0, 1fr)
-      );
-
-    gap: 10px;
-  }
-
-  .iconWrap {
-    width: 36px;
-
-    height: 36px;
-  }
-
-  .resourceItem strong {
-    font-size: 34px;
-  }
-
-  .resourceItem p {
-    font-size: 9px;
+    margin-left: -16px;
   }
 }

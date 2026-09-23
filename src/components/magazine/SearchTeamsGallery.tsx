@@ -2,54 +2,98 @@
 
 /* eslint-disable @next/next/no-img-element */
 
-import { useEffect, useRef } from "react";
+import {
+  useEffect,
+  useRef,
+} from "react";
+
+import SubtitleImage from "./SubtitleImage";
 
 import styles from "./SearchTeamsGallery.module.css";
+
 
 type GalleryItem = {
   src: string;
   alt: string;
 };
 
+
 const IMAGES: GalleryItem[] = [
   {
-    src: "/images/readymag/teams/team-1.jpg",
-    alt: "Hình ảnh đội tìm kiếm 1",
+    src:
+      "/images/readymag/teams/team-1.jpg",
+
+    alt:
+      "Hình ảnh đội tìm kiếm 1",
   },
+
   {
-    src: "/images/readymag/teams/team-2.jpg",
-    alt: "Hình ảnh đội tìm kiếm 2",
+    src:
+      "/images/readymag/teams/team-2.jpg",
+
+    alt:
+      "Hình ảnh đội tìm kiếm 2",
   },
+
   {
-    src: "/images/readymag/teams/team-3.jpg",
-    alt: "Hình ảnh đội tìm kiếm 3",
+    src:
+      "/images/readymag/teams/team-3.jpg",
+
+    alt:
+      "Hình ảnh đội tìm kiếm 3",
   },
+
   {
-    src: "/images/readymag/teams/team-4.jpg",
-    alt: "Hình ảnh đội tìm kiếm 4",
+    src:
+      "/images/readymag/teams/team-4.jpg",
+
+    alt:
+      "Hình ảnh đội tìm kiếm 4",
   },
+
   {
-    src: "/images/readymag/teams/team-5.jpg",
-    alt: "Hình ảnh đội tìm kiếm 5",
+    src:
+      "/images/readymag/teams/team-5.jpg",
+
+    alt:
+      "Hình ảnh đội tìm kiếm 5",
   },
 ];
 
+
 export default function SearchTeamsGallery() {
   const sectionRef =
-    useRef<HTMLElement | null>(null);
+    useRef<
+      HTMLElement | null
+    >(
+      null
+    );
 
   const galleryWindowRef =
-    useRef<HTMLDivElement | null>(null);
+    useRef<
+      HTMLDivElement | null
+    >(
+      null
+    );
 
   const trackRef =
-    useRef<HTMLDivElement | null>(null);
+    useRef<
+      HTMLDivElement | null
+    >(
+      null
+    );
 
   const frameRef =
-    useRef<number | null>(null);
+    useRef<
+      number | null
+    >(
+      null
+    );
 
   useEffect(() => {
     function updateGallery() {
-      frameRef.current = null;
+      frameRef.current =
+        null;
 
       const section =
         sectionRef.current;
@@ -75,23 +119,23 @@ export default function SearchTeamsGallery() {
         section.offsetHeight -
         window.innerHeight;
 
-      if (scrollDistance <= 0) {
+      if (
+        scrollDistance <=
+        0
+      ) {
         track.style.transform =
-          "translate3d(0px, 0px, 0px)";
+          "translate3d(0px,0px,0px)";
 
         return;
       }
-
-      const rawProgress =
-        -rect.top /
-        scrollDistance;
 
       const progress =
         Math.min(
           1,
           Math.max(
             0,
-            rawProgress
+            -rect.top /
+              scrollDistance
           )
         );
 
@@ -102,12 +146,11 @@ export default function SearchTeamsGallery() {
             galleryWindow.clientWidth
         );
 
-      const translateX =
-        progress *
-        maxTranslate;
-
       track.style.transform =
-        `translate3d(-${translateX}px, 0px, 0px)`;
+        `translate3d(-${
+          progress *
+          maxTranslate
+        }px,0,0)`;
     }
 
     function requestUpdate() {
@@ -119,31 +162,10 @@ export default function SearchTeamsGallery() {
       }
 
       frameRef.current =
-        window.requestAnimationFrame(
+        requestAnimationFrame(
           updateGallery
         );
     }
-
-    function handleImageLoad() {
-      requestUpdate();
-    }
-
-    const track =
-      trackRef.current;
-
-    const images =
-      track?.querySelectorAll(
-        "img"
-      ) ?? [];
-
-    images.forEach((image) => {
-      if (!image.complete) {
-        image.addEventListener(
-          "load",
-          handleImageLoad
-        );
-      }
-    });
 
     updateGallery();
 
@@ -171,18 +193,11 @@ export default function SearchTeamsGallery() {
         requestUpdate
       );
 
-      images.forEach((image) => {
-        image.removeEventListener(
-          "load",
-          handleImageLoad
-        );
-      });
-
       if (
         frameRef.current !==
         null
       ) {
-        window.cancelAnimationFrame(
+        cancelAnimationFrame(
           frameRef.current
         );
       }
@@ -191,36 +206,49 @@ export default function SearchTeamsGallery() {
 
   return (
     <>
+      {/* ===================================================
+          SUBTITLE
+      ==================================================== */}
+
+      <SubtitleImage
+        alt="Những đội tìm kiếm giữa thời bình"
+        imagePath="/images/readymag/subtitles/search-teams.png"
+        maxWidth={1050}
+      />
+
+      {/* ===================================================
+          GALLERY
+      ==================================================== */}
+
       <section
-        ref={sectionRef}
+        ref={
+          sectionRef
+        }
         id="search-teams"
-        className={styles.section}
+        className={
+          styles.section
+        }
       >
         <div
-          className={styles.stickyViewport}
+          className={
+            styles.stickyViewport
+          }
         >
-          {/* TITLE */}
-
           <div
-            className={styles.heading}
-          >
-            <h2>
-              Những đội tìm kiếm
-              giữa thời bình
-            </h2>
-          </div>
-
-          {/* GALLERY */}
-
-          <div
-            ref={galleryWindowRef}
+            ref={
+              galleryWindowRef
+            }
             className={
               styles.galleryWindow
             }
           >
             <div
-              ref={trackRef}
-              className={styles.track}
+              ref={
+                trackRef
+              }
+              className={
+                styles.track
+              }
             >
               {IMAGES.map(
                 (
@@ -228,7 +256,9 @@ export default function SearchTeamsGallery() {
                   index
                 ) => (
                   <figure
-                    key={item.src}
+                    key={
+                      item.src
+                    }
                     className={
                       styles.slide
                     }
@@ -239,10 +269,16 @@ export default function SearchTeamsGallery() {
                       }
                     >
                       <img
-                        src={item.src}
-                        alt={item.alt}
+                        src={
+                          item.src
+                        }
+                        alt={
+                          item.alt
+                        }
                         loading="lazy"
-                        draggable={false}
+                        draggable={
+                          false
+                        }
                         className={
                           styles.image
                         }
@@ -254,7 +290,8 @@ export default function SearchTeamsGallery() {
                         }
                       >
                         {String(
-                          index + 1
+                          index +
+                            1
                         ).padStart(
                           2,
                           "0"
@@ -266,8 +303,6 @@ export default function SearchTeamsGallery() {
               )}
             </div>
           </div>
-
-          {/* ONE CAPTION FOR ALL IMAGES */}
 
           <p
             className={
@@ -281,17 +316,23 @@ export default function SearchTeamsGallery() {
         </div>
       </section>
 
-      {/* EDITORIAL PAUSE */}
+      {/* FLOWER */}
 
       <div
-        className={styles.flowerSpacer}
+        className={
+          styles.flowerSpacer
+        }
         aria-hidden="true"
       >
         <img
           src="/images/readymag/decor/chrysanthemum.png"
           alt=""
-          className={styles.flower}
-          draggable={false}
+          draggable={
+            false
+          }
+          className={
+            styles.flower
+          }
         />
       </div>
     </>

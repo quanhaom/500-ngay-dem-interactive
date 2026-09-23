@@ -1,151 +1,124 @@
 "use client";
 
-import Image from "next/image";
+/* eslint-disable @next/next/no-img-element */
+
 import {
   useEffect,
   useRef,
   useState,
 } from "react";
 
+import SubtitleImage from "./SubtitleImage";
+
 import styles from "./DnaIdentitySection.module.css";
 
-type DnaStory = {
-  image: string;
-  alt: string;
-  side: "left" | "right";
-  eyebrow?: string;
-  text: string;
-};
 
-const STORIES: DnaStory[] = [
+const STORIES = [
   {
     image:
       "/images/readymag/dna/dna-1.jpg",
 
-    alt:
-      "Lực lượng chức năng thực hiện lấy mẫu hài cốt liệt sĩ",
+    text:
+      "148.601 phần mộ đã được lấy mẫu, đạt 69,8%. Trong đó, 102.689 mẫu đủ điều kiện phục vụ giám định, tương đương 69,1%; 45.912 mẫu còn lại chưa đủ điều kiện.",
 
     side:
-      "left",
-
-    eyebrow:
-      "LẤY MẪU HÀI CỐT",
-
-    text:
-      "Đến ngày 22/8/2026, lực lượng chức năng đã lấy mẫu tại 148.601 mộ liệt sĩ, đạt 69,8% tiến độ. Trong đó, 102.689 mộ đủ điều kiện lấy mẫu, đạt 69,1%, còn 45.912 mộ chưa đủ điều kiện lấy mẫu.",
+      "left" as const,
   },
 
   {
     image:
       "/images/readymag/dna/dna-2.jpg",
 
-    alt:
-      "Các tổ đội triển khai lấy mẫu tại nghĩa trang liệt sĩ",
+    text:
+      "264 tổ lấy mẫu với khoảng 3.500 người được huy động. Đến nay, 11/34 tỉnh, thành phố đã hoàn thành công tác lấy mẫu.",
 
     side:
-      "right",
-
-    eyebrow:
-      "264 TỔ, ĐỘI LẤY MẪU",
-
-    text:
-      "Để triển khai nhiệm vụ, 264 tổ, đội lấy mẫu với khoảng 3.500 người đã được huy động. Đến nay, 11/34 tỉnh, thành phố đã hoàn thành công tác lấy mẫu. Những con số này cho thấy quy mô lớn của quá trình thu thập dữ liệu, đồng thời phản ánh khối lượng công việc vẫn đang được tiếp tục tại nhiều địa phương.",
+      "right" as const,
   },
 
   {
     image:
-      "/images/readymag/dna/dna-3.jpg",
-
-    alt:
-      "Thu thập mẫu ADN của thân nhân liệt sĩ",
-
-    side:
-      "left",
-
-    eyebrow:
-      "MẪU SINH PHẨM THÂN NHÂN",
+      "https://cdn-images.vtv.vn/thumb_w/1200/66349b6076cb4dee98746cf1/2026/07/09/anh-6-51626575313164794750339.jpg",
 
     text:
-      "Song song với việc lấy mẫu hài cốt, công tác thu thập mẫu sinh phẩm của thân nhân liệt sĩ cũng được đẩy mạnh. Đến ngày 22/8, tổng số mẫu thân nhân đã được lấy là 265.761 mẫu, trong đó 71.102 mẫu đã được phân tích và 66.909 mẫu được đồng bộ vào cơ sở dữ liệu. Đây là nguồn dữ liệu quan trọng phục vụ quá trình phân tích, đối sánh ADN, từng bước xác định danh tính những liệt sĩ còn thiếu thông tin.",
+      "265.761 mẫu thân nhân liệt sĩ đã được thu thập; 71.102 mẫu được phân tích và 66.909 kết quả đã được đồng bộ vào hệ thống dữ liệu.",
+
+    side:
+      "left" as const,
   },
 
   {
     image:
-      "/images/readymag/dna/dna-4.jpg",
-
-    alt:
-      "Tiếp nhận, lưu trữ và giám định mẫu hài cốt liệt sĩ",
-
-    side:
-      "right",
-
-    eyebrow:
-      "GIÁM ĐỊNH VÀ ĐỐI SÁNH",
+      "https://cdn.nhandan.vn/images/-sKnr5TwgX2qCv6f7Q2Evm3vnhvdmT3KILbjs4rok1ejnwvj0Wj3orLSWLodesnQ/dscf3934.jpg.avif",
 
     text:
-      "Đằng sau những con số là một quy trình đòi hỏi sự chính xác và cẩn trọng ở từng khâu. Đến ngày 22/8, các cơ quan chức năng đã tiếp nhận, lưu trữ và bảo quản 35.983 mẫu hài cốt liệt sĩ của các địa phương. Riêng Viện Pháp y Quân đội đã tiếp nhận 27.169 mẫu hài cốt liệt sĩ của 16/17 tỉnh, thành phố và thực hiện giám định 195 mẫu.",
+      "35.983 mẫu hài cốt đang được lưu giữ. Riêng Viện Pháp y Quân đội đã tiếp nhận 27.169 mẫu từ 16/17 tỉnh, thành phố và triển khai giám định 195 mẫu.",
+
+    side:
+      "right" as const,
   },
 ];
 
+
 export default function DnaIdentitySection() {
-  const [activeIndex, setActiveIndex] =
+  const [
+    activeIndex,
+    setActiveIndex,
+  ] =
     useState(0);
 
-  const stepRefs =
+  const refs =
     useRef<
-      Array<HTMLDivElement | null>
+      Array<
+        HTMLDivElement | null
+      >
     >([]);
 
   useEffect(() => {
-    const observers:
-      IntersectionObserver[] =
-      [];
+    const observers =
+      refs.current.map(
+        (
+          element,
+          index
+        ) => {
+          if (!element) {
+            return null;
+          }
 
-    stepRefs.current.forEach(
-      (element, index) => {
-        if (!element) {
-          return;
-        }
+          const observer =
+            new IntersectionObserver(
+              ([entry]) => {
+                if (
+                  entry.isIntersecting
+                ) {
+                  setActiveIndex(
+                    index
+                  );
+                }
+              },
+              {
+                threshold:
+                  0.18,
 
-        const observer =
-          new IntersectionObserver(
-            (entries) => {
-              const entry =
-                entries[0];
-
-              if (
-                entry.isIntersecting
-              ) {
-                setActiveIndex(
-                  index
-                );
+                rootMargin:
+                  "-32% 0px -45% 0px",
               }
-            },
-            {
-              root: null,
+            );
 
-              threshold:
-                0.18,
-
-              rootMargin:
-                "-32% 0px -45% 0px",
-            }
+          observer.observe(
+            element
           );
 
-        observer.observe(
-          element
-        );
-
-        observers.push(
-          observer
-        );
-      }
-    );
+          return observer;
+        }
+      );
 
     return () => {
       observers.forEach(
-        (observer) => {
-          observer.disconnect();
+        (
+          observer
+        ) => {
+          observer?.disconnect();
         }
       );
     };
@@ -158,62 +131,44 @@ export default function DnaIdentitySection() {
         styles.section
       }
     >
-      {/* =========================================
-          CHAPTER INTRO
-      ========================================== */}
+      <SubtitleImage
+        alt="Tìm lại danh tính từ những mẫu sinh phẩm"
+        imagePath="/images/readymag/subtitles/dna-identity.png"
+        maxWidth={1080}
+      />
 
       <div
         className={
           styles.intro
         }
       >
-        <div
+        <p
           className={
-            styles.introInner
+            styles.introBody
           }
         >
           <span
             className={
-              styles.kicker
+              styles.dropCap
             }
           >
-            XÁC ĐỊNH DANH TÍNH
+            V
           </span>
 
-          <h2>
-            Tìm lại danh tính
-            từ những mẫu
-            sinh phẩm
-          </h2>
-
-          <p>
-            Một nhiệm vụ quan
-            trọng của “Chiến
-            dịch 500 ngày đêm”
-            là lấy mẫu hài cốt
-            liệt sĩ phục vụ
-            giám định, xác định
-            danh tính.
-          </p>
-        </div>
+          iệc lấy mẫu hài cốt liệt sĩ phục vụ giám định,
+          xác định danh tính là một nhiệm vụ quan trọng
+          của “Chiến dịch 500 ngày đêm”.
+        </p>
       </div>
-
-      {/* =========================================
-          SCROLL STORY
-      ========================================== */}
 
       <div
         className={
           styles.scrolly
         }
       >
-        {/* =======================================
-            STICKY IMAGE STAGE
-        ======================================== */}
-
         <div
           className={
-            styles.stickyStage
+            styles.stickyVisual
           }
         >
           {STORIES.map(
@@ -221,173 +176,94 @@ export default function DnaIdentitySection() {
               story,
               index
             ) => (
-              <div
+              <img
                 key={
                   story.image
                 }
-                className={`${styles.imageLayer} ${
+                src={
+                  story.image
+                }
+                alt=""
+                className={[
+                  styles.image,
+
                   activeIndex ===
                   index
-                    ? styles.imageLayerActive
-                    : ""
-                } ${
-                  index <
-                  activeIndex
-                    ? styles.imageLayerPast
-                    : ""
-                }`}
-              >
-                <Image
-                  src={
-                    story.image
-                  }
-                  alt={
-                    story.alt
-                  }
-                  fill
-                  priority={
-                    index === 0
-                  }
-                  sizes="100vw"
-                  className={
-                    styles.image
-                  }
-                />
-
-                <div
-                  className={
-                    styles.imageShade
-                  }
-                />
-              </div>
+                    ? styles.imageActive
+                    : "",
+                ]
+                  .filter(
+                    Boolean
+                  )
+                  .join(
+                    " "
+                  )}
+              />
             )
           )}
-
-          {/* =====================================
-              FRAME / DECOR
-          ====================================== */}
-
-          <div
-            className={
-              styles.topRule
-            }
-            aria-hidden="true"
-          />
-
-          <div
-            className={
-              styles.imageCounter
-            }
-          >
-            <span>
-              {String(
-                activeIndex +
-                  1
-              ).padStart(
-                2,
-                "0"
-              )}
-            </span>
-
-            <i />
-
-            <span>
-              {String(
-                STORIES.length
-              ).padStart(
-                2,
-                "0"
-              )}
-            </span>
-          </div>
         </div>
-
-        {/* =======================================
-            TEXT STEPS
-        ======================================== */}
 
         <div
           className={
             styles.steps
           }
         >
+          <div
+            className={
+              styles.imageLead
+            }
+          />
+
           {STORIES.map(
             (
               story,
               index
-            ) => {
-              const active =
-                activeIndex ===
-                index;
+            ) => (
+              <div
+                key={
+                  story.text
+                }
+                ref={(
+                  node
+                ) => {
+                  refs.current[
+                    index
+                  ] =
+                    node;
+                }}
+                className={[
+                  styles.step,
 
-              return (
+                  story.side ===
+                  "left"
+                    ? styles.stepLeft
+                    : styles.stepRight,
+                ].join(
+                  " "
+                )}
+              >
                 <div
-                  key={`${story.image}-text`}
-                  ref={(
-                    element
-                  ) => {
-                    stepRefs.current[
-                      index
-                    ] =
-                      element;
-                  }}
-                  className={`${styles.step} ${
-                    story.side ===
-                    "left"
-                      ? styles.stepLeft
-                      : styles.stepRight
-                  }`}
+                  className={
+                    styles.card
+                  }
                 >
-                  <article
-                    className={`${styles.copy} ${
-                      active
-                        ? styles.copyActive
-                        : ""
-                    } ${
-                      story.side ===
-                      "left"
-                        ? styles.copyLeft
-                        : styles.copyRight
-                    }`}
-                  >
-                    {story.eyebrow ? (
-                      <span
-                        className={
-                          styles.eyebrow
-                        }
-                      >
-                        {
-                          story.eyebrow
-                        }
-                      </span>
-                    ) : null}
-
-                    <p>
-                      {
-                        story.text
-                      }
-                    </p>
-
-                    <span
-                      className={
-                        styles.stepNumber
-                      }
-                    >
-                      0
-                      {index +
-                        1}
-                    </span>
-                  </article>
+                  <p>
+                    {
+                      story.text
+                    }
+                  </p>
                 </div>
-              );
-            }
+              </div>
+            )
           )}
+
+          <div
+            className={
+              styles.imageTail
+            }
+          />
         </div>
       </div>
-
-      {/* =========================================
-          CLOSING
-      ========================================== */}
 
       <div
         className={
@@ -395,20 +271,13 @@ export default function DnaIdentitySection() {
         }
       >
         <p>
-          Mỗi mẫu vật không chỉ
-          là dữ liệu phục vụ xét
-          nghiệm, mà còn có thể
-          trở thành cầu nối giữa
-          người đã khuất với
-          những người thân đang
-          chờ đợi. Phía sau mỗi
-          kết quả xác định danh
-          tính là một cái tên
-          được trả lại, một gia
-          đình có thêm lời hồi
-          đáp và một hành trình
-          trở về được tiến gần
-          hơn đến ngày hoàn tất.
+          Mỗi mẫu vật không chỉ là dữ liệu phục vụ xét
+          nghiệm, mà còn có thể trở thành cầu nối giữa
+          người đã khuất với những người thân đang chờ
+          đợi. Phía sau mỗi kết quả xác định danh tính là
+          một cái tên được trả lại, một gia đình có thêm
+          lời hồi đáp và một hành trình trở về được tiến
+          gần hơn đến ngày hoàn tất.
         </p>
       </div>
     </section>

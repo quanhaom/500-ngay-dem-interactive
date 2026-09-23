@@ -1,169 +1,54 @@
-/* =========================================================
-   SECTION
-========================================================= */
-
 .section {
-  position: relative;
-
   width: 100%;
 
   background: #f2dfad;
-
-  color: #000000;
 }
-
-/* =========================================================
-   INNER
-========================================================= */
 
 .inner {
   width:
     min(
-      1240px,
+      1280px,
       calc(100% - 80px)
     );
 
   margin: 0 auto;
 
   padding:
-    clamp(80px, 9vw, 140px)
     0
-    clamp(90px, 9vw, 140px);
+    0
+    95px;
 }
 
-/* =========================================================
-   HEADER
-========================================================= */
-
-.header {
-  width: 100%;
-
-  margin-bottom:
-    clamp(55px, 6vw, 90px);
-}
-
-.kicker {
-  display: block;
-
-  margin-bottom: 20px;
-
-  color:
-    rgba(
-      0,
-      0,
-      0,
-      0.5
-    );
-
-  font-family:
-    var(--font-sans),
-    Arial,
-    sans-serif;
-
-  font-size: 10px;
-
-  font-weight: 800;
-
-  letter-spacing: 0.2em;
-}
-
-/* =========================================================
-   BIG MAGAZINE TITLE
-========================================================= */
-
-.header h2 {
-  max-width: 1040px;
-
-  margin: 0;
-
-  color: #050505;
-
-  font-family:
-    var(--font-editorial),
-    "Times New Roman",
-    serif;
-
-  font-size:
-    clamp(
-      58px,
-      6.8vw,
-      104px
-    );
-
-  font-weight: 800;
-
-  line-height: 0.92;
-
-  letter-spacing: -0.055em;
-
-  text-wrap: balance;
-}
-
-/* =========================================================
-   OPENING TEXT
-========================================================= */
-
-.opening {
+.body,
+.closing {
   width:
     min(
-      980px,
+      860px,
       100%
     );
 
-  margin:
-    0
-    auto;
+  margin: 0 auto;
 }
 
-.opening p,
-.storyBlock p {
+.body p,
+.closing p {
   margin: 0;
 
-  color:
-    rgba(
-      0,
-      0,
-      0,
-      0.88
-    );
-
   font-family:
-    var(--font-editorial),
-    "Times New Roman",
+    "Merriweather",
+    Georgia,
     serif;
 
-  font-size:
-    clamp(
-      21px,
-      1.6vw,
-      27px
-    );
+  font-size: 22px;
 
-  font-weight: 500;
-
-  line-height: 1.72;
-
-  letter-spacing: -0.012em;
-
-  text-wrap: pretty;
+  line-height: 1.78;
 }
 
-.opening p + p {
-  margin-top:
-    clamp(
-      30px,
-      3vw,
-      44px
-    );
+.body p + p {
+  margin-top: 26px;
 }
 
-/* =========================================================
-   DROP CAP
-
-   Cao khoảng đúng 2 dòng text.
-========================================================= */
-
-.dropCapParagraph {
+.dropParagraph {
   display: flow-root;
 }
 
@@ -171,414 +56,73 @@
   float: left;
 
   margin:
-    0.055em
-    0.12em
-    -0.06em
+    .055em
+    .12em
+    -.04em
     0;
 
-  color: #765100;
+  color: #235944;
 
-  font-family:
-    var(--font-editorial),
-    "Times New Roman",
-    serif;
-
-  font-size: 5.35em;
+  font-size: 4.7em;
 
   font-weight: 700;
 
-  line-height: 0.72;
-
-  letter-spacing: -0.08em;
+  line-height: .72;
 }
-
-.dropCapRest {
-  position: relative;
-}
-
-/* =========================================================
-   STORY BLOCK
-========================================================= */
-
-.storyBlock {
-  width:
-    min(
-      980px,
-      100%
-    );
-
-  margin:
-    clamp(
-      70px,
-      8vw,
-      120px
-    )
-    auto
-    0;
-}
-
-.storyBlock p + p {
-  margin-top:
-    clamp(
-      32px,
-      3.5vw,
-      48px
-    );
-}
-
-.storyBlock strong {
-  color: #765100;
-
-  font-weight: 700;
-}
-
-/* =========================================================
-   7.104 BREAK
-========================================================= */
-
-.numberBreak {
-  display: flex;
-
-  align-items: flex-end;
-
-  justify-content: center;
-
-  gap:
-    clamp(
-      20px,
-      3vw,
-      42px
-    );
-
-  margin:
-    clamp(
-      85px,
-      9vw,
-      140px
-    )
-    0;
-
-  padding:
-    clamp(
-      46px,
-      5vw,
-      72px
-    )
-    0;
-
-  border-top:
-    1px solid
-    rgba(
-      65,
-      48,
-      17,
-      0.2
-    );
-
-  border-bottom:
-    1px solid
-    rgba(
-      65,
-      48,
-      17,
-      0.2
-    );
-}
-
-.numberBreak strong {
-  color: #765100;
-
-  font-family:
-    var(--font-editorial),
-    "Times New Roman",
-    serif;
-
-  font-size:
-    clamp(
-      100px,
-      12vw,
-      190px
-    );
-
-  font-weight: 700;
-
-  line-height: 0.68;
-
-  letter-spacing: -0.075em;
-}
-
-.numberBreak span {
-  padding-bottom: 5px;
-
-  color:
-    rgba(
-      0,
-      0,
-      0,
-      0.62
-    );
-
-  font-family:
-    var(--font-editorial),
-    "Times New Roman",
-    serif;
-
-  font-size:
-    clamp(
-      19px,
-      1.6vw,
-      26px
-    );
-
-  font-style: italic;
-
-  font-weight: 600;
-}
-
-/* =========================================================
-   IMAGE
-========================================================= */
-
-.figure {
-  width: 100%;
-
-  margin:
-    clamp(
-      85px,
-      9vw,
-      140px
-    )
-    0
-    0;
-}
-
-.imageWrap {
-  position: relative;
-
-  width: 100%;
-
-  aspect-ratio: 16 / 9;
-
-  overflow: hidden;
-
-  background: #d9c58e;
-}
-
-.image {
-  object-fit: cover;
-
-  object-position: center center;
-}
-
-.figure figcaption {
-  width:
-    min(
-      900px,
-      100%
-    );
-
-  margin:
-    16px
-    auto
-    0;
-
-  color:
-    rgba(
-      0,
-      0,
-      0,
-      0.62
-    );
-
-  font-family:
-    var(--font-editorial),
-    "Times New Roman",
-    serif;
-
-  font-size:
-    clamp(
-      14px,
-      1vw,
-      17px
-    );
-
-  font-style: italic;
-
-  line-height: 1.5;
-
-  text-align: center;
-}
-
-/* =========================================================
-   CLOSING
-========================================================= */
-
-.closing {
-  width:
-    min(
-      980px,
-      100%
-    );
-
-  margin:
-    clamp(
-      70px,
-      7vw,
-      110px
-    )
-    auto
-    0;
-}
-
-.closing p {
-  margin: 0;
-
-  color: #111111;
-
-  font-family:
-    var(--font-editorial),
-    "Times New Roman",
-    serif;
-
-  font-size:
-    clamp(
-      22px,
-      1.75vw,
-      29px
-    );
-
-  font-weight: 500;
-
-  line-height: 1.68;
-
-  letter-spacing: -0.012em;
-
-  text-wrap: pretty;
-}
-
-/* =========================================================
-   VIDEO SECTION
-========================================================= */
 
 .videoSection {
-  width: 100%;
-
-  padding:
-    0
-    0
-    clamp(
-      100px,
-      11vw,
-      170px
-    );
-
-  background: #f2dfad;
+  margin:
+    55px
+    auto;
 }
-
-.videoInner {
-  width:
-    min(
-      1380px,
-      calc(100% - 80px)
-    );
-
-  margin: 0 auto;
-}
-
-/* =========================================================
-   VIDEO PLACEHOLDER
-========================================================= */
 
 .videoPlaceholder {
-  position: relative;
-
   display: flex;
+
+  flex-direction: column;
 
   align-items: center;
 
   justify-content: center;
 
-  width: 100%;
+  width:
+    min(
+      1080px,
+      100%
+    );
 
   aspect-ratio: 16 / 9;
 
-  overflow: hidden;
+  margin: 0 auto;
 
-  background:
-    #15130f;
+  background: #235944;
 
-  color: #ffffff;
+  color: white;
 }
 
-/* subtle texture */
-
-.videoPlaceholder::before {
-  content: "";
-
-  position: absolute;
-
-  inset: 0;
-
-  background:
-    radial-gradient(
-      circle at center,
-      rgba(255, 255, 255, 0.06),
-      transparent 55%
-    );
-
-  pointer-events: none;
-}
-
-/* =========================================================
-   PLAY BUTTON
-========================================================= */
-
-.playIcon {
-  position: absolute;
-
-  top: 50%;
-
-  left: 50%;
-
+.videoIcon {
   display: flex;
 
   align-items: center;
 
   justify-content: center;
 
-  width:
-    clamp(
-      72px,
-      7vw,
-      108px
-    );
+  width: 70px;
 
-  aspect-ratio: 1;
+  height: 70px;
 
   border:
-    1px solid
-    rgba(
-      255,
-      255,
-      255,
-      0.65
-    );
+    1px solid white;
 
   border-radius: 50%;
-
-  transform:
-    translate(
-      -50%,
-      -50%
-    );
 }
 
-.playIcon span {
+.videoIcon span {
   width: 0;
 
   height: 0;
 
-  margin-left: 7px;
+  margin-left: 5px;
 
   border-top:
     10px solid transparent;
@@ -587,227 +131,81 @@
     10px solid transparent;
 
   border-left:
-    16px solid #ffffff;
+    16px solid white;
 }
-
-/* =========================================================
-   VIDEO LABEL
-========================================================= */
 
 .videoLabel {
-  position: absolute;
+  margin-top: 22px;
 
-  left:
-    clamp(
-      24px,
-      4vw,
-      58px
-    );
-
-  bottom:
-    clamp(
-      22px,
-      4vw,
-      54px
-    );
-
-  max-width:
-    460px;
-}
-
-.videoLabel > span {
-  display: block;
-
-  margin-bottom: 9px;
-
-  color:
-    rgba(
-      255,
-      255,
-      255,
-      0.62
-    );
-
-  font-family:
-    var(--font-sans),
-    Arial,
-    sans-serif;
-
-  font-size: 9px;
+  font-size: 11px;
 
   font-weight: 800;
 
-  letter-spacing: 0.18em;
+  letter-spacing: .18em;
 }
 
-.videoLabel p {
-  margin: 0;
+.videoHint {
+  max-width: 600px;
 
-  color: #ffffff;
+  margin:
+    15px
+    auto
+    0;
 
   font-family:
-    var(--font-editorial),
-    "Times New Roman",
+    "Merriweather",
+    Georgia,
     serif;
 
-  font-size:
-    clamp(
-      17px,
-      1.35vw,
-      23px
+  font-size: 18px;
+
+  text-align: center;
+}
+
+.figure {
+  width:
+    min(
+      1080px,
+      100%
     );
 
-  font-style: italic;
-
-  line-height: 1.45;
+  margin:
+    55px
+    auto;
 }
 
-/* =========================================================
-   TABLET
-========================================================= */
+.image {
+  display: block;
 
-@media (max-width: 1000px) {
-  .inner {
-    width:
-      calc(100% - 46px);
-  }
+  width: 100%;
 
-  .videoInner {
-    width:
-      calc(100% - 46px);
-  }
-
-  .header h2 {
-    font-size:
-      clamp(
-        52px,
-        8vw,
-        76px
-      );
-  }
+  height: auto;
 }
 
-/* =========================================================
-   MOBILE
-========================================================= */
+.closing {
+  margin-top: 48px;
+}
 
 @media (max-width: 700px) {
   .inner {
     width:
-      calc(100% - 30px);
-
-    padding:
-      65px
-      0
-      75px;
+      calc(
+        100% - 32px
+      );
   }
 
-  .header {
-    margin-bottom: 45px;
-  }
-
-  .kicker {
-    margin-bottom: 13px;
-
-    font-size: 8px;
-  }
-
-  .header h2 {
-    font-size: 43px;
-
-    line-height: 0.98;
-  }
-
-  .opening p,
-  .storyBlock p {
-    font-size: 18px;
-
-    line-height: 1.62;
-  }
-
-  /* drop cap vẫn khoảng 2 dòng */
-
-  .dropCap {
-    margin-right: 0.1em;
-
-    font-size: 4.7em;
-
-    line-height: 0.74;
-  }
-
-  .storyBlock {
-    margin-top: 55px;
-  }
-
-  .numberBreak {
-    align-items: flex-start;
-
-    flex-direction: column;
-
-    gap: 18px;
-
-    margin:
-      65px
-      0;
-
-    padding:
-      38px
-      0;
-  }
-
-  .numberBreak strong {
-    font-size: 112px;
-  }
-
-  .numberBreak span {
-    padding: 0;
-
-    font-size: 18px;
-  }
-
-  .figure {
-    margin-top: 65px;
-  }
-
-  .imageWrap {
-    aspect-ratio: 4 / 3;
-  }
-
-  .figure figcaption {
-    margin-top: 12px;
-
-    font-size: 13px;
-
-    text-align: left;
-  }
-
-  .closing {
-    margin-top: 55px;
-  }
-
+  .body p,
   .closing p {
-    font-size: 21px;
-
-    line-height: 1.55;
+    font-size: 19px;
   }
 
-  .videoSection {
-    padding-bottom: 90px;
-  }
+  .videoPlaceholder,
+  .figure {
+    width:
+      calc(
+        100% + 32px
+      );
 
-  .videoInner {
-    width: 100%;
-  }
-
-  .videoPlaceholder {
-    aspect-ratio: 4 / 3;
-  }
-
-  .videoLabel {
-    left: 18px;
-
-    right: 18px;
-
-    bottom: 18px;
+    margin-left: -16px;
   }
 }

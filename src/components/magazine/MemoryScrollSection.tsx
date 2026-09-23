@@ -1,78 +1,64 @@
 "use client";
 
-import Image from "next/image";
+/* eslint-disable @next/next/no-img-element */
+
 import {
   useEffect,
   useRef,
   useState,
 } from "react";
 
+import SubtitleImage from "./SubtitleImage";
+
 import styles from "./MemoryScrollSection.module.css";
 
-/* =========================================================
-   TYPES
-========================================================= */
 
-type StoryStep = {
+type MemoryStory = {
   image: string;
+
   alt: string;
-  caption: string;
 
-  eyebrow: string;
+  side:
+    | "left"
+    | "right";
 
-  body?: string;
+  type:
+    | "text"
+    | "quote";
 
-  intro?: string;
-
-  quote?: string;
+  content: string;
 
   source?: string;
 
-  /*
-   * Điều chỉnh trọng tâm ảnh.
-   *
-   * text trái  -> focus ảnh sang phải
-   * text phải  -> focus ảnh sang trái
-   */
-  imagePosition?: string;
+  caption?: string;
+
+  objectPosition?: string;
 };
 
-/* =========================================================
-   STORY DATA
-========================================================= */
 
-const STORIES: StoryStep[] = [
-  /* =======================================================
-     01
-     TEXT LEFT
-     IMAGE FOCUS RIGHT
-  ======================================================= */
-
+const STORIES: MemoryStory[] = [
   {
     image:
       "/images/readymag/memory/le-thi-rieng-1.jpg",
 
     alt:
-      "Các lực lượng chức năng khảo sát thực địa tại Công viên Lê Thị Riêng",
+      "Khảo sát thực địa tại Công viên Lê Thị Riêng",
+
+    side:
+      "left",
+
+    type:
+      "text",
+
+    content:
+      "Tại Công viên Lê Thị Riêng (Thành phố Hồ Chí Minh), hành trình tìm kiếm dấu tích các hố chôn tập thể được bắt đầu từ sự kết nối giữa dữ liệu lịch sử, hình ảnh tư liệu và lời kể của những người từng chứng kiến sự việc.",
 
     caption:
       "Các lực lượng chức năng khảo sát thực địa để xác định vị trí các hố chôn tập thể tại Công viên Lê Thị Riêng.",
 
-    eyebrow:
-      "KHI KÝ ỨC TRỞ THÀNH MANH MỐI",
-
-    body:
-      "Trong nhiều cuộc tìm kiếm, ký ức của nhân chứng là một trong những nguồn thông tin quan trọng giúp thu hẹp phạm vi khảo sát. Đó có thể là lời kể của người từng chứng kiến trận đánh, người dân sống gần khu vực chiến trường hoặc những người từng tham gia chôn cất, di chuyển hài cốt trong chiến tranh.",
-
-    imagePosition:
+    objectPosition:
       "62% center",
   },
-
-  /* =======================================================
-     02
-     TEXT RIGHT
-     IMAGE FOCUS LEFT
-  ======================================================= */
 
   {
     image:
@@ -81,383 +67,304 @@ const STORIES: StoryStep[] = [
     alt:
       "Ông Nguyễn Thành Phước",
 
-    caption:
-      "Ông Nguyễn Thành Phước - một nhân chứng lịch sử từng sinh sống lâu năm tại khu vực Bắc Hải, gần Công viên Lê Thị Riêng đã chứng kiến việc đào những hố lớn để chôn tập thể nhiều thi hài chiến sĩ khi còn nhỏ.",
+    side:
+      "right",
 
-    eyebrow:
-      "LỜI KỂ NHÂN CHỨNG",
+    type:
+      "quote",
 
-    intro:
-      "Ông kể:",
-
-    quote:
+    content:
       "Tôi đứng cạnh hầm chôn chỉ vài mét, khi đó có một hầm dài mấy chục mét, ngang khoảng 4m. Nhiều thi hài chiến sĩ được đưa xuống chôn tập thể. Ước mong lớn nhất của tôi là sớm đưa các anh về với đồng đội.",
 
     source:
       "Nguyễn Thành Phước",
 
-    imagePosition:
-      "5% center",
+    objectPosition:
+      "34% center",
   },
-
-  /* =======================================================
-     03
-     TEXT LEFT
-     IMAGE FOCUS RIGHT
-  ======================================================= */
 
   {
     image:
       "/images/readymag/memory/le-thi-rieng-2.jpg",
 
     alt:
-      "Các lực lượng chức năng đối chiếu tư liệu và nhân chứng",
+      "Đối chiếu thông tin trong quá trình tìm kiếm",
 
-    caption:
-      "Các lực lượng chức năng đối chiếu tư liệu và nhân chứng để xác định vị trí các hố chôn tập thể liệt sĩ.",
+    side:
+      "left",
 
-    eyebrow:
-      "ĐỐI CHIẾU THÔNG TIN",
+    type:
+      "text",
 
-    body:
+    content:
       "Lời kể ấy không phải là căn cứ duy nhất, nhưng trở thành một mảnh ghép quan trọng trong quá trình đối chiếu thông tin. Cùng với các bức ảnh tư liệu và dữ liệu kỹ thuật, những dấu vết tưởng như rời rạc dần được kết nối, mở ra khả năng xác định rõ hơn vị trí và quy mô của các khu vực cần khảo sát.",
 
-    imagePosition:
-      "90% center",
+    objectPosition:
+      "62% center",
   },
-
-  /* =======================================================
-     04
-     TEXT RIGHT
-     KTS NGUYỄN XUÂN THẮNG
-     IMAGE FOCUS LEFT
-  ======================================================= */
 
   {
     image:
       "/images/readymag/memory/nguyen-xuan-thang.jpg",
 
     alt:
-      "Kiến trúc sư Nguyễn Xuân Thắng",
+      "Nguyễn Xuân Thắng phân tích tư liệu",
 
-    caption:
-      "Kiến trúc sư Nguyễn Xuân Thắng nhận định về ba bức ảnh tư liệu có thể giúp xác định rõ hơn vị trí và quy mô các rãnh mộ tập thể từng tồn tại tại khu vực Công viên Lê Thị Riêng.",
+    side:
+      "right",
 
-    eyebrow:
-      "PHÂN TÍCH TƯ LIỆU",
+    type:
+      "quote",
 
-    intro:
-      "Kiến trúc sư Nguyễn Xuân Thắng nhận định:",
-
-    quote:
-      "Ba bức ảnh, khi được đặt cạnh nhau, mở ra khả năng xác định rõ hơn vị trí và quy mô của các rãnh mộ tập thể từng tồn tại tại khu vực này. Đặc biệt, dữ liệu EXIF - những thông tin kỹ thuật được lưu kèm tệp ảnh trở thành một manh mối quan trọng. Phần dữ liệu còn được lưu trên nền tảng lưu trữ cho biết thời điểm chụp và nội dung liên quan đến việc chôn cất tập thể.",
+    content:
+      "Từ ba bức ảnh tư liệu, chúng tôi phân tích các chi tiết hiện trường, đối chiếu dữ liệu EXIF và những dấu hiệu còn lại để thu hẹp phạm vi khảo sát.",
 
     source:
-      "KTS Nguyễn Xuân Thắng",
+      "Nguyễn Xuân Thắng",
 
-    /*
-     * Quote ở bên phải
-     * nên focus ảnh về trái.
-     *
-     * Nếu người vẫn bị text che:
-     * thử 30% hoặc 27%.
-     */
-    imagePosition:
-      "35% center",
+    objectPosition:
+      "36% center",
   },
 ];
 
-/* =========================================================
-   COMPONENT
-========================================================= */
 
 export default function MemoryScrollSection() {
   const [
     activeIndex,
     setActiveIndex,
-  ] = useState(0);
+  ] =
+    useState(0);
 
   const stepRefs =
     useRef<
-      Array<HTMLElement | null>
+      Array<
+        HTMLDivElement | null
+      >
     >([]);
 
-  /* =======================================================
-     ACTIVE STEP OBSERVER
-  ======================================================= */
-
   useEffect(() => {
-    const observers: IntersectionObserver[] =
-      [];
+    const observers =
+      stepRefs.current.map(
+        (
+          element,
+          index
+        ) => {
+          if (!element) {
+            return null;
+          }
 
-    stepRefs.current.forEach(
-      (
-        element,
-        index
-      ) => {
-        if (!element) {
-          return;
-        }
+          const observer =
+            new IntersectionObserver(
+              ([entry]) => {
+                if (
+                  entry.isIntersecting
+                ) {
+                  setActiveIndex(
+                    index
+                  );
+                }
+              },
+              {
+                threshold:
+                  0.18,
 
-        const observer =
-          new IntersectionObserver(
-            (
-              entries
-            ) => {
-              const entry =
-                entries[0];
-
-              if (
-                entry.isIntersecting
-              ) {
-                setActiveIndex(
-                  index
-                );
+                rootMargin:
+                  "-28% 0px -44% 0px",
               }
-            },
+            );
 
-            {
-              root:
-                null,
-
-              threshold:
-                0.22,
-
-              rootMargin:
-                "-34% 0px -42% 0px",
-            }
+          observer.observe(
+            element
           );
 
-        observer.observe(
-          element
-        );
-
-        observers.push(
-          observer
-        );
-      }
-    );
+          return observer;
+        }
+      );
 
     return () => {
       observers.forEach(
         (
           observer
         ) => {
-          observer.disconnect();
+          observer?.disconnect();
         }
       );
     };
   }, []);
 
+  const currentStory =
+    STORIES[activeIndex] ??
+    STORIES[0];
+
   return (
     <section
-      id="memory-clues"
+      id="memory"
       className={
         styles.section
       }
     >
-      {/* =================================================
-          STICKY FULL-SCREEN VISUAL
-      ================================================== */}
+      {/* ===================================================
+          SUBTITLE PLACEHOLDER
+      ==================================================== */}
+
+      <SubtitleImage
+        alt="Lần theo dấu vết ký ức"
+        imagePath="/images/readymag/subtitles/memory.png"
+        maxWidth={1050}
+      />
+
+      {/* ===================================================
+          INTRO
+      ==================================================== */}
 
       <div
         className={
-          styles.stickyStage
+          styles.intro
         }
       >
-        {/* ===============================================
-            IMAGE STACK
-        ================================================ */}
-
-        <div
+        <p
           className={
-            styles.imageStack
+            styles.introBody
           }
         >
-          {STORIES.map(
-            (
-              story,
-              index
-            ) => {
-              const defaultPosition =
-                index %
-                  2 ===
-                0
-                  ? "62% center"
-                  : "38% center";
-
-              return (
-                <div
-                  key={
-                    story.image
-                  }
-                  className={`${styles.imageLayer} ${
-                    activeIndex ===
-                    index
-                      ? styles.imageLayerActive
-                      : ""
-                  }`}
-                >
-                  <Image
-                    src={
-                      story.image
-                    }
-                    alt={
-                      story.alt
-                    }
-                    fill
-                    priority={
-                      index ===
-                      0
-                    }
-                    sizes="100vw"
-                    className={
-                      styles.bgImage
-                    }
-                    style={{
-                      objectPosition:
-                        story.imagePosition ??
-                        defaultPosition,
-                    }}
-                  />
-                </div>
-              );
+          <span
+            className={
+              styles.dropCap
             }
-          )}
-        </div>
-
-        {/* ===============================================
-            COLOR OVERLAY
-        ================================================ */}
-
-        <div
-          className={`${styles.stageOverlay} ${
-            activeIndex %
-              2 ===
-            0
-              ? styles.overlayLeft
-              : styles.overlayRight
-          }`}
-        />
-
-        {/* ===============================================
-            GLOBAL CINEMATIC SHADE
-        ================================================ */}
-
-        <div
-          className={
-            styles.globalShade
-          }
-        />
-
-        {/* ===============================================
-            CAPTION
-        ================================================ */}
-
-        <div
-          className={
-            styles.captionWrap
-          }
-        >
-          {STORIES.map(
-            (
-              story,
-              index
-            ) => {
-              const captionOnRight =
-                index %
-                  2 ===
-                0;
-
-              return (
-                <div
-                  key={`${story.image}-caption`}
-                  className={`${styles.captionLayer} ${
-                    activeIndex ===
-                    index
-                      ? styles.captionLayerActive
-                      : ""
-                  } ${
-                    captionOnRight
-                      ? styles.captionRight
-                      : styles.captionLeft
-                  }`}
-                >
-                  <p
-                    className={
-                      styles.caption
-                    }
-                  >
-                    {
-                      story.caption
-                    }
-                  </p>
-                </div>
-              );
-            }
-          )}
-        </div>
-
-        {/* ===============================================
-            COUNTER
-        ================================================ */}
-
-        <div
-          className={
-            styles.counter
-          }
-          aria-hidden="true"
-        >
-          <span>
-            {String(
-              activeIndex +
-                1
-            ).padStart(
-              2,
-              "0"
-            )}
+          >
+            T
           </span>
 
-          <i />
-
-          <span>
-            {String(
-              STORIES.length
-            ).padStart(
-              2,
-              "0"
-            )}
-          </span>
-        </div>
+          rong nhiều cuộc tìm kiếm, ký ức của nhân chứng là
+          một trong những nguồn thông tin quan trọng giúp thu
+          hẹp phạm vi khảo sát. Đó có thể là lời kể của người
+          từng chứng kiến trận đánh, người dân sống gần khu vực
+          chiến trường hoặc những người từng tham gia chôn cất,
+          di chuyển hài cốt trong chiến tranh.
+        </p>
       </div>
 
-      {/* =================================================
-          SCROLLING STORY
-      ================================================== */}
+      {/* ===================================================
+          SCROLL
+      ==================================================== */}
 
       <div
         className={
-          styles.steps
+          styles.scrolly
         }
       >
-        {STORIES.map(
-          (
-            story,
-            index
-          ) => {
-            const isLeft =
-              index %
-                2 ===
-              0;
+        <div
+          className={
+            styles.stickyStage
+          }
+        >
+          {STORIES.map(
+            (
+              story,
+              index
+            ) => (
+              <div
+                key={
+                  story.image
+                }
+                className={[
+                  styles.imageLayer,
 
-            const isQuote =
-              Boolean(
-                story.quote
-              );
+                  story.side ===
+                  "left"
+                    ? styles.imageRight
+                    : styles.imageLeft,
 
-            return (
-              <article
-                key={`${story.image}-step`}
+                  activeIndex ===
+                  index
+                    ? styles.imageLayerActive
+                    : "",
+                ]
+                  .filter(
+                    Boolean
+                  )
+                  .join(
+                    " "
+                  )}
+              >
+                <img
+                  src={
+                    story.image
+                  }
+                  alt={
+                    story.alt
+                  }
+                  draggable={
+                    false
+                  }
+                  className={
+                    styles.image
+                  }
+                  style={{
+                    objectPosition:
+                      story.objectPosition ??
+                      "center",
+                  }}
+                />
+              </div>
+            )
+          )}
+
+          <div
+            className={[
+              styles.greenPanel,
+
+              currentStory.side ===
+              "left"
+                ? styles.greenPanelLeft
+                : styles.greenPanelRight,
+            ].join(
+              " "
+            )}
+            aria-hidden="true"
+          />
+
+          {currentStory.caption && (
+            <p
+              className={[
+                styles.caption,
+
+                currentStory.side ===
+                "left"
+                  ? styles.captionRight
+                  : styles.captionLeft,
+              ].join(
+                " "
+              )}
+            >
+              {
+                currentStory.caption
+              }
+            </p>
+          )}
+        </div>
+
+        <div
+          className={
+            styles.steps
+          }
+        >
+          <div
+            className={
+              styles.leadSpace
+            }
+            aria-hidden="true"
+          />
+
+          {STORIES.map(
+            (
+              story,
+              index
+            ) => (
+              <div
+                key={
+                  `${story.image}-${index}`
+                }
                 ref={(
                   node
                 ) => {
@@ -466,115 +373,72 @@ export default function MemoryScrollSection() {
                   ] =
                     node;
                 }}
-                className={`${styles.step} ${
-                  isLeft
+                className={[
+                  styles.step,
+
+                  story.side ===
+                  "left"
                     ? styles.stepLeft
-                    : styles.stepRight
-                }`}
+                    : styles.stepRight,
+                ].join(
+                  " "
+                )}
               >
                 <div
-                  className={`${styles.copy} ${
-                    isQuote
+                  className={[
+                    styles.copy,
+
+                    story.type ===
+                    "quote"
                       ? styles.quoteCopy
-                      : ""
-                  } ${
-                    activeIndex ===
-                    index
-                      ? styles.copyActive
-                      : ""
-                  }`}
+                      : styles.textCopy,
+                  ].join(
+                    " "
+                  )}
                 >
-                  {/* ===============================
-                      EYEBROW
-                  ================================ */}
-
-                  <span
-                    className={
-                      styles.eyebrow
-                    }
-                  >
-                    {
-                      story.eyebrow
-                    }
-                  </span>
-
-                  {/* ===============================
-                      NORMAL BODY
-                  ================================ */}
-
-                  {story.body && (
-                    <p
-                      className={
-                        styles.body
-                      }
-                    >
+                  {story.type ===
+                  "text" ? (
+                    <p>
                       {
-                        story.body
+                        story.content
                       }
                     </p>
-                  )}
-
-                  {/* ===============================
-                      INTERVIEW / QUOTE
-                  ================================ */}
-
-                  {story.quote && (
+                  ) : (
                     <>
-                      {story.intro && (
-                        <p
-                          className={
-                            styles.quoteIntro
-                          }
-                        >
-                          {
-                            story.intro
-                          }
-                        </p>
-                      )}
-
-                      <div
-                        className={
-                          styles.quoteBox
+                      <blockquote>
+                        “
+                        {
+                          story.content
                         }
-                      >
+                        ”
+                      </blockquote>
+
+                      {story.source && (
                         <span
                           className={
-                            styles.quoteMark
-                          }
-                          aria-hidden="true"
-                        >
-                          “
-                        </span>
-
-                        <blockquote
-                          className={
-                            styles.quote
+                            styles.source
                           }
                         >
+                          —{" "}
                           {
-                            story.quote
+                            story.source
                           }
-                        </blockquote>
-
-                        {story.source && (
-                          <span
-                            className={
-                              styles.quoteSource
-                            }
-                          >
-                            {
-                              story.source
-                            }
-                          </span>
-                        )}
-                      </div>
+                        </span>
+                      )}
                     </>
                   )}
                 </div>
-              </article>
-            );
-          }
-        )}
+              </div>
+            )
+          )}
+
+          <div
+            className={
+              styles.tailSpace
+            }
+            aria-hidden="true"
+          />
+        </div>
       </div>
     </section>
   );

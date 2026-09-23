@@ -1139,10 +1139,22 @@ export default function OpeningHero() {
                   )
                 );
 
+              const formattedFinalNumber =
+                displayed >= 1000
+                  ? `${Math.floor(
+                      displayed / 1000
+                    )}\u2009.\u2009${String(
+                      displayed % 1000
+                    ).padStart(
+                      3,
+                      "0"
+                    )}`
+                  : String(
+                      displayed
+                    );
+
               finalNumberRef.current.textContent =
-                displayed.toLocaleString(
-                  "vi-VN"
-                );
+                formattedFinalNumber;
             }
 
             /* ===========================================

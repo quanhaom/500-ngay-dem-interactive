@@ -1,38 +1,55 @@
+/* eslint-disable @next/next/no-img-element */
+
+import SubtitleImage from "./SubtitleImage";
+
 import styles from "./PromiseSection.module.css";
+
 
 export default function PromiseSection() {
   return (
     <section
       id="promise"
-      className={styles.section}
+      className={
+        styles.section
+      }
     >
-      {/* =====================================================
-          OPENING ARTICLE
-      ====================================================== */}
+      {/* ===================================================
+          SUBTITLE
+      ==================================================== */}
 
-      <div className={styles.article}>
-        <header className={styles.header}>
-          <span className={styles.kicker}>
-            MỘT CUỘC TRỞ VỀ CÒN CHỜ ĐỢI
-          </span>
+      <SubtitleImage
+        alt="Một lời hẹn còn dang dở"
+        imagePath="/images/readymag/subtitles/promise.png"
+        maxWidth={1050}
+      />
 
-          <h2>
-            Một lời hẹn
-            <br />
-            còn dang dở…
-          </h2>
-        </header>
+      {/* ===================================================
+          ARTICLE
+      ==================================================== */}
 
-        <div className={styles.body}>
+      <div
+        className={
+          styles.article
+        }
+      >
+        <div
+          className={
+            styles.body
+          }
+        >
           <p>
             Với gia đình liệt sĩ Nguyễn Văn Xiêm, sự trở về
             có lẽ đã bắt đầu từ lời hẹn năm nào. Trước lúc
             ra đi, người lính trẻ từng nói với mẹ:
           </p>
 
-          <p className={styles.promiseQuote}>
+          <blockquote
+            className={
+              styles.promiseQuote
+            }
+          >
             “Mẹ ơi! Con đi, con sẽ trở về với mẹ và gia đình!”
-          </p>
+          </blockquote>
 
           <p>
             Nhiều năm trôi qua, lời hẹn ấy vẫn ở lại trong
@@ -42,90 +59,128 @@ export default function PromiseSection() {
         </div>
       </div>
 
-      {/* =====================================================
-          IMAGE STORY
+      {/* ===================================================
+          STICKY STORY
+      ==================================================== */}
 
-          Ảnh là BACKGROUND THẬT của toàn bộ phần này.
-
-          Background đứng yên.
-          Quote + article scroll phía trên.
-      ====================================================== */}
-
-      <div className={styles.story}>
-        {/* ===================================================
-            GIAI ĐOẠN 1
-            CHỈ NHÌN ẢNH
-        ==================================================== */}
-
+      <div
+        className={
+          styles.story
+        }
+      >
         <div
-          className={styles.imageOnly}
-          aria-hidden="true"
-        />
+          className={
+            styles.stickyVisual
+          }
+        >
+          <img
+            src="/images/readymag/ending/promise-waiting.jpg"
+            alt="Gia đình liệt sĩ chờ đợi thông tin về người thân"
+            className={
+              styles.stickyImage
+            }
+            draggable={
+              false
+            }
+          />
 
-        {/* ===================================================
-            GIAI ĐOẠN 2
-            QUOTE TRƯỢT QUA ẢNH
-        ==================================================== */}
-
-        <div className={styles.quoteScene}>
-          <div className={styles.quoteInner}>
-            <p className={styles.waitingQuote}>
-              “Gia đình tôi đang ngóng
-              <br />
-              trông từng giờ, từng ngày”
-            </p>
-
-            <p className={styles.waitingDescription}>
-              lời chia sẻ ấy không chỉ là nỗi niềm của một
-              gia đình, mà còn gợi lên sự chờ đợi kéo dài
-              qua nhiều thế hệ.
-            </p>
-          </div>
+          <div
+            className={
+              styles.imageShade
+            }
+            aria-hidden="true"
+          />
         </div>
 
-        {/* ===================================================
-            GIAI ĐOẠN 3
-            QUOTE ĐÃ ĐI QUA
-            ẢNH VẪN CÒN ĐỨNG YÊN
-        ==================================================== */}
-
         <div
-          className={styles.afterQuote}
-          aria-hidden="true"
-        />
+          className={
+            styles.foreground
+          }
+        >
+          <div
+            className={
+              styles.imageLead
+            }
+            aria-hidden="true"
+          />
 
-        {/* ===================================================
-            GIAI ĐOẠN 4
-            NỘI DUNG VÀNG TRƯỢT LÊN CHE ẢNH
-        ==================================================== */}
+          <div
+            className={
+              styles.quoteStep
+            }
+          >
+            <div
+              className={
+                styles.quoteInner
+              }
+            >
+              <blockquote
+                className={
+                  styles.waitingQuote
+                }
+              >
+                “Gia đình tôi đang ngóng
+                <br />
+                trông từng giờ, từng ngày”
+              </blockquote>
 
-        <div className={styles.articleOverlay}>
-          <div className={styles.overlayInner}>
-            <div className={styles.overlayBody}>
-              <p>
-                Trên những vùng đất từng ghi dấu chiến tranh,
-                hành trình ấy vẫn được tiếp nối bằng những công
-                việc âm thầm: một mũi dò đi qua lớp đất, một
-                dấu hiệu được ghi nhận, một mẫu sinh phẩm được
-                nâng niu chuyển đến nơi giám định. Những gì còn
-                sót lại của quá khứ, dù chỉ là một dấu vết nhỏ,
-                đều có thể trở thành chỉ dẫn cho một cuộc trở về.
+              <p
+                className={
+                  styles.waitingDescription
+                }
+              >
+                Lời chia sẻ ấy không chỉ là nỗi niềm của
+                một gia đình, mà còn gợi lên sự chờ đợi
+                kéo dài qua nhiều thế hệ.
               </p>
             </div>
+          </div>
 
-            <div className={styles.endingText}>
-              <p>
-                Chiều buông xuống trên địa bàn tìm kiếm, ánh
-                sáng cuối ngày phủ lên những vạt rừng, những
-                bước chân rời khỏi hiện trường, những thiết bị
-                được xếp lại, nhưng dưới lớp đất kia, câu
-                chuyện về những người đã nằm xuống vẫn chưa
-                khép lại. Ở một nơi khác, ánh đèn vẫn còn sáng
-                bên những mẫu sinh phẩm chưa có kết quả; trong
-                những mái nhà, những gia đình vẫn chờ một tin
-                báo, một cái tên, một ngày người thân được gọi
-                về đúng với quê hương mình.
-              </p>
+          <div
+            className={
+              styles.afterQuoteSpace
+            }
+            aria-hidden="true"
+          />
+
+          <div
+            className={
+              styles.yellowPanel
+            }
+          >
+            <div
+              className={
+                styles.yellowInner
+              }
+            >
+              <div
+                className={
+                  styles.panelBody
+                }
+              >
+                <p>
+                  Trên những vùng đất từng ghi dấu chiến tranh,
+                  hành trình ấy vẫn được tiếp nối bằng những
+                  công việc âm thầm: một mũi dò đi qua lớp đất,
+                  một dấu hiệu được ghi nhận, một mẫu sinh phẩm
+                  được nâng niu chuyển đến nơi giám định.
+                </p>
+              </div>
+
+              <div
+                className={
+                  styles.endingText
+                }
+              >
+                <p>
+                  Chiều buông xuống trên địa bàn tìm kiếm, ánh
+                  sáng cuối ngày phủ lên những vạt rừng, những
+                  bước chân rời khỏi hiện trường, những thiết
+                  bị được xếp lại, nhưng dưới lớp đất kia, câu
+                  chuyện về những người đã nằm xuống vẫn chưa
+                  khép lại.
+                </p>
+              </div>
             </div>
           </div>
         </div>

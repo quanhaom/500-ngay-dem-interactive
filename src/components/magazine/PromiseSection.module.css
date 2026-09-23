@@ -1,27 +1,10 @@
-/* =========================================================
-   SECTION
-========================================================= */
-
 .section {
-  position: relative;
-
   width: 100%;
 
   background: #f2dfad;
-
-  color: #000;
 }
 
-
-/* =========================================================
-   OPENING ARTICLE
-========================================================= */
-
 .article {
-  position: relative;
-
-  z-index: 5;
-
   width:
     min(
       1280px,
@@ -31,1095 +14,287 @@
   margin: 0 auto;
 
   padding:
-    clamp(90px, 9vw, 140px)
     0
-    clamp(95px, 9vw, 145px);
-
-  background: #f2dfad;
+    0
+    80px;
 }
-
-
-/* =========================================================
-   HEADER
-========================================================= */
-
-.header {
-  width: 100%;
-
-  margin-bottom:
-    clamp(
-      50px,
-      5vw,
-      76px
-    );
-}
-
-.kicker {
-  display: block;
-
-  margin-bottom: 16px;
-
-  color:
-    rgba(
-      0,
-      0,
-      0,
-      0.48
-    );
-
-  font-family:
-    var(--font-sans),
-    "Segoe UI",
-    Arial,
-    sans-serif;
-
-  font-size: 10px;
-
-  font-weight: 800;
-
-  letter-spacing: 0.19em;
-
-  text-transform: uppercase;
-}
-
-.header h2 {
-  max-width: 1050px;
-
-  margin: 0;
-
-  color: #050505;
-
-  font-family:
-    var(--font-editorial),
-    "Times New Roman",
-    serif;
-
-  font-size:
-    clamp(
-      62px,
-      7vw,
-      108px
-    );
-
-  font-weight: 800;
-
-  line-height: 0.92;
-
-  letter-spacing: -0.055em;
-
-  text-wrap: balance;
-}
-
-
-/* =========================================================
-   BODY
-========================================================= */
 
 .body {
   width:
     min(
-      1180px,
+      860px,
       100%
     );
 
   margin: 0 auto;
 }
 
-.body > p:not(.promiseQuote) {
-  width:
-    min(
-      940px,
-      100%
-    );
-
-  margin-left: auto;
-
-  margin-right: auto;
-}
-
 .body p {
-  margin-top: 0;
-
-  margin-bottom: 0;
-
-  color:
-    rgba(
-      0,
-      0,
-      0,
-      0.88
-    );
+  margin: 0;
 
   font-family:
-    var(--font-editorial),
-    "Times New Roman",
+    "Merriweather",
+    Georgia,
+    serif;
+
+  font-size: 22px;
+
+  line-height: 1.78;
+}
+
+.promiseQuote {
+  margin:
+    45px
+    auto;
+
+  font-family:
+    "Merriweather",
+    Georgia,
     serif;
 
   font-size:
     clamp(
-      21px,
-      1.55vw,
-      26px
+      34px,
+      3vw,
+      40px
     );
-
-  font-weight: 500;
-
-  line-height: 1.72;
-
-  letter-spacing: -0.012em;
-
-  text-wrap: pretty;
-}
-
-
-/* =========================================================
-   PROMISE QUOTE
-========================================================= */
-
-.promiseQuote {
-  display: block;
-
-  width: 100%;
-
-  margin:
-    clamp(
-      50px,
-      5vw,
-      74px
-    )
-    auto !important;
-
-  padding:
-    0
-    10px;
-
-  color:
-    #080808 !important;
-
-  font-family:
-    var(--font-editorial),
-    "Times New Roman",
-    serif !important;
-
-  font-size:
-    clamp(
-      31px,
-      2.65vw,
-      46px
-    ) !important;
 
   font-style: italic;
 
-  font-weight:
-    800 !important;
-
-  line-height:
-    1.32 !important;
-
-  letter-spacing:
-    -0.035em !important;
+  font-weight: 700;
 
   text-align: center;
-
-  text-wrap: balance;
 }
-
-@media (min-width: 1180px) {
-  .promiseQuote {
-    white-space: nowrap;
-  }
-}
-
 
 /* =========================================================
-   STORY
-
-   ẢNH LÀ BACKGROUND CỦA TOÀN BỘ STORY.
-
-   background-attachment: fixed
-   => ảnh đứng yên trong viewport.
-
-   Các block con vẫn scroll bình thường.
+   STICKY STORY
 ========================================================= */
 
 .story {
   position: relative;
 
-  width: 100%;
+  overflow: visible;
 
-  /*
-   * Background image thật.
-   * Không còn <img> sticky.
-   */
-  background-image:
-    linear-gradient(
-      to bottom,
-
-      rgba(
-        0,
-        0,
-        0,
-        0.02
-      )
-      0%,
-
-      rgba(
-        0,
-        0,
-        0,
-        0.1
-      )
-      42%,
-
-      rgba(
-        0,
-        0,
-        0,
-        0.34
-      )
-      100%
-    ),
-
-    url("/images/readymag/ending/promise-waiting.jpg");
-
-  background-repeat:
-    no-repeat;
-
-  background-size:
-    cover;
-
-  background-position:
-    center center;
-
-  /*
-   * QUAN TRỌNG NHẤT.
-   * Ảnh background đứng yên.
-   */
-  background-attachment:
-    fixed;
-
-  background-color:
-    #7f775c;
+  background: #10130f;
 }
 
+.stickyVisual {
+  position: sticky;
 
-/* =========================================================
-   IMAGE ONLY
-
-   Đầu story chỉ show ảnh.
-
-   100svh = ít nhất một màn hình hoàn chỉnh.
-========================================================= */
-
-.imageOnly {
-  position: relative;
-
-  width: 100%;
+  top: 0;
 
   height: 100vh;
   height: 100svh;
 
-  background: transparent;
-
-  pointer-events: none;
+  overflow: hidden;
 }
 
+.stickyImage {
+  position: absolute;
 
-/* =========================================================
-   QUOTE SCENE
+  inset: 0;
 
-   QUOTE KHÔNG STICKY.
+  width: 100%;
 
-   Nó scroll từ dưới lên trong khi background đứng yên.
-========================================================= */
+  height: 100%;
 
-.quoteScene {
+  object-fit: cover;
+
+  transform: none;
+}
+
+.imageShade {
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(0,0,0,.01),
+      rgba(0,0,0,.12)
+    );
+}
+
+.foreground {
   position: relative;
 
-  z-index: 2;
+  z-index: 5;
 
+  margin-top: -100svh;
+}
+
+.imageLead {
+  height: 65svh;
+}
+
+.quoteStep {
   display: flex;
 
   align-items: center;
 
   justify-content: center;
 
-  width: 100%;
-
-  min-height: 110vh;
-  min-height: 110svh;
+  min-height: 105svh;
 
   padding:
-    18vh
-    20px;
-
-  background: transparent;
+    10vh
+    24px;
 }
-
-
-/* =========================================================
-   QUOTE INNER
-========================================================= */
 
 .quoteInner {
   width:
     min(
-      1120px,
+      1000px,
       100%
     );
 
-  margin:
-    0
-    auto;
-
-  text-align:
-    center;
+  text-align: center;
 }
-
-
-/* =========================================================
-   WAITING QUOTE
-========================================================= */
 
 .waitingQuote {
   margin: 0;
 
-  color:
-    #fffdf2;
+  color: #fff8e7;
 
   font-family:
-    var(--font-editorial),
-    "Times New Roman",
+    "Merriweather",
+    Georgia,
     serif;
 
   font-size:
     clamp(
-      48px,
-      4.6vw,
-      78px
+      38px,
+      3.5vw,
+      50px
     );
 
-  font-style:
-    italic;
+  font-style: italic;
 
-  font-weight:
-    800;
+  font-weight: 700;
 
-  line-height:
-    1.12;
-
-  letter-spacing:
-    -0.05em;
-
-  text-wrap:
-    balance;
+  line-height: 1.42;
 
   text-shadow:
-    0
-    3px
-    26px
-    rgba(
-      0,
-      0,
-      0,
-      0.5
-    );
+    0 3px 14px
+    rgba(0,0,0,.7);
 }
-
-
-/* =========================================================
-   WAITING DESCRIPTION
-========================================================= */
 
 .waitingDescription {
   width:
     min(
-      900px,
+      780px,
       100%
     );
 
   margin:
-    clamp(
-      28px,
-      3vw,
-      42px
-    )
+    28px
     auto
     0;
 
-  color:
-    rgba(
-      255,
-      253,
-      243,
-      0.97
-    );
+  color: #fff8e7;
 
   font-family:
-    var(--font-editorial),
-    "Times New Roman",
+    "Merriweather",
+    Georgia,
     serif;
 
-  font-size:
-    clamp(
-      18px,
-      1.25vw,
-      22px
-    );
+  font-size: 22px;
 
-  font-weight:
-    500;
-
-  line-height:
-    1.6;
-
-  letter-spacing:
-    -0.01em;
-
-  text-wrap:
-    pretty;
+  line-height: 1.72;
 
   text-shadow:
-    0
-    2px
-    14px
-    rgba(
-      0,
-      0,
-      0,
-      0.48
-    );
+    0 3px 12px
+    rgba(0,0,0,.8);
 }
 
-
-/* =========================================================
-   AFTER QUOTE
-
-   Quote đi khỏi viewport.
-   Background vẫn còn hiện thêm một chút.
-========================================================= */
-
-.afterQuote {
-  position: relative;
-
-  width: 100%;
-
-  height: 22vh;
-  height: 22svh;
-
-  background:
-    transparent;
-
-  pointer-events:
-    none;
+.afterQuoteSpace {
+  height: 18svh;
 }
 
-
-/* =========================================================
-   ARTICLE OVERLAY
-
-   Khối vàng này SCROLL BÌNH THƯỜNG.
-
-   Vì background nằm phía sau và fixed,
-   nó sẽ tạo cảm giác panel vàng
-   đi từ dưới lên và che dần ảnh.
-========================================================= */
-
-.articleOverlay {
+.yellowPanel {
   position: relative;
 
   z-index: 10;
 
-  width: 100%;
-
-  background:
-    #f2dfad;
-
-  box-shadow:
-    0
-    -12px
-    35px
-    rgba(
-      0,
-      0,
-      0,
-      0.035
-    );
+  background: #f2dfad;
 }
 
-
-/* tránh hairline */
-.articleOverlay::before {
-  content: "";
-
-  position: absolute;
-
-  top: -3px;
-
-  left: 0;
-
-  width: 100%;
-
-  height: 4px;
-
-  background:
-    #f2dfad;
-}
-
-
-/* =========================================================
-   OVERLAY INNER
-========================================================= */
-
-.overlayInner {
+.yellowInner {
   width:
     min(
       1280px,
       calc(100% - 80px)
     );
 
-  margin:
-    0
-    auto;
+  margin: 0 auto;
 
   padding:
-    clamp(
-      105px,
-      10vw,
-      155px
-    )
+    85px
     0
-    clamp(
-      125px,
-      11vw,
-      180px
-    );
+    120px;
 }
 
-
-/* =========================================================
-   FIRST TEXT
-========================================================= */
-
-.overlayBody {
-  width:
-    min(
-      940px,
-      100%
-    );
-
-  margin:
-    0
-    auto;
-}
-
-.overlayBody p {
-  margin: 0;
-
-  color:
-    rgba(
-      0,
-      0,
-      0,
-      0.88
-    );
-
-  font-family:
-    var(--font-editorial),
-    "Times New Roman",
-    serif;
-
-  font-size:
-    clamp(
-      21px,
-      1.55vw,
-      26px
-    );
-
-  font-weight:
-    500;
-
-  line-height:
-    1.72;
-
-  letter-spacing:
-    -0.012em;
-
-  text-wrap:
-    pretty;
-}
-
-
-/* =========================================================
-   ENDING
-========================================================= */
-
+.panelBody,
 .endingText {
   width:
     min(
-      940px,
+      860px,
       100%
     );
 
-  margin:
-    clamp(
-      82px,
-      8vw,
-      130px
-    )
-    auto
-    0;
-
-  padding-top:
-    clamp(
-      44px,
-      5vw,
-      65px
-    );
-
-  border-top:
-    1px
-    solid
-    rgba(
-      65,
-      48,
-      17,
-      0.16
-    );
+  margin: 0 auto;
 }
 
+.panelBody p,
 .endingText p {
   margin: 0;
 
-  color:
-    rgba(
-      0,
-      0,
-      0,
-      0.88
-    );
-
   font-family:
-    var(--font-editorial),
-    "Times New Roman",
+    "Merriweather",
+    Georgia,
     serif;
 
-  font-size:
-    clamp(
-      21px,
-      1.55vw,
-      26px
-    );
+  font-size: 22px;
 
-  font-weight:
-    500;
-
-  line-height:
-    1.72;
-
-  letter-spacing:
-    -0.012em;
-
-  text-wrap:
-    pretty;
+  line-height: 1.78;
 }
 
+.endingText {
+  margin-top: 60px;
 
-/* =========================================================
-   TABLET
-========================================================= */
+  padding-top: 38px;
 
-@media (max-width: 1000px) {
-  .article {
-    width:
-      min(
-        calc(100% - 48px),
-        1000px
-      );
-
-    padding:
-      78px
-      0
-      105px;
-  }
-
-  .header h2 {
-    font-size:
-      clamp(
-        52px,
-        8vw,
-        78px
-      );
-  }
-
-  .body {
-    width:
-      100%;
-  }
-
-  .body > p:not(.promiseQuote) {
-    width:
-      min(
-        760px,
-        100%
-      );
-  }
-
-  .promiseQuote {
-    white-space:
-      normal;
-
-    font-size:
-      clamp(
-        30px,
-        4vw,
-        40px
-      ) !important;
-  }
-
-  /* story */
-
-  .imageOnly {
-    height:
-      90vh;
-
-    height:
-      90svh;
-  }
-
-  .quoteScene {
-    min-height:
-      105vh;
-
-    min-height:
-      105svh;
-
-    padding:
-      15vh
-      20px;
-  }
-
-  .quoteInner {
-    width:
-      min(
-        900px,
-        100%
-      );
-  }
-
-  .waitingQuote {
-    font-size:
-      clamp(
-        42px,
-        6vw,
-        62px
-      );
-  }
-
-  .afterQuote {
-    height:
-      18vh;
-
-    height:
-      18svh;
-  }
-
-  /* yellow */
-
-  .overlayInner {
-    width:
-      min(
-        calc(100% - 48px),
-        1000px
-      );
-
-    padding:
-      90px
-      0
-      125px;
-  }
-
-  .overlayBody,
-  .endingText {
-    width:
-      min(
-        760px,
-        100%
-      );
-  }
+  border-top:
+    1px solid
+    rgba(0,0,0,.15);
 }
-
-
-/* =========================================================
-   MOBILE
-========================================================= */
 
 @media (max-width: 700px) {
-  /* -----------------------------
-     Article
-  ----------------------------- */
-
-  .article {
+  .article,
+  .yellowInner {
     width:
       calc(
         100% - 32px
       );
-
-    padding:
-      58px
-      0
-      78px;
-  }
-
-  .header {
-    margin-bottom:
-      42px;
-  }
-
-  .kicker {
-    margin-bottom:
-      12px;
-
-    font-size:
-      9px;
-
-    letter-spacing:
-      0.16em;
-  }
-
-  .header h2 {
-    font-size:
-      clamp(
-        42px,
-        12vw,
-        58px
-      );
-
-    line-height:
-      0.96;
-  }
-
-  .body > p:not(.promiseQuote) {
-    width:
-      100%;
   }
 
   .body p,
-  .overlayBody p,
-  .endingText p {
-    font-size:
-      19px;
-
-    line-height:
-      1.68;
-  }
-
-  /* -----------------------------
-     Promise quote
-  ----------------------------- */
-
-  .promiseQuote {
-    width:
-      100%;
-
-    margin:
-      38px
-      auto !important;
-
-    padding:
-      0
-      8px;
-
-    font-size:
-      clamp(
-        27px,
-        7vw,
-        34px
-      ) !important;
-
-    line-height:
-      1.38 !important;
-
-    white-space:
-      normal;
-
-    text-align:
-      center;
-  }
-
-  /* -----------------------------
-     Background
-  ----------------------------- */
-
-  .story {
-    /*
-     * Mobile browser thường xử lý
-     * background-attachment fixed không ổn định.
-     *
-     * Dùng local ở mobile để tránh giật.
-     */
-    background-attachment:
-      scroll;
-
-    background-position:
-      center center;
-  }
-
-  /*
-   * Trên desktop ảnh fixed đúng yêu cầu.
-   * Mobile ưu tiên ổn định.
-   */
-
-  .imageOnly {
-    height:
-      82vh;
-
-    height:
-      82svh;
-  }
-
-  /* -----------------------------
-     Quote
-  ----------------------------- */
-
-  .quoteScene {
-    min-height:
-      100vh;
-
-    min-height:
-      100svh;
-
-    padding:
-      12vh
-      16px;
-  }
-
-  .quoteInner {
-    width:
-      100%;
+  .panelBody p,
+  .endingText p,
+  .waitingDescription {
+    font-size: 19px;
   }
 
   .waitingQuote {
-    font-size:
-      clamp(
-        34px,
-        9.5vw,
-        48px
-      );
-
-    line-height:
-      1.17;
+    font-size: 30px;
   }
 
-  .waitingDescription {
-    margin-top:
-      24px;
-
-    font-size:
-      17px;
-
-    line-height:
-      1.55;
+  .foreground {
+    margin-top: -100svh;
   }
 
-  .afterQuote {
-    height:
-      12vh;
-
-    height:
-      12svh;
-  }
-
-  /* -----------------------------
-     Yellow article
-  ----------------------------- */
-
-  .overlayInner {
-    width:
-      calc(
-        100% - 32px
-      );
-
-    padding:
-      75px
-      0
-      100px;
-  }
-
-  .overlayBody,
-  .endingText {
-    width:
-      100%;
-  }
-
-  .endingText {
-    margin-top:
-      60px;
-
-    padding-top:
-      35px;
-  }
-}
-
-
-/* =========================================================
-   SMALL MOBILE
-========================================================= */
-
-@media (max-width: 430px) {
-  .article {
-    width:
-      calc(
-        100% - 28px
-      );
-  }
-
-  .header h2 {
-    font-size:
-      clamp(
-        39px,
-        12vw,
-        52px
-      );
-  }
-
-  .body p,
-  .overlayBody p,
-  .endingText p {
-    font-size:
-      18px;
-
-    line-height:
-      1.66;
-  }
-
-  .promiseQuote {
-    font-size:
-      clamp(
-        25px,
-        7.4vw,
-        31px
-      ) !important;
-  }
-
-  .waitingQuote {
-    font-size:
-      clamp(
-        31px,
-        9vw,
-        42px
-      );
-  }
-
-  .waitingDescription {
-    font-size:
-      16px;
-  }
-
-  .overlayInner {
-    width:
-      calc(
-        100% - 28px
-      );
+  .imageLead {
+    height: 50svh;
   }
 }

@@ -1,571 +1,140 @@
-/* =========================================================
-   ROOT
-========================================================= */
-
 .section {
-  position: relative;
-
   width: 100%;
 
-  background:
-    #f2dfad;
-
-  color:
-    #000000;
+  background: #f2dfad;
 }
-
-/* =========================================================
-   INTRO
-========================================================= */
 
 .intro {
-  position: relative;
-
-  width: 100%;
-
-  padding:
-    clamp(
-      75px,
-      8vw,
-      125px
-    )
-    0
-    clamp(
-      70px,
-      8vw,
-      110px
-    );
-
-  background:
-    #f2dfad;
-}
-
-.introInner {
   width:
     min(
-      1180px,
-      calc(
-        100% -
-        80px
-      )
+      1280px,
+      calc(100% - 80px)
     );
 
-  margin:
+  margin: 0 auto;
+
+  padding:
     0
-    auto;
+    0
+    60px;
 }
 
-.kicker {
-  display: block;
+.introBody,
+.closing p {
+  display: flow-root;
 
-  margin-bottom:
-    18px;
-
-  color:
-    rgba(
-      0,
-      0,
-      0,
-      0.52
+  width:
+    min(
+      860px,
+      100%
     );
 
-  font-family:
-    var(--font-sans),
-    Arial,
-    sans-serif;
-
-  font-size:
-    10px;
-
-  font-weight:
-    700;
-
-  letter-spacing:
-    0.18em;
-}
-
-.intro h2 {
-  max-width:
-    720px;
-
-  margin:
-    0;
-
-  color:
-    #000000;
+  margin: 0 auto;
 
   font-family:
-    var(--font-editorial),
-    "Times New Roman",
+    "Merriweather",
+    Georgia,
     serif;
 
-  font-size:
-    clamp(
-      42px,
-      5.2vw,
-      78px
-    );
+  font-size: 22px;
 
-  font-weight:
-    700;
-
-  line-height:
-    0.99;
-
-  letter-spacing:
-    -0.045em;
-
-  text-wrap:
-    balance;
+  line-height: 1.78;
 }
 
-.intro p {
-  max-width:
-    760px;
+.dropCap {
+  float: left;
 
   margin:
-    clamp(
-      32px,
-      4vw,
-      52px
-    )
-    0
+    .055em
+    .12em
+    -.04em
     0;
 
-  color:
-    rgba(
-      0,
-      0,
-      0,
-      0.82
-    );
+  color: #235944;
 
-  font-family:
-    var(--font-editorial),
-    "Times New Roman",
-    serif;
+  font-size: 4.7em;
 
-  font-size:
-    clamp(
-      21px,
-      1.55vw,
-      27px
-    );
+  font-weight: 700;
 
-  font-weight:
-    500;
-
-  line-height:
-    1.64;
+  line-height: .72;
 }
-
-/* =========================================================
-   SCROLLY ROOT
-========================================================= */
 
 .scrolly {
   position: relative;
-
-  width: 100%;
-
-  background:
-    #15130f;
 }
 
-/* =========================================================
-   STICKY IMAGE SCREEN
-========================================================= */
-
-.stickyStage {
-  position:
-    sticky;
+.stickyVisual {
+  position: sticky;
 
   top: 0;
 
-  z-index: 1;
-
-  width: 100%;
-
-  height: 100vh;
   height: 100svh;
 
-  overflow:
-    hidden;
+  overflow: hidden;
 
-  background:
-    #15130f;
+  background: #111713;
 }
 
-/* =========================================================
-   IMAGE LAYER
-
-   Mặc định ảnh tiếp theo:
-   lệch nhẹ sang phải + blur + opacity 0.
-
-   Vì thế khi chuyển ảnh có cảm giác
-   nó lướt vào chứ không bật ra.
-========================================================= */
-
-.imageLayer {
-  position:
-    absolute;
+.image {
+  position: absolute;
 
   inset: 0;
 
-  overflow:
-    hidden;
+  width: 100%;
+
+  height: 100%;
+
+  object-fit: cover;
 
   opacity: 0;
-
-  transform:
-    translate3d(
-      5.5%,
-      0,
-      0
-    )
-    scale(
-      1.015
-    );
-
-  filter:
-    blur(
-      8px
-    )
-    brightness(
-      0.8
-    );
 
   transition:
     opacity
-      900ms
-      cubic-bezier(
-        0.22,
-        1,
-        0.36,
-        1
-      ),
-    transform
-      1100ms
-      cubic-bezier(
-        0.22,
-        1,
-        0.36,
-        1
-      ),
-    filter
-      1000ms
-      ease;
-
-  will-change:
-    opacity,
-    transform,
-    filter;
+    .6s
+    ease;
 }
 
-/* =========================================================
-   ACTIVE IMAGE
-========================================================= */
-
-.imageLayerActive {
+.imageActive {
   opacity: 1;
-
-  transform:
-    translate3d(
-      0,
-      0,
-      0
-    )
-    scale(
-      1
-    );
-
-  filter:
-    blur(
-      0
-    )
-    brightness(
-      1
-    );
 }
-
-/* =========================================================
-   PREVIOUS IMAGE
-
-   Ảnh cũ trượt ngược sang trái.
-========================================================= */
-
-.imageLayerPast {
-  opacity: 0;
-
-  transform:
-    translate3d(
-      -5.5%,
-      0,
-      0
-    )
-    scale(
-      1.01
-    );
-
-  filter:
-    blur(
-      7px
-    )
-    brightness(
-      0.8
-    );
-}
-
-/* =========================================================
-   IMAGE
-========================================================= */
-
-.image {
-  object-fit:
-    cover;
-
-  object-position:
-    center
-    center;
-}
-
-/* =========================================================
-   DARKEN IMAGE
-
-   Giúp text card nổi hơn nhưng không làm ảnh quá tối.
-========================================================= */
-
-.imageShade {
-  position:
-    absolute;
-
-  inset: 0;
-
-  pointer-events:
-    none;
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(
-        0,
-        0,
-        0,
-        0.06
-      )
-      0%,
-      rgba(
-        0,
-        0,
-        0,
-        0.02
-      )
-      45%,
-      rgba(
-        0,
-        0,
-        0,
-        0.22
-      )
-      100%
-    );
-}
-
-/* =========================================================
-   DECORATIVE TOP RULE
-========================================================= */
-
-.topRule {
-  position:
-    absolute;
-
-  top:
-    clamp(
-      28px,
-      4vh,
-      48px
-    );
-
-  left:
-    max(
-      4vw,
-      28px
-    );
-
-  z-index: 8;
-
-  width:
-    min(
-      180px,
-      18vw
-    );
-
-  height:
-    1px;
-
-  background:
-    rgba(
-      255,
-      255,
-      255,
-      0.62
-    );
-}
-
-/* =========================================================
-   IMAGE COUNTER
-========================================================= */
-
-.imageCounter {
-  position:
-    absolute;
-
-  right:
-    max(
-      4vw,
-      28px
-    );
-
-  bottom:
-    clamp(
-      26px,
-      4vh,
-      46px
-    );
-
-  z-index: 8;
-
-  display:
-    flex;
-
-  align-items:
-    center;
-
-  gap:
-    12px;
-
-  color:
-    rgba(
-      255,
-      255,
-      255,
-      0.78
-    );
-
-  font-family:
-    var(--font-sans),
-    Arial,
-    sans-serif;
-
-  font-size:
-    9px;
-
-  font-weight:
-    700;
-
-  letter-spacing:
-    0.15em;
-}
-
-.imageCounter i {
-  display:
-    block;
-
-  width:
-    38px;
-
-  height:
-    1px;
-
-  background:
-    rgba(
-      255,
-      255,
-      255,
-      0.45
-    );
-}
-
-/* =========================================================
-   STEPS
-
-   Dùng margin âm để text scroll qua sticky image.
-========================================================= */
 
 .steps {
-  position:
-    relative;
+  position: relative;
 
-  z-index: 5;
+  z-index: 4;
 
-  width: 100%;
-
-  margin-top:
-    -100vh;
-
-  margin-top:
-    -100svh;
+  margin-top: -100svh;
 }
 
-/* =========================================================
-   EACH STEP
+.imageLead {
+  height: 48svh;
+}
 
-   Mỗi step > 100vh để tạo khoảng chuyển ảnh tự nhiên.
-========================================================= */
+.imageTail {
+  height: 36svh;
+}
 
 .step {
-  position:
-    relative;
-
   display: flex;
 
-  align-items:
-    center;
+  align-items: center;
 
-  width: 100%;
-
-  min-height:
-    112vh;
-
-  min-height:
-    112svh;
+  min-height: 100svh;
 
   padding:
-    15vh
-    max(
-      5vw,
-      38px
-    );
-
-  pointer-events:
-    none;
+    8vh
+    6vw;
 }
 
-/* =========================================================
-   LEFT / RIGHT
-========================================================= */
-
 .stepLeft {
-  justify-content:
-    flex-start;
+  justify-content: flex-start;
 }
 
 .stepRight {
-  justify-content:
-    flex-end;
+  justify-content: flex-end;
 }
 
-/* =========================================================
-   TEXT FRAME
-
-   Khung semi-opaque,
-   vẫn nhìn thấy ảnh phía sau.
-========================================================= */
-
-.copy {
-  position:
-    relative;
-
+.card {
   width:
     min(
       520px,
@@ -575,486 +144,65 @@
   padding:
     clamp(
       30px,
-      3.4vw,
-      48px
+      3vw,
+      46px
     );
 
   background:
     rgba(
-      242,
-      223,
-      173,
-      0.94
-    );
-
-  color:
-    #000000;
-
-  box-shadow:
-    0
-    22px
-    55px
-    rgba(
-      0,
-      0,
-      0,
-      0.14
-    );
-
-  opacity: 0;
-
-  pointer-events:
-    none;
-
-  transition:
-    opacity
-      650ms
-      ease,
-    transform
-      950ms
-      cubic-bezier(
-        0.16,
-        1,
-        0.3,
-        1
-      );
-}
-
-/* =========================================================
-   LEFT CARD
-
-   Xuất phát ngoài mép trái.
-========================================================= */
-
-.copyLeft {
-  transform:
-    translate3d(
-      -110px,
-      0,
-      0
+      35,
+      89,
+      68,
+      .76
     );
 }
 
-/* =========================================================
-   RIGHT CARD
-
-   Xuất phát ngoài mép phải.
-========================================================= */
-
-.copyRight {
-  transform:
-    translate3d(
-      110px,
-      0,
-      0
-    );
-}
-
-/* =========================================================
-   ACTIVE CARD
-========================================================= */
-
-.copyActive {
-  opacity: 1;
-
-  transform:
-    translate3d(
-      0,
-      0,
-      0
-    );
-}
-
-/* =========================================================
-   EYEBROW
-========================================================= */
-
-.eyebrow {
-  display:
-    block;
-
-  margin-bottom:
-    18px;
-
-  color:
-    #785300;
-
-  font-family:
-    var(--font-sans),
-    Arial,
-    sans-serif;
-
-  font-size:
-    9px;
-
-  font-weight:
-    800;
-
-  line-height:
-    1.35;
-
-  letter-spacing:
-    0.17em;
-}
-
-/* =========================================================
-   TEXT
-========================================================= */
-
-.copy p {
+.card p {
   margin: 0;
 
-  color:
-    #080808;
+  color: white;
 
   font-family:
-    var(--font-editorial),
-    "Times New Roman",
+    "Merriweather",
+    Georgia,
     serif;
 
-  font-size:
-    clamp(
-      20px,
-      1.45vw,
-      25px
-    );
+  font-size: 22px;
 
-  font-weight:
-    500;
-
-  line-height:
-    1.62;
-
-  letter-spacing:
-    -0.012em;
-
-  text-wrap:
-    pretty;
+  line-height: 1.72;
 }
-
-/* =========================================================
-   NUMBER INSIDE FRAME
-========================================================= */
-
-.stepNumber {
-  position:
-    absolute;
-
-  right:
-    18px;
-
-  bottom:
-    13px;
-
-  color:
-    rgba(
-      91,
-      63,
-      17,
-      0.32
-    );
-
-  font-family:
-    var(--font-editorial),
-    "Times New Roman",
-    serif;
-
-  font-size:
-    26px;
-
-  font-style:
-    italic;
-}
-
-/* =========================================================
-   CLOSING
-
-   Trở về nền vàng article.
-========================================================= */
 
 .closing {
-  position:
-    relative;
-
-  z-index: 8;
-
-  width: 100%;
-
   padding:
-    clamp(
-      90px,
-      10vw,
-      150px
-    )
-    max(
-      5vw,
-      30px
-    )
-    clamp(
-      100px,
-      11vw,
-      170px
-    );
-
-  background:
-    #f2dfad;
+    65px
+    24px
+    90px;
 }
 
-.closing p {
-  width:
-    min(
-      1050px,
-      100%
-    );
-
-  margin:
-    0
-    auto;
-
-  color:
-    #000000;
-
-  font-family:
-    var(--font-editorial),
-    "Times New Roman",
-    serif;
-
-  font-size:
-    clamp(
-      24px,
-      2vw,
-      34px
-    );
-
-  font-weight:
-    600;
-
-  line-height:
-    1.6;
-
-  letter-spacing:
-    -0.02em;
-
-  text-wrap:
-    pretty;
-}
-
-/* =========================================================
-   TABLET
-========================================================= */
-
-@media (
-  max-width: 1000px
-) {
-  .introInner {
-    width:
-      calc(
-        100% -
-        48px
-      );
-  }
-
-  .copy {
-    width:
-      min(
-        500px,
-        52vw
-      );
-  }
-
-  .step {
-    padding-left:
-      30px;
-
-    padding-right:
-      30px;
-  }
-}
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media (
-  max-width: 700px
-) {
+@media (max-width: 700px) {
   .intro {
-    padding:
-      65px
-      0
-      65px;
-  }
-
-  .introInner {
     width:
       calc(
-        100% -
-        30px
+        100% - 32px
       );
   }
 
-  .intro h2 {
-    font-size:
-      40px;
-  }
-
-  .intro p {
-    margin-top:
-      27px;
-
-    font-size:
-      18px;
-
-    line-height:
-      1.6;
-  }
-
-  .stickyStage {
-    height:
-      92svh;
-  }
-
-  .steps {
-    margin-top:
-      -92svh;
+  .introBody,
+  .closing p,
+  .card p {
+    font-size: 19px;
   }
 
   .step {
-    align-items:
-      flex-end;
-
-    min-height:
-      105svh;
+    justify-content: center;
 
     padding:
-      120px
-      14px
-      54px;
+      12vh
+      16px
+      9vh;
   }
 
-  .stepLeft,
-  .stepRight {
-    justify-content:
-      center;
-  }
-
-  .copy {
-    width:
-      100%;
-
-    max-width:
-      560px;
-
-    padding:
-      25px
-      22px
-      30px;
-
-    background:
-      rgba(
-        242,
-        223,
-        173,
-        0.95
-      );
-  }
-
-  .copyLeft,
-  .copyRight {
-    transform:
-      translate3d(
-        0,
-        55px,
-        0
-      );
-  }
-
-  .copyActive {
-    transform:
-      translate3d(
-        0,
-        0,
-        0
-      );
-  }
-
-  .copy p {
-    font-size:
-      17px;
-
-    line-height:
-      1.55;
-  }
-
-  .eyebrow {
-    margin-bottom:
-      13px;
-
-    font-size:
-      8px;
-  }
-
-  .topRule {
-    left:
-      15px;
-
-    top:
-      20px;
-  }
-
-  .imageCounter {
-    right:
-      15px;
-
-    bottom:
-      auto;
-
-    top:
-      20px;
-  }
-
-  .closing {
-    padding:
-      70px
-      17px
-      90px;
-  }
-
-  .closing p {
-    font-size:
-      21px;
-
-    line-height:
-      1.58;
-  }
-}
-
-/* =========================================================
-   REDUCED MOTION
-========================================================= */
-
-@media (
-  prefers-reduced-motion:
-    reduce
-) {
-  .imageLayer,
-  .copy {
-    transition:
-      none;
-  }
-
-  .imageLayer {
-    transform:
-      none;
-
-    filter:
-      none;
-  }
-
-  .copyLeft,
-  .copyRight,
-  .copyActive {
-    transform:
-      none;
+  .card {
+    width: 100%;
   }
 }
