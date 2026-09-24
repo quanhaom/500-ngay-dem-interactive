@@ -4,24 +4,22 @@ import TeamsDotsSection from "./teams/TeamsDotsSection";
 import DnaJourneySection from "./DnaJourneySection";
 import MemoryScrollSection from "./MemoryScrollSection";
 import DnaIdentitySection from "./DnaIdentitySection";
+
 import {
-  MineClearanceSection,
   ReadymagCover,
   ReadymagIntro,
   ReadymagNarrative,
 } from "./ReadymagSections";
+
 import SearchTeamsGallery from "./SearchTeamsGallery";
 import styles from "./MagazineExperience.module.css";
 import SearchTeamsStoryFlow from "./SearchTeamsStoryFlow";
 import PromiseSection from "./PromiseSection";
 import MineClearanceStorySection from "./MineClearanceStorySection";
+
 export default function MagazineExperience() {
   return (
-    <main
-      className={
-        styles.magazine
-      }
-    >
+    <main className={styles.magazine}>
       <ReadingProgress />
 
       <ReadymagCover />
@@ -40,11 +38,13 @@ export default function MagazineExperience() {
         <TeamsDotsSection />
       </SearchTeamsStoryFlow>
 
-      <DnaIdentitySection />  
-      <DnaJourneySection />
-      <MineClearanceStorySection />
-      <PromiseSection />
+      <DnaIdentitySection />
 
+      <DnaJourneySection />
+
+      <MineClearanceStorySection />
+
+      <PromiseSection />
     </main>
   );
 }
