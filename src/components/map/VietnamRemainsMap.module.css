@@ -2726,3 +2726,288 @@
   background:
     transparent !important;
 }
+
+/* =========================================================
+   EMBED INFO PANEL — FULL HEIGHT DRAWER
+========================================================= */
+
+.embedded .infoPanel {
+  position: absolute !important;
+
+  top: 12px !important;
+  right: 12px !important;
+  bottom: 12px !important;
+  left: auto !important;
+
+  width:
+    min(
+      360px,
+      calc(100% - 24px)
+    ) !important;
+
+  height:
+    auto !important;
+
+  max-height:
+    none !important;
+
+  overflow-x:
+    hidden !important;
+
+  overflow-y:
+    auto !important;
+
+  padding:
+    20px
+    22px
+    28px !important;
+
+  border-radius:
+    16px !important;
+
+  background:
+    rgba(
+      244,
+      229,
+      204,
+      0.98
+    ) !important;
+
+  border:
+    1px solid
+    rgba(
+      127,
+      48,
+      41,
+      0.18
+    ) !important;
+
+  box-shadow:
+    0
+    18px
+    45px
+    rgba(
+      70,
+      28,
+      22,
+      0.18
+    ) !important;
+
+  overscroll-behavior:
+    contain;
+
+  scrollbar-width:
+    thin;
+
+  scrollbar-color:
+    rgba(
+      127,
+      48,
+      41,
+      0.45
+    )
+    transparent;
+}
+
+
+/* scrollbar */
+.embedded .infoPanel::-webkit-scrollbar {
+  width:
+    6px;
+}
+
+.embedded .infoPanel::-webkit-scrollbar-track {
+  background:
+    transparent;
+}
+
+.embedded .infoPanel::-webkit-scrollbar-thumb {
+  border-radius:
+    999px;
+
+  background:
+    rgba(
+      127,
+      48,
+      41,
+      0.45
+    );
+}
+
+
+/* close button luôn nhìn thấy */
+.embedded .closeButton {
+  position:
+    sticky !important;
+
+  top:
+    0 !important;
+
+  right:
+    auto !important;
+
+  float:
+    right;
+
+  z-index:
+    50;
+
+  margin:
+    -5px
+    -5px
+    8px
+    12px !important;
+
+  background:
+    #ead8c4 !important;
+
+  color:
+    #7f3029 !important;
+}
+
+
+/* compact spacing */
+.embedded .divider {
+  margin:
+    14px
+    0 !important;
+}
+
+
+.embedded .infoPanel h3 {
+  font-size:
+    22px !important;
+
+  line-height:
+    1.2 !important;
+}
+
+
+.embedded .infoLabel {
+  font-size:
+    9px !important;
+
+  line-height:
+    1.3 !important;
+}
+
+
+.embedded .locationName {
+  margin-top:
+    5px !important;
+
+  font-size:
+    14px !important;
+
+  line-height:
+    1.45 !important;
+}
+
+
+.embedded .remainsNumber {
+  margin-top:
+    5px !important;
+
+  font-size:
+    28px !important;
+
+  line-height:
+    1.05 !important;
+}
+
+
+.embedded .subMeta {
+  font-size:
+    12px !important;
+
+  line-height:
+    1.4 !important;
+}
+
+
+.embedded .summaryText {
+  font-size:
+    13px !important;
+
+  line-height:
+    1.55 !important;
+}
+
+
+.embedded .detailList {
+  margin-top:
+    6px !important;
+
+  padding-left:
+    17px !important;
+}
+
+
+.embedded .detailList li {
+  margin-top:
+    6px !important;
+
+  font-size:
+    13px !important;
+
+  line-height:
+    1.5 !important;
+}
+
+
+/* tránh text bị cắt */
+.embedded .locationName,
+.embedded .summaryText,
+.embedded .subMeta,
+.embedded .detailList,
+.embedded .detailList li {
+  overflow-wrap:
+    anywhere;
+}
+
+
+/* =========================================================
+   NARROW / WIX EMBED
+========================================================= */
+
+@media (
+  max-width: 650px
+) {
+  .embedded .infoPanel {
+    top:
+      10px !important;
+
+    right:
+      10px !important;
+
+    bottom:
+      10px !important;
+
+    left:
+      10px !important;
+
+    width:
+      auto !important;
+
+    max-height:
+      none !important;
+
+    padding:
+      18px
+      18px
+      26px !important;
+
+    border-radius:
+      16px !important;
+  }
+
+  .embedded .infoPanel h3 {
+    font-size:
+      21px !important;
+  }
+
+  .embedded .remainsNumber {
+    font-size:
+      27px !important;
+  }
+}

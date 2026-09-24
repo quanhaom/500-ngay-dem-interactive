@@ -479,3 +479,34 @@
       9px !important;
   }
 }
+
+/* =========================================================
+   COORDINATE EMBED — HIDE INTERNAL SCROLLBAR
+========================================================= */
+
+:global(html),
+:global(body) {
+  margin: 0 !important;
+  padding: 0 !important;
+
+  scrollbar-width:
+    none !important;
+
+  -ms-overflow-style:
+    none !important;
+
+  overscroll-behavior:
+    none;
+}
+
+:global(html::-webkit-scrollbar),
+:global(body::-webkit-scrollbar) {
+  display:
+    none !important;
+
+  width:
+    0 !important;
+
+  height:
+    0 !important;
+}

@@ -34,6 +34,12 @@ export default function ProvinceTooltip({
       onPointerDown={(event) => {
         event.stopPropagation();
       }}
+      onWheel={(event) => {
+        event.stopPropagation();
+      }}
+      onTouchMove={(event) => {
+        event.stopPropagation();
+      }}
     >
       <button
         type="button"
