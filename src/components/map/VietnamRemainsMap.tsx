@@ -103,8 +103,8 @@ const VIETNAM_BOUNDS: [
   [number, number],
   [number, number],
 ] = [
-  [102.0, 8.0],
-  [110.8, 23.6],
+  [101.7, 5.5],
+  [116.5, 23.9],
 ];
 
 const VIETNAM_PROVINCES = [
@@ -425,36 +425,50 @@ function fitVietnam(
   map: MapLibreMap,
   instant = false
 ) {
-  const mobile =
-    window.innerWidth <=
-    800;
+  const container =
+    map.getContainer();
+
+  const width =
+    container.clientWidth;
+
+  const height =
+    container.clientHeight;
+
+  if (
+    width <= 0 ||
+    height <= 0
+  ) {
+    return;
+  }
+
+  const compact =
+    width <= 760;
+
+  map.stop();
+
+  map.resize();
 
   map.fitBounds(
     VIETNAM_BOUNDS,
     {
-      padding: mobile
+      padding: compact
         ? {
-            top: 25,
-            right: 20,
-            bottom: 25,
-            left: 20,
+            top: 28,
+            right: 42,
+            bottom: 32,
+            left: 28,
           }
         : {
-            top: 45,
-            right: 35,
+            top: 42,
+            right: 65,
             bottom: 45,
-            left: 35,
+            left: 45,
           },
-
-      maxZoom:
-        mobile
-          ? 5.2
-          : 5.8,
 
       duration:
         instant
           ? 0
-          : 1000,
+          : 650,
     }
   );
 }
