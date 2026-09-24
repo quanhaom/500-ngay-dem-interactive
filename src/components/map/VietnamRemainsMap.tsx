@@ -103,8 +103,8 @@ const VIETNAM_BOUNDS: [
   [number, number],
   [number, number],
 ] = [
-  [101.7, 5.5],
-  [110.5, 20],
+  [101.5, 7.0],
+  [116.0, 23.9],
 ];
 
 const VIETNAM_PROVINCES = [
@@ -1529,22 +1529,52 @@ export default function VietnamRemainsMap({
         /* ===============================================
            RESPONSIVE RESIZE
         =============================================== */
+        let resizeTimer:
+          ReturnType<typeof setTimeout>
+          | null = null;
 
-        const resizeMap =
+        const resizeAndFit =
           () => {
+            if (disposed) {
+              return;
+            }
+
             map.resize();
+
+            if (autoFit) {
+              fitVietnam(
+                map,
+                true
+              );
+            }
+          };
+
+        const scheduleResizeAndFit =
+          () => {
+            if (resizeTimer) {
+              clearTimeout(
+                resizeTimer
+              );
+            }
+
+            resizeTimer =
+              setTimeout(
+                () => {
+                  resizeAndFit();
+                },
+                150
+              );
           };
 
         window.addEventListener(
           "resize",
-
-          resizeMap
+          scheduleResizeAndFit
         );
 
         const resizeObserver =
           new ResizeObserver(
             () => {
-              map.resize();
+              scheduleResizeAndFit();
             }
           );
 
@@ -1556,15 +1586,55 @@ export default function VietnamRemainsMap({
           );
         }
 
+        /*
+        * Wix thường hoàn tất kích thước iframe
+        * sau khi nội dung đã load.
+        * Fit lại vài lần để camera bắt đúng kích thước cuối.
+        */
+        const delayedFit1 =
+          window.setTimeout(
+            resizeAndFit,
+            300
+          );
+
+        const delayedFit2 =
+          window.setTimeout(
+            resizeAndFit,
+            800
+          );
+
+        const delayedFit3 =
+          window.setTimeout(
+            resizeAndFit,
+            1500
+          );
+
         cleanupResize =
           () => {
             window.removeEventListener(
               "resize",
-
-              resizeMap
+              scheduleResizeAndFit
             );
 
             resizeObserver.disconnect();
+
+            if (resizeTimer) {
+              clearTimeout(
+                resizeTimer
+              );
+            }
+
+            window.clearTimeout(
+              delayedFit1
+            );
+
+            window.clearTimeout(
+              delayedFit2
+            );
+
+            window.clearTimeout(
+              delayedFit3
+            );
           };
       } catch (
         initializationError
