@@ -2599,3 +2599,91 @@
       8px;
   }
 }
+
+/* =========================================================
+   MAP POPUP — FULL RED
+========================================================= */
+
+.mapPopup,
+.mapPopup strong,
+.mapPopup div,
+.popupLocation,
+.popupNumber,
+.popupHint {
+  font-family:
+    "Lora",
+    Georgia,
+    "Times New Roman",
+    serif !important;
+}
+
+/* tên tỉnh */
+.mapPopup strong {
+  color: #7f3029 !important;
+  font-weight: 700 !important;
+}
+
+/* toàn bộ text thường */
+.mapPopup div {
+  color: #7f3029 !important;
+}
+
+/* địa điểm */
+.popupLocation {
+  color: #7f3029 !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+}
+
+/* "4 hài cốt" */
+.popupNumber {
+  color: #a12f28 !important;
+
+  font-size: 14px !important;
+  font-weight: 800 !important;
+
+  opacity: 1 !important;
+}
+
+/* "BẤM ĐỂ XEM CHI TIẾT" */
+.popupHint {
+  color: #a12f28 !important;
+
+  font-size: 9px !important;
+  font-weight: 800 !important;
+
+  letter-spacing: 0.05em !important;
+
+  opacity: 1 !important;
+}
+
+/* nền popup */
+:global(.maplibregl-popup-content) {
+  border:
+    1px solid
+    rgba(127, 48, 41, 0.18) !important;
+
+  background:
+    rgba(244, 229, 204, 0.97) !important;
+
+  color:
+    #7f3029 !important;
+
+  box-shadow:
+    0
+    10px
+    28px
+    rgba(86, 30, 23, 0.18) !important;
+
+  font-family:
+    "Lora",
+    Georgia,
+    "Times New Roman",
+    serif !important;
+}
+
+/* mũi tên dưới popup */
+:global(.maplibregl-popup-tip) {
+  border-top-color:
+    rgba(244, 229, 204, 0.97) !important;
+}

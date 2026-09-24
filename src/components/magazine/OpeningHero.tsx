@@ -1338,6 +1338,28 @@ export default function OpeningHero() {
         height
       );
 
+      /*
+        Chưa cuộn thì không vẽ particle.
+        Bắt đầu xuất hiện nhẹ sau khi scroll.
+      */
+      if (progress <= 0.025) {
+        animationFrame  =
+          requestAnimationFrame(
+            render
+          );
+
+        return;
+      }
+
+      const particleReveal =
+        easeInOutCubic(
+          phase(
+            progress,
+            0.025,
+            0.10
+          )
+        );
+
       const mapPhase =
         phase(
           progress,
@@ -1579,9 +1601,9 @@ export default function OpeningHero() {
 
         context.fillStyle =
           `rgba(
-            169,
-            199,
-            178,
+            190,
+            55,
+            46,
             ${clamp(
               alpha
             )}
@@ -1670,12 +1692,11 @@ export default function OpeningHero() {
             Math.PI *
               2
           );
-
           context.fillStyle =
             `rgba(
-              158,
-              190,
-              168,
+              151,
+              39,
+              33,
               ${
                 reveal *
                 pulse *

@@ -1324,3 +1324,61 @@
       0.01ms !important;
   }
 }
+/* =========================================================
+   OPENING — COORDINATE RED / LORA
+========================================================= */
+
+/* "một tọa độ." */
+.heroOpeningStatement strong {
+  color:
+    #a52f27 !important;
+
+  font-family:
+    "Lora",
+    Georgia,
+    "Times New Roman",
+    serif !important;
+
+  font-weight:
+    700 !important;
+
+  letter-spacing:
+    -0.035em;
+}
+
+
+/* tọa độ chạy theo con trỏ */
+.heroCoordinate {
+  color:
+    #b63a30 !important;
+
+  font-family:
+    "Lora",
+    Georgia,
+    "Times New Roman",
+    serif !important;
+
+  font-size:
+    10px !important;
+
+  font-weight:
+    700 !important;
+
+  line-height:
+    1.4;
+
+  letter-spacing:
+    0.08em !important;
+
+  font-variant-numeric:
+    tabular-nums;
+
+  text-shadow:
+    0 0 18px
+    rgba(
+      166,
+      47,
+      39,
+      0.18
+    );
+}
