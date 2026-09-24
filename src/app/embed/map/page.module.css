@@ -1,0 +1,26 @@
+.page {
+  position: relative;
+
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+
+  min-height: 620px;
+
+  margin: 0;
+  padding: 0;
+
+  overflow: hidden;
+
+  /*
+   * Background dự phòng.
+   */
+  background:
+    #d8c09d;
+}
+
+@media (max-width: 700px) {
+  .page {
+    min-height: 620px;
+  }
+}

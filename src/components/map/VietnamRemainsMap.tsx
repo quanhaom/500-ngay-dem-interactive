@@ -5,7 +5,9 @@ import {
   useRef,
   useState,
 } from "react";
-
+import {
+  trackedProvinceLocations,
+} from "../../data/mapLocations";
 import type {
   Feature,
   FeatureCollection,
@@ -142,6 +144,16 @@ const VIETNAM_PROVINCES = [
   "Cà Mau",
 ];
 
+function getProvinceDisplayName(
+  province: string
+) {
+  if (province === "Hồ Chí Minh") {
+    return "TP.HỒ CHÍ MINH";
+  }
+
+  return province.toUpperCase();
+}
+
 const NORMALIZED_PROVINCES =
   new Map(
     VIETNAM_PROVINCES.map(
@@ -155,73 +167,6 @@ const NORMALIZED_PROVINCES =
     )
   );
 
-const TRACKED_PROVINCE_LABELS = [
-  {
-    province:
-      "Tuyên Quang",
-
-    coordinates:
-      [105.22, 22.13] as [
-        number,
-        number,
-      ],
-  },
-
-  {
-    province:
-      "Quảng Trị",
-
-    coordinates:
-      [107.05, 16.75] as [
-        number,
-        number,
-      ],
-  },
-
-  {
-    province:
-      "Quảng Ngãi",
-
-    coordinates:
-      [108.75, 15.12] as [
-        number,
-        number,
-      ],
-  },
-
-  {
-    province:
-      "Đắk Lắk",
-
-    coordinates:
-      [108.05, 12.7] as [
-        number,
-        number,
-      ],
-  },
-
-  {
-    province:
-      "Đồng Nai",
-
-    coordinates:
-      [107.15, 11.0] as [
-        number,
-        number,
-      ],
-  },
-
-  {
-    province:
-      "Hồ Chí Minh",
-
-    coordinates:
-      [106.65, 10.78] as [
-        number,
-        number,
-      ],
-  },
-];
 
 /* =========================================================
    GET PROVINCE NAME
@@ -617,11 +562,9 @@ export default function VietnamRemainsMap({
                     "background",
 
                   paint: {
-                  "background-color":
-                    minimal
-                      ? "#f2dfad"
-                      : MAP_CONFIG.colors.background,
-                },
+                    "background-color":
+                      "rgba(0, 0, 0, 0)",
+                  },
                 },
               ],
             },
@@ -1016,7 +959,7 @@ export default function VietnamRemainsMap({
 
               for (
                 const item of
-                TRACKED_PROVINCE_LABELS
+                trackedProvinceLocations
               ) {
                 const element =
                   document.createElement(
@@ -1027,7 +970,9 @@ export default function VietnamRemainsMap({
                   styles.provinceMapLabel;
 
                 element.textContent =
-                  item.province;
+                  getProvinceDisplayName(
+                    item.province
+                  );
 
                 const marker =
                   new maplibre.Marker({
