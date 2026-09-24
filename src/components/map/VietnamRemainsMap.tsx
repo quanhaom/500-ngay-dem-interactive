@@ -104,7 +104,7 @@ const VIETNAM_BOUNDS: [
   [number, number],
 ] = [
   [101.7, 5.5],
-  [116.5, 23.9],
+  [110.5, 20],
 ];
 
 const VIETNAM_PROVINCES = [
