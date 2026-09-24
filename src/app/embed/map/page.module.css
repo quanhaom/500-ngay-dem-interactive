@@ -1,13 +1,17 @@
-/* =========================================================
-   EMBED MAP PAGE — FULL TRANSPARENT
-========================================================= */
-
 :global(html) {
-  background: transparent !important;
+  margin: 0 !important;
+  padding: 0 !important;
+
+  background:
+    transparent !important;
 }
 
 :global(body) {
-  background: transparent !important;
+  margin: 0 !important;
+  padding: 0 !important;
+
+  background:
+    transparent !important;
 }
 
 .page {
@@ -24,22 +28,14 @@
 
   overflow: hidden;
 
-  background: transparent !important;
+  background:
+    transparent !important;
 }
 
-/* MapLibre root */
-.page :global(.maplibregl-map) {
-  background: transparent !important;
-}
-
-.page :global(.maplibregl-canvas-container) {
-  background: transparent !important;
-}
-
-.page :global(.maplibregl-canvas) {
-  background: transparent !important;
-}
-
+.page :global(.maplibregl-map),
+.page :global(.maplibregl-canvas-container),
+.page :global(.maplibregl-canvas),
 .page canvas {
-  background: transparent !important;
+  background:
+    transparent !important;
 }
