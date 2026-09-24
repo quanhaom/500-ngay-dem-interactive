@@ -1,7 +1,7 @@
 .page {
   position: relative;
 
-  width: 100%;
+  width: 100vw;
   height: 100vh;
   height: 100dvh;
 
@@ -12,15 +12,5 @@
 
   overflow: hidden;
 
-  /*
-   * Background dự phòng.
-   */
-  background:
-    #d8c09d;
-}
-
-@media (max-width: 700px) {
-  .page {
-    min-height: 620px;
-  }
+  background: transparent !important;
 }

@@ -2687,3 +2687,42 @@
   border-top-color:
     rgba(244, 229, 204, 0.97) !important;
 }
+
+/* =========================================================
+   EMBED MAP — TRANSPARENT BACKGROUND
+========================================================= */
+
+.embedded {
+  background:
+    transparent !important;
+}
+
+.embedded .mapShell {
+  background:
+    transparent !important;
+}
+
+.embedded .map {
+  background:
+    transparent !important;
+}
+
+.embedded .map canvas {
+  background:
+    transparent !important;
+}
+
+.embedded :global(.maplibregl-map) {
+  background:
+    transparent !important;
+}
+
+.embedded :global(.maplibregl-canvas-container) {
+  background:
+    transparent !important;
+}
+
+.embedded :global(.maplibregl-canvas) {
+  background:
+    transparent !important;
+}
