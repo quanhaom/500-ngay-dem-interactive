@@ -1,3 +1,7 @@
+/* =========================================================
+   COORDINATES EMBED
+========================================================= */
+
 .page {
   position: relative;
 
@@ -7,30 +11,44 @@
   margin: 0;
   padding: 0;
 
-  overflow-x: clip;
+  overflow-x: hidden;
 
-  background: #050806;
+  background:
+    #050202;
 }
 
 
 /* =========================================================
-   RED THEME WRAPPER
+   RED THEME
 ========================================================= */
 
 .redTheme {
-  --night: #050202;
-  --night-soft: #120504;
+  --night:
+    #050202;
 
-  --ivory: #f4e8e4;
-  --paper: #ead7d2;
+  --night-soft:
+    #120504;
 
-  --ink: #24110f;
+  --ivory:
+    #f4e8e4;
 
-  --green: #a42f28;
-  --green-mid: #c14a40;
-  --green-light: #d9786e;
+  --paper:
+    #ead7d2;
 
-  --red: #a42f28;
+  --ink:
+    #24110f;
+
+  --green:
+    #a42f28;
+
+  --green-mid:
+    #c14a40;
+
+  --green-light:
+    #d9786e;
+
+  --red:
+    #a42f28;
 
   background:
     #050202 !important;
@@ -48,24 +66,20 @@
 
 /* =========================================================
    CANVAS
-   Recolor canvas particles sang đỏ.
 ========================================================= */
 
 .redTheme canvas {
   filter:
-    sepia(1)
-    saturate(7)
-    hue-rotate(305deg)
-    brightness(0.9)
-    contrast(1.12);
+    none !important;
 }
 
 
 /* =========================================================
-   OPENING SEARCHLIGHT
+   SEARCH BEAM
 ========================================================= */
 
-.redTheme div[class*="heroSearchBeam"] {
+.redTheme
+div[class*="heroSearchBeam"] {
   background:
     radial-gradient(
       circle
@@ -74,13 +88,72 @@
       var(--beam-x)
       var(--beam-y),
 
-      rgba(0, 0, 0, 0) 0%,
+      rgba(
+        0,
+        0,
+        0,
+        0
+      )
+      0%,
 
-      rgba(92, 19, 15, 0.06) 42%,
+      rgba(
+        84,
+        10,
+        7,
+        0.05
+      )
+      42%,
 
-      rgba(49, 7, 5, 0.68) 72%,
+      rgba(
+        48,
+        4,
+        3,
+        0.66
+      )
+      72%,
 
-      rgba(8, 1, 1, 0.94) 100%
+      rgba(
+        8,
+        1,
+        1,
+        0.94
+      )
+      100%
+    ) !important;
+}
+
+
+.redTheme
+div[class*="heroSearchBeam"]::before {
+  border-color:
+    rgba(
+      190,
+      57,
+      48,
+      0.58
+    ) !important;
+
+  box-shadow:
+    0
+    0
+    32px
+    rgba(
+      184,
+      46,
+      38,
+      0.20
+    ) !important;
+}
+
+
+.redTheme
+div[class*="heroSearchBeam"]::after {
+  color:
+    rgba(
+      202,
+      65,
+      54,
+      0.88
     ) !important;
 }
 
@@ -89,7 +162,8 @@
    TOP CHROME
 ========================================================= */
 
-.redTheme div[class*="heroChrome"] {
+.redTheme
+div[class*="heroChrome"] {
   color:
     rgba(
       207,
@@ -106,10 +180,11 @@
 
 
 /* =========================================================
-   OPENING STATEMENT
+   OPENING
 ========================================================= */
 
-.redTheme div[class*="heroOpeningStatement"] {
+.redTheme
+div[class*="heroOpeningStatement"] {
   font-family:
     "Lora",
     Georgia,
@@ -117,7 +192,9 @@
 }
 
 
-.redTheme div[class*="heroOpeningStatement"] span {
+.redTheme
+div[class*="heroOpeningStatement"]
+span {
   color:
     rgba(
       205,
@@ -136,7 +213,9 @@
 }
 
 
-.redTheme div[class*="heroOpeningStatement"] strong {
+.redTheme
+div[class*="heroOpeningStatement"]
+strong {
   color:
     #bd382f !important;
 
@@ -150,7 +229,9 @@
     700 !important;
 
   text-shadow:
-    0 0 40px
+    0
+    0
+    40px
     rgba(
       188,
       47,
@@ -164,7 +245,8 @@
    COORDINATE
 ========================================================= */
 
-.redTheme div[class*="heroCoordinate"] {
+.redTheme
+div[class*="heroCoordinate"] {
   color:
     #cc493e !important;
 
@@ -187,7 +269,9 @@
     0.08em !important;
 
   text-shadow:
-    0 0 20px
+    0
+    0
+    20px
     rgba(
       194,
       54,
@@ -198,10 +282,11 @@
 
 
 /* =========================================================
-   DAY COUNTER
+   DAY
 ========================================================= */
 
-.redTheme div[class*="heroDayCounter"] {
+.redTheme
+div[class*="heroDayCounter"] {
   font-family:
     "Lora",
     Georgia,
@@ -209,7 +294,9 @@
 }
 
 
-.redTheme div[class*="heroDayCounter"] span {
+.redTheme
+div[class*="heroDayCounter"]
+span {
   color:
     rgba(
       207,
@@ -228,7 +315,9 @@
 }
 
 
-.redTheme div[class*="heroDayCounter"] strong {
+.redTheme
+div[class*="heroDayCounter"]
+strong {
   color:
     #c33b32 !important;
 
@@ -241,7 +330,9 @@
     700 !important;
 
   text-shadow:
-    0 0 42px
+    0
+    0
+    42px
     rgba(
       184,
       43,
@@ -255,7 +346,8 @@
    STAGE WORD
 ========================================================= */
 
-.redTheme div[class*="heroStageWord"] {
+.redTheme
+div[class*="heroStageWord"] {
   color:
     rgba(
       196,
@@ -272,10 +364,11 @@
 
 
 /* =========================================================
-   500 TITLE
+   500
 ========================================================= */
 
-.redTheme div[class*="hero500Title"] {
+.redTheme
+div[class*="hero500Title"] {
   font-family:
     "Lora",
     Georgia,
@@ -283,7 +376,9 @@
 }
 
 
-.redTheme div[class*="hero500Title"] > span {
+.redTheme
+div[class*="hero500Title"]
+> span {
   -webkit-text-stroke:
     1px
     rgba(
@@ -295,7 +390,9 @@
 }
 
 
-.redTheme div[class*="hero500Title"] strong {
+.redTheme
+div[class*="hero500Title"]
+strong {
   color:
     #bf392f !important;
 
@@ -308,7 +405,9 @@
     700 !important;
 
   text-shadow:
-    0 0 38px
+    0
+    0
+    38px
     rgba(
       188,
       47,
@@ -318,7 +417,9 @@
 }
 
 
-.redTheme div[class*="hero500Title"] p {
+.redTheme
+div[class*="hero500Title"]
+p {
   color:
     rgba(
       220,
@@ -338,7 +439,8 @@
    FINAL STAT
 ========================================================= */
 
-.redTheme div[class*="heroFinalStat"] {
+.redTheme
+div[class*="heroFinalStat"] {
   font-family:
     "Lora",
     Georgia,
@@ -346,7 +448,9 @@
 }
 
 
-.redTheme div[class*="heroFinalStat"] > p {
+.redTheme
+div[class*="heroFinalStat"]
+> p {
   color:
     #d16a60 !important;
 
@@ -360,7 +464,9 @@
 }
 
 
-.redTheme div[class*="heroFinalStat"] > span {
+.redTheme
+div[class*="heroFinalStat"]
+> span {
   color:
     #b92f28 !important;
 
@@ -370,7 +476,9 @@
     serif !important;
 
   text-shadow:
-    0 0 85px
+    0
+    0
+    85px
     rgba(
       185,
       45,
@@ -380,7 +488,9 @@
 }
 
 
-.redTheme div[class*="heroFinalStat"] > strong {
+.redTheme
+div[class*="heroFinalStat"]
+> strong {
   color:
     #c83f35 !important;
 
@@ -394,7 +504,9 @@
 }
 
 
-.redTheme div[class*="heroFinalStat"] > small {
+.redTheme
+div[class*="heroFinalStat"]
+> small {
   color:
     #d87369 !important;
 
@@ -408,7 +520,9 @@
 }
 
 
-.redTheme div[class*="heroFinalStat"] > i {
+.redTheme
+div[class*="heroFinalStat"]
+> i {
   color:
     rgba(
       211,
@@ -428,8 +542,11 @@
    SCROLL CUE
 ========================================================= */
 
-.redTheme div[class*="scrollCue"],
-.redTheme div[class*="scrollCue"] span {
+.redTheme
+div[class*="scrollCue"],
+.redTheme
+div[class*="scrollCue"]
+span {
   color:
     rgba(
       206,
@@ -449,7 +566,7 @@
 
 
 /* =========================================================
-   ALL TEXT INSIDE EMBED
+   ALL TEXT
 ========================================================= */
 
 .redTheme p,
@@ -466,28 +583,31 @@
 
 
 /* =========================================================
-   MOBILE
-========================================================= */
-
-@media (max-width: 700px) {
-  .page {
-    width: 100%;
-  }
-
-  .redTheme div[class*="heroCoordinate"] {
-    font-size:
-      9px !important;
-  }
-}
-
-/* =========================================================
-   COORDINATE EMBED — HIDE INTERNAL SCROLLBAR
+   HIDDEN INTERNAL SCROLLBAR
 ========================================================= */
 
 :global(html),
 :global(body) {
-  margin: 0 !important;
-  padding: 0 !important;
+  width:
+    100%;
+
+  margin:
+    0 !important;
+
+  padding:
+    0 !important;
+
+  /*
+   * Document vẫn scroll được bằng JS.
+   *
+   * Người dùng không thấy scrollbar
+   * và không scroll nó trực tiếp.
+   */
+  overflow-x:
+    hidden !important;
+
+  overflow-y:
+    scroll !important;
 
   scrollbar-width:
     none !important;
@@ -495,9 +615,10 @@
   -ms-overflow-style:
     none !important;
 
-  overscroll-behavior:
-    none;
+  background:
+    #050202 !important;
 }
+
 
 :global(html::-webkit-scrollbar),
 :global(body::-webkit-scrollbar) {
@@ -509,4 +630,24 @@
 
   height:
     0 !important;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (
+  max-width: 700px
+) {
+  .page {
+    width:
+      100%;
+  }
+
+  .redTheme
+  div[class*="heroCoordinate"] {
+    font-size:
+      9px !important;
+  }
 }

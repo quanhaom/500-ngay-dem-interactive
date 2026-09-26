@@ -12,13 +12,39 @@ import styles from "./page.module.css";
 
 function clamp(
   value: number,
-  min: number,
-  max: number
+  min = 0,
+  max = 1
 ) {
   return Math.min(
     max,
-    Math.max(min, value)
+    Math.max(
+      min,
+      value
+    )
   );
+}
+
+
+function normalizeWheelDelta(
+  event: WheelEvent
+) {
+  let delta =
+    event.deltaY;
+
+  if (
+    event.deltaMode === 1
+  ) {
+    delta *= 18;
+  }
+
+  if (
+    event.deltaMode === 2
+  ) {
+    delta *=
+      window.innerHeight;
+  }
+
+  return delta;
 }
 
 
@@ -28,138 +54,104 @@ export default function CoordinatesEmbedPage() {
       null
     );
 
+
   useEffect(() => {
-    function getMaxScroll() {
-      return Math.max(
-        0,
-        document.documentElement.scrollHeight -
-          window.innerHeight
-      );
+    /*
+     * iframe KHÔNG tự quyết định progress nữa.
+     *
+     * Wheel được gửi ra Wix.
+     * Wix scroll page chính.
+     *
+     * Wix sau đó gửi progress 0 → 1
+     * trở lại iframe.
+     */
+
+
+    /* =============================================
+       RECEIVE PROGRESS FROM WIX
+    ============================================== */
+
+    function handleMessage(
+      event: MessageEvent
+    ) {
+      const data =
+        event.data;
+
+      if (
+        !data ||
+        data.source !==
+          "500-ngay-dem" ||
+        data.type !==
+          "COORD_PROGRESS"
+      ) {
+        return;
+      }
+
+      const progress =
+        clamp(
+          Number(
+            data.progress
+          ) || 0
+        );
+
+      const maxScroll =
+        Math.max(
+          0,
+          document.documentElement
+            .scrollHeight -
+            window.innerHeight
+        );
+
+      /*
+       * Programmatically move OpeningHero
+       * according to Wix page progress.
+       */
+      window.scrollTo({
+        top:
+          maxScroll *
+          progress,
+
+        left: 0,
+
+        behavior:
+          "auto",
+      });
     }
 
-    function sendScrollToWix(
-      deltaY: number
+
+    /* =============================================
+       MOUSE WHEEL → WIX
+    ============================================== */
+
+    function handleWheel(
+      event: WheelEvent
     ) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      const deltaY =
+        normalizeWheelDelta(
+          event
+        );
+
       window.parent.postMessage(
         {
           source:
             "500-ngay-dem",
+
           type:
-            "COORD_SCROLL_OUT",
+            "COORD_WHEEL",
+
           deltaY,
         },
         "*"
       );
     }
 
-    function moveScene(
-      deltaY: number
-    ) {
-      const maxScroll =
-        getMaxScroll();
 
-      const current =
-        window.scrollY;
-
-      if (maxScroll <= 1) {
-        sendScrollToWix(
-          deltaY
-        );
-        return;
-      }
-
-      const atTop =
-        current <= 1;
-
-      const atBottom =
-        current >=
-        maxScroll - 1;
-
-      /*
-       * Đang ở đầu và cuộn lên
-       * → trả quyền scroll cho Wix.
-       */
-      if (
-        deltaY < 0 &&
-        atTop
-      ) {
-        sendScrollToWix(
-          deltaY
-        );
-        return;
-      }
-
-      /*
-       * Đang ở cuối và cuộn xuống
-       * → trả quyền scroll cho Wix.
-       */
-      if (
-        deltaY > 0 &&
-        atBottom
-      ) {
-        sendScrollToWix(
-          deltaY
-        );
-        return;
-      }
-
-      /*
-       * Đang ở giữa animation
-       * → scroll chính iframe tọa độ.
-       */
-      const next =
-        clamp(
-          current +
-            deltaY,
-          0,
-          maxScroll
-        );
-
-      window.scrollTo({
-        top: next,
-        left: 0,
-        behavior:
-          "auto",
-      });
-    }
-
-    function handleWheel(
-      event: WheelEvent
-    ) {
-      /*
-       * Không cho wheel lọt ra ngoài
-       * trong khi đang chạy animation.
-       */
-      event.preventDefault();
-      event.stopPropagation();
-
-      let delta =
-        event.deltaY;
-
-      /*
-       * Chuẩn hóa mouse wheel.
-       */
-      if (
-        event.deltaMode === 1
-      ) {
-        delta *= 18;
-      }
-
-      if (
-        event.deltaMode === 2
-      ) {
-        delta *=
-          window.innerHeight;
-      }
-
-      /*
-       * Scene 560vh khá dài,
-       * tăng tốc nhẹ để UX tự nhiên hơn.
-       */
-      moveScene(
-        delta * 1.25
-      );
-    }
+    /* =============================================
+       TOUCH → WIX
+    ============================================== */
 
     function handleTouchStart(
       event: TouchEvent
@@ -169,6 +161,7 @@ export default function CoordinatesEmbedPage() {
           ?.clientY ??
         null;
     }
+
 
     function handleTouchMove(
       event: TouchEvent
@@ -188,22 +181,59 @@ export default function CoordinatesEmbedPage() {
 
       event.preventDefault();
 
-      const delta =
-        previous -
-        touch.clientY;
+      const deltaY =
+        (
+          previous -
+          touch.clientY
+        ) *
+        1.25;
 
       touchYRef.current =
         touch.clientY;
 
-      moveScene(
-        delta * 1.4
+      window.parent.postMessage(
+        {
+          source:
+            "500-ngay-dem",
+
+          type:
+            "COORD_WHEEL",
+
+          deltaY,
+        },
+        "*"
       );
     }
+
 
     function handleTouchEnd() {
       touchYRef.current =
         null;
     }
+
+
+    /* =============================================
+       INITIAL STATE
+    ============================================== */
+
+    if (
+      "scrollRestoration" in
+      history
+    ) {
+      history.scrollRestoration =
+        "manual";
+    }
+
+    window.scrollTo(
+      0,
+      0
+    );
+
+
+    window.addEventListener(
+      "message",
+      handleMessage
+    );
 
     window.addEventListener(
       "wheel",
@@ -234,7 +264,28 @@ export default function CoordinatesEmbedPage() {
       handleTouchEnd
     );
 
+
+    /*
+     * Báo cho Wix biết iframe đã sẵn sàng.
+     */
+    window.parent.postMessage(
+      {
+        source:
+          "500-ngay-dem",
+
+        type:
+          "COORD_READY",
+      },
+      "*"
+    );
+
+
     return () => {
+      window.removeEventListener(
+        "message",
+        handleMessage
+      );
+
       window.removeEventListener(
         "wheel",
         handleWheel
@@ -256,6 +307,7 @@ export default function CoordinatesEmbedPage() {
       );
     };
   }, []);
+
 
   return (
     <main
