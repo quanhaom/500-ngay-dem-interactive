@@ -1242,501 +1242,676 @@ export default function OpeningHero() {
     };
   }, []);
 
-  /* =======================================================
-     CANVAS RENDER LOOP
-  ======================================================= */
+/* =======================================================
+   CANVAS RENDER LOOP
+   DARK RED PARTICLE VERSION
+======================================================= */
 
-  useEffect(() => {
-    if (!ready) {
-      return;
-    }
+useEffect(() => {
+  if (!ready) {
+    return;
+  }
 
-    const canvas =
-      canvasRef.current;
+  const canvas =
+    canvasRef.current;
 
-    if (!canvas) {
-      return;
-    }
+  if (!canvas) {
+    return;
+  }
 
-    const context =
-      canvas.getContext(
-        "2d"
+  const context =
+    canvas.getContext(
+      "2d"
+    );
+
+  if (!context) {
+    return;
+  }
+
+  let animationFrame =
+    0;
+
+  let width =
+    0;
+
+  let height =
+    0;
+
+  let dpr =
+    1;
+
+
+  /* =====================================================
+     RESIZE
+
+     Giảm DPR từ 2 xuống 1.35
+     để canvas nhẹ hơn khi nhúng Wix.
+  ===================================================== */
+
+  function resize() {
+    width =
+      window.innerWidth;
+
+    height =
+      window.innerHeight;
+
+    dpr =
+      Math.min(
+        window.devicePixelRatio ||
+          1,
+        1.35
       );
 
-    if (!context) {
-      return;
-    }
-
-    let animationFrame =
-      0;
-
-    let width = 0;
-    let height = 0;
-    let dpr = 1;
-
-    function resize() {
-      width =
-        window.innerWidth;
-
-      height =
-        window.innerHeight;
-
-      dpr =
-        Math.min(
-          window.devicePixelRatio ||
-            1,
-          2
-        );
-
-      canvas.width =
-        Math.round(
-          width *
-            dpr
-        );
-
-      canvas.height =
-        Math.round(
-          height *
-            dpr
-        );
-
-      canvas.style.width =
-        `${width}px`;
-
-      canvas.style.height =
-        `${height}px`;
-
-      context.setTransform(
-        dpr,
-        0,
-        0,
-        dpr,
-        0,
-        0
+    canvas.width =
+      Math.round(
+        width *
+          dpr
       );
-    }
 
-    resize();
+    canvas.height =
+      Math.round(
+        height *
+          dpr
+      );
 
-    function render(
-      time: number
+    canvas.style.width =
+      `${width}px`;
+
+    canvas.style.height =
+      `${height}px`;
+
+    context.setTransform(
+      dpr,
+      0,
+      0,
+      dpr,
+      0,
+      0
+    );
+  }
+
+
+  resize();
+
+
+  /* =====================================================
+     RENDER
+  ===================================================== */
+
+  function render(
+    time: number
+  ) {
+    const {
+      traces,
+      number500,
+      finalField,
+    } =
+      heroDataRef.current;
+
+
+    const progress =
+      progressRef.current;
+
+
+    context.clearRect(
+      0,
+      0,
+      width,
+      height
+    );
+
+
+    /* ===================================================
+       CHƯA CUỘN → KHÔNG VẼ PARTICLE
+    =================================================== */
+
+    if (
+      progress <=
+      0.025
     ) {
-      const {
-        traces,
-        number500,
-        finalField,
-      } =
-        heroDataRef.current;
-
-      const progress =
-        progressRef.current;
-
-      context.clearRect(
-        0,
-        0,
-        width,
-        height
-      );
-
-      /*
-        Chưa cuộn thì không vẽ particle.
-        Bắt đầu xuất hiện nhẹ sau khi scroll.
-      */
-      if (progress <= 0.025) {
-        animationFrame  =
-          requestAnimationFrame(
-            render
-          );
-
-        return;
-      }
-
-      const particleReveal =
-        easeInOutCubic(
-          phase(
-            progress,
-            0.025,
-            0.10
-          )
+      animationFrame =
+        requestAnimationFrame(
+          render
         );
 
-      const mapPhase =
+      return;
+    }
+
+
+    /* ===================================================
+       PARTICLE FADE IN
+    =================================================== */
+
+    const particleReveal =
+      easeInOutCubic(
         phase(
           progress,
-          0.055,
-          0.48
-        );
+          0.025,
+          0.10
+        )
+      );
 
-      const morph500 =
-        easeInOutCubic(
-          phase(
-            progress,
-            0.49,
-            0.67
-          )
-        );
 
-      const dissolve =
-        easeInOutCubic(
-          phase(
-            progress,
-            0.70,
-            0.90
-          )
-        );
+    /* ===================================================
+       PHASES
+    =================================================== */
 
-      const mapWidth =
-        Math.min(
-          width *
-            0.43,
-          470
-        );
+    const mapPhase =
+      phase(
+        progress,
+        0.055,
+        0.48
+      );
 
-      const mapHeight =
-        Math.min(
-          height *
-            0.74,
-          720
-        );
 
-      const mapLeft =
+    const morph500 =
+      easeInOutCubic(
+        phase(
+          progress,
+          0.49,
+          0.67
+        )
+      );
+
+
+    const dissolve =
+      easeInOutCubic(
+        phase(
+          progress,
+          0.70,
+          0.90
+        )
+      );
+
+
+    /* ===================================================
+       MAP SIZE
+    =================================================== */
+
+    const mapWidth =
+      Math.min(
         width *
-          0.5 -
-        mapWidth /
-          2;
+          0.43,
+        470
+      );
 
-      const mapTop =
+
+    const mapHeight =
+      Math.min(
         height *
-          0.5 -
-        mapHeight /
-          2;
+          0.74,
+        720
+      );
 
-      const pointer =
-        pointerRef.current;
+
+    const mapLeft =
+      width *
+        0.5 -
+      mapWidth /
+        2;
+
+
+    const mapTop =
+      height *
+        0.5 -
+      mapHeight /
+        2;
+
+
+    const pointer =
+      pointerRef.current;
+
+
+    /* ===================================================
+       TRACE PARTICLES
+       500 PARTICLES
+
+       MAIN DARK RED
+       #94261F
+    =================================================== */
+
+    for (
+      let i =
+        0;
+      i <
+      TRACE_COUNT;
+      i++
+    ) {
+      const source =
+        traces[i];
+
+
+      if (!source) {
+        continue;
+      }
+
+
+      const target500 =
+        number500[i] ||
+        source;
+
+
+      const targetFinal =
+        finalField[i] ||
+        target500;
+
 
       /* ===============================================
-         TRACE PARTICLES
-      ================================================ */
+         INITIAL POSITION
+      =============================================== */
 
+      const initialX =
+        mapLeft +
+        source.x *
+          mapWidth;
+
+
+      const initialY =
+        mapTop +
+        source.y *
+          mapHeight;
+
+
+      /* ===============================================
+         500 POSITION
+      =============================================== */
+
+      const numberX =
+        target500.x *
+        width;
+
+
+      const numberY =
+        target500.y *
+        height;
+
+
+      /* ===============================================
+         FINAL POSITION
+      =============================================== */
+
+      const finalX =
+        targetFinal.x *
+        width;
+
+
+      const finalY =
+        targetFinal.y *
+        height;
+
+
+      /* ===============================================
+         MAP → 500
+      =============================================== */
+
+      let x =
+        lerp(
+          initialX,
+          numberX,
+          morph500
+        );
+
+
+      let y =
+        lerp(
+          initialY,
+          numberY,
+          morph500
+        );
+
+
+      /* ===============================================
+         500 → 1863 FIELD
+      =============================================== */
+
+      x =
+        lerp(
+          x,
+          finalX,
+          dissolve
+        );
+
+
+      y =
+        lerp(
+          y,
+          finalY,
+          dissolve
+        );
+
+
+      /* ===============================================
+         REVEAL
+      =============================================== */
+
+      const revealIndex =
+        i /
+        TRACE_COUNT;
+
+
+      const reveal =
+        clamp(
+          (
+            mapPhase -
+            revealIndex *
+              0.78
+          ) *
+            5
+        );
+
+
+      /* ===============================================
+         PULSE
+      =============================================== */
+
+      const pulse =
+        0.78 +
+        Math.sin(
+          time *
+            0.00125 +
+          i *
+            0.71
+        ) *
+          0.16;
+
+
+      let alpha =
+        reveal *
+        pulse;
+
+
+      /*
+       * Fade particle sau khi người dùng
+       * thực sự bắt đầu cuộn.
+       */
+      alpha *=
+        particleReveal;
+
+
+      /* ===============================================
+         500 OPACITY
+      =============================================== */
+
+      alpha =
+        lerp(
+          alpha,
+          0.72,
+          morph500
+        );
+
+
+      /* ===============================================
+         FINAL OPACITY
+      =============================================== */
+
+      alpha =
+        lerp(
+          alpha,
+          0.28,
+          dissolve
+        );
+
+
+      /* ===============================================
+         SEARCHLIGHT
+      =============================================== */
+
+      const dx =
+        x -
+        pointer.x *
+          width;
+
+
+      const dy =
+        y -
+        pointer.y *
+          height;
+
+
+      const distance =
+        Math.sqrt(
+          dx *
+            dx +
+          dy *
+            dy
+        );
+
+
+      const searchBoost =
+        1 -
+        clamp(
+          distance /
+            190
+        );
+
+
+      alpha +=
+        searchBoost *
+        (
+          1 -
+          morph500
+        ) *
+        0.72 *
+        particleReveal;
+
+
+      /* ===============================================
+         SIZE
+      =============================================== */
+
+      const radius =
+        lerp(
+          1.1,
+          1.8,
+          morph500
+        );
+
+
+      /* ===============================================
+         DRAW
+      =============================================== */
+
+      context.beginPath();
+
+
+      context.arc(
+        x,
+        y,
+        radius,
+        0,
+        Math.PI *
+          2
+      );
+
+
+      /*
+       * ĐỎ ĐẬM CHÍNH
+       *
+       * #94261F
+       */
+      context.fillStyle =
+        `rgba(
+          148,
+          38,
+          31,
+          ${
+            clamp(
+              alpha
+            )
+          }
+        )`;
+
+
+      context.fill();
+    }
+
+
+    /* ===================================================
+       EXTRA PARTICLES
+       500 → 1863
+
+       DARKER RED
+       #691512
+    =================================================== */
+
+    const extraReveal =
+      dissolve;
+
+
+    if (
+      extraReveal >
+      0
+    ) {
       for (
-        let i = 0;
-        i < TRACE_COUNT;
+        let i =
+          TRACE_COUNT;
+        i <
+        FINAL_PARTICLE_COUNT;
         i++
       ) {
-        const source =
-          traces[i];
+        const point =
+          finalField[i];
 
-        if (!source) {
+
+        if (!point) {
           continue;
         }
 
-        const target500 =
-          number500[i] ||
-          source;
 
-        const targetFinal =
-          finalField[i] ||
-          target500;
-
-        /*
-          Initial search trace.
-        */
-
-        const initialX =
-          mapLeft +
-          source.x *
-            mapWidth;
-
-        const initialY =
-          mapTop +
-          source.y *
-            mapHeight;
-
-        /*
-          500 position.
-        */
-
-        const numberX =
-          target500.x *
-          width;
-
-        const numberY =
-          target500.y *
-          height;
-
-        /*
-          Final dispersed field.
-        */
-
-        const finalX =
-          targetFinal.x *
-          width;
-
-        const finalY =
-          targetFinal.y *
-          height;
-
-        let x =
-          lerp(
-            initialX,
-            numberX,
-            morph500
+        const threshold =
+          (
+            i -
+            TRACE_COUNT
+          ) /
+          (
+            FINAL_PARTICLE_COUNT -
+            TRACE_COUNT
           );
 
-        let y =
-          lerp(
-            initialY,
-            numberY,
-            morph500
-          );
-
-        x =
-          lerp(
-            x,
-            finalX,
-            dissolve
-          );
-
-        y =
-          lerp(
-            y,
-            finalY,
-            dissolve
-          );
-
-        const revealIndex =
-          i /
-          TRACE_COUNT;
 
         const reveal =
           clamp(
             (
-              mapPhase -
-              revealIndex *
-                0.78
+              extraReveal -
+              threshold *
+                0.55
             ) *
-              5
+              4
           );
 
+
+        if (
+          reveal <=
+          0
+        ) {
+          continue;
+        }
+
+
+        const x =
+          point.x *
+          width;
+
+
+        const y =
+          point.y *
+          height;
+
+
         const pulse =
-          0.82 +
+          0.62 +
           Math.sin(
             time *
-              0.0013 +
-              i *
-                0.71
+              0.001 +
+            i *
+              0.42
           ) *
             0.18;
 
-        let alpha =
-          reveal *
-          pulse;
-
-        alpha =
-          lerp(
-            alpha,
-            0.75,
-            morph500
-          );
-
-        alpha =
-          lerp(
-            alpha,
-            0.25,
-            dissolve
-          );
-
-        /*
-          Searchlight emphasis.
-        */
-
-        const dx =
-          x -
-          pointer.x *
-            width;
-
-        const dy =
-          y -
-          pointer.y *
-            height;
-
-        const distance =
-          Math.sqrt(
-            dx * dx +
-              dy * dy
-          );
-
-        const searchBoost =
-          1 -
-          clamp(
-            distance /
-              180
-          );
-
-        alpha +=
-          searchBoost *
-          (
-            1 -
-            morph500
-          ) *
-          0.8;
-
-        const radius =
-          lerp(
-            1.1,
-            1.8,
-            morph500
-          );
 
         context.beginPath();
+
 
         context.arc(
           x,
           y,
-          radius,
+          1.08,
           0,
           Math.PI *
             2
         );
 
+
+        /*
+         * ĐỎ RƯỢU / ĐỎ RẤT ĐẬM
+         *
+         * #691512
+         */
         context.fillStyle =
           `rgba(
-            190,
-            55,
-            46,
-            ${clamp(
-              alpha
-            )}
+            105,
+            21,
+            18,
+            ${
+              clamp(
+                reveal *
+                pulse *
+                0.62
+              )
+            }
           )`;
+
 
         context.fill();
       }
-
-      /* ===============================================
-         EXTRA PARTICLES AFTER 500 → 1863
-      ================================================ */
-
-      const extraReveal =
-        dissolve;
-
-      if (
-        extraReveal >
-        0
-      ) {
-        for (
-          let i =
-            TRACE_COUNT;
-          i <
-          FINAL_PARTICLE_COUNT;
-          i++
-        ) {
-          const point =
-            finalField[i];
-
-          if (!point) {
-            continue;
-          }
-
-          const threshold =
-            (
-              i -
-              TRACE_COUNT
-            ) /
-            (
-              FINAL_PARTICLE_COUNT -
-              TRACE_COUNT
-            );
-
-          const reveal =
-            clamp(
-              (
-                extraReveal -
-                threshold *
-                  0.55
-              ) *
-                4
-            );
-
-          if (
-            reveal <=
-            0
-          ) {
-            continue;
-          }
-
-          const x =
-            point.x *
-            width;
-
-          const y =
-            point.y *
-            height;
-
-          const pulse =
-            0.65 +
-            Math.sin(
-              time *
-                0.001 +
-                i *
-                  0.42
-            ) *
-              0.2;
-
-          context.beginPath();
-
-          context.arc(
-            x,
-            y,
-            1.1,
-            0,
-            Math.PI *
-              2
-          );
-          context.fillStyle =
-            `rgba(
-              151,
-              39,
-              33,
-              ${
-                reveal *
-                pulse *
-                0.55
-              }
-            )`;
-
-          context.fill();
-        }
-      }
-
-      animationFrame =
-        requestAnimationFrame(
-          render
-        );
     }
+
+
+    /* ===================================================
+       NEXT FRAME
+    =================================================== */
 
     animationFrame =
       requestAnimationFrame(
         render
       );
+  }
 
-    window.addEventListener(
+
+  /* =====================================================
+     START
+  ===================================================== */
+
+  animationFrame =
+    requestAnimationFrame(
+      render
+    );
+
+
+  window.addEventListener(
+    "resize",
+    resize
+  );
+
+
+  /* =====================================================
+     CLEANUP
+  ===================================================== */
+
+  return () => {
+    cancelAnimationFrame(
+      animationFrame
+    );
+
+
+    window.removeEventListener(
       "resize",
       resize
     );
-
-    return () => {
-      cancelAnimationFrame(
-        animationFrame
-      );
-
-      window.removeEventListener(
-        "resize",
-        resize
-      );
-    };
-  }, [
-    ready,
-  ]);
+  };
+}, [
+  ready,
+]);
 
   /* =======================================================
      RENDER
