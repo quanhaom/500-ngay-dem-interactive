@@ -1305,3 +1305,116 @@ div[class*="heroSticky"] {
   display:
     none !important;
 }
+
+/* =========================================================
+   WIX EMBED MODE
+   Outer Wix page owns the scroll.
+========================================================= */
+
+.wixMode {
+  position:
+    relative;
+
+  width:
+    100%;
+
+  min-height:
+    560vh;
+
+  overflow:
+    visible !important;
+
+  background:
+    #080104 !important;
+}
+
+
+/*
+ * Giữ document 560vh để OpeningHero
+ * vẫn tính progress giống page chính.
+ */
+.wixMode
+section[class*="heroScene"] {
+  position:
+    relative !important;
+
+  height:
+    560vh !important;
+
+  overflow:
+    visible !important;
+
+  background:
+    #080104 !important;
+}
+
+
+/*
+ * CỰC KỲ QUAN TRỌNG.
+ *
+ * Trong Wix không dùng sticky nội bộ nữa.
+ *
+ * Wix bên ngoài đã sticky cả iframe.
+ * Bên trong iframe chỉ cần viewport cố định.
+ *
+ * Điều này loại bỏ hoàn toàn lỗi:
+ *
+ * DAY 034
+ * --------
+ * màn hình đen phía dưới
+ */
+.wixMode
+div[class*="heroSticky"] {
+  position:
+    fixed !important;
+
+  inset:
+    0 !important;
+
+  top:
+    0 !important;
+
+  left:
+    0 !important;
+
+  width:
+    100% !important;
+
+  height:
+    100vh !important;
+
+  height:
+    100dvh !important;
+
+  min-height:
+    100vh !important;
+
+  overflow:
+    hidden !important;
+
+  background:
+    #080104 !important;
+}
+
+
+/*
+ * Không xuất scrollbar trong iframe.
+ */
+.wixMode::-webkit-scrollbar {
+  display:
+    none;
+}
+
+
+/* =========================================================
+   BURGUNDY BACKGROUND
+========================================================= */
+
+.wixMode,
+.wixMode
+section[class*="heroScene"],
+.wixMode
+div[class*="heroSticky"] {
+  background:
+    #080104 !important;
+}
