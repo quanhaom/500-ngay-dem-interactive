@@ -10,6 +10,10 @@ import magazineStyles from "../../../components/magazine/MagazineExperience.modu
 import styles from "./page.module.css";
 
 
+const SOURCE =
+  "500-ngay-dem";
+
+
 function clamp(
   value: number,
   min = 0,
@@ -25,31 +29,11 @@ function clamp(
 }
 
 
-function normalizeWheelDelta(
-  event: WheelEvent
-) {
-  let delta =
-    event.deltaY;
-
-  if (
-    event.deltaMode === 1
-  ) {
-    delta *= 18;
-  }
-
-  if (
-    event.deltaMode === 2
-  ) {
-    delta *=
-      window.innerHeight;
-  }
-
-  return delta;
-}
-
-
 export default function CoordinatesEmbedPage() {
-  const touchYRef =
+  const pendingProgressRef =
+    useRef(0);
+
+  const frameRef =
     useRef<number | null>(
       null
     );
@@ -57,61 +41,68 @@ export default function CoordinatesEmbedPage() {
 
   useEffect(() => {
     /*
-     * iframe KHÔNG tự quyết định progress nữa.
+     * QUAN TRỌNG:
      *
-     * Wheel được gửi ra Wix.
-     * Wix scroll page chính.
+     * Không bắt wheel.
+     * Không preventDefault.
      *
-     * Wix sau đó gửi progress 0 → 1
-     * trở lại iframe.
+     * Vì vậy khi mở trực tiếp:
+     *
+     * /embed/coordinates/
+     *
+     * nó vẫn scroll tự nhiên giống web chính.
+     *
+     * Khi ở Wix, progress sẽ được parent
+     * gửi vào bằng postMessage.
      */
 
 
-    /* =============================================
-       RECEIVE PROGRESS FROM WIX
-    ============================================== */
+    function getMaxScroll() {
+      const documentHeight =
+        Math.max(
+          document.documentElement
+            .scrollHeight,
 
-    function handleMessage(
-      event: MessageEvent
-    ) {
-      const data =
-        event.data;
+          document.body
+            .scrollHeight
+        );
 
-      if (
-        !data ||
-        data.source !==
-          "500-ngay-dem" ||
-        data.type !==
-          "COORD_PROGRESS"
-      ) {
-        return;
-      }
+
+      return Math.max(
+        0,
+
+        documentHeight -
+          window.innerHeight
+      );
+    }
+
+
+    /* =====================================================
+       APPLY WIX PROGRESS
+    ===================================================== */
+
+    function applyProgress() {
+      frameRef.current =
+        null;
+
 
       const progress =
         clamp(
-          Number(
-            data.progress
-          ) || 0
+          pendingProgressRef.current
         );
+
 
       const maxScroll =
-        Math.max(
-          0,
-          document.documentElement
-            .scrollHeight -
-            window.innerHeight
-        );
+        getMaxScroll();
 
-      /*
-       * Programmatically move OpeningHero
-       * according to Wix page progress.
-       */
+
       window.scrollTo({
         top:
           maxScroll *
           progress,
 
-        left: 0,
+        left:
+          0,
 
         behavior:
           "auto",
@@ -119,115 +110,136 @@ export default function CoordinatesEmbedPage() {
     }
 
 
-    /* =============================================
-       MOUSE WHEEL → WIX
-    ============================================== */
-
-    function handleWheel(
-      event: WheelEvent
+    function setExternalProgress(
+      progress: number
     ) {
-      event.preventDefault();
-      event.stopPropagation();
-
-      const deltaY =
-        normalizeWheelDelta(
-          event
+      pendingProgressRef.current =
+        clamp(
+          progress
         );
 
-      window.parent.postMessage(
-        {
-          source:
-            "500-ngay-dem",
-
-          type:
-            "COORD_WHEEL",
-
-          deltaY,
-        },
-        "*"
-      );
-    }
-
-
-    /* =============================================
-       TOUCH → WIX
-    ============================================== */
-
-    function handleTouchStart(
-      event: TouchEvent
-    ) {
-      touchYRef.current =
-        event.touches[0]
-          ?.clientY ??
-        null;
-    }
-
-
-    function handleTouchMove(
-      event: TouchEvent
-    ) {
-      const touch =
-        event.touches[0];
-
-      const previous =
-        touchYRef.current;
 
       if (
-        !touch ||
-        previous === null
+        frameRef.current !==
+        null
       ) {
         return;
       }
 
-      event.preventDefault();
 
-      const deltaY =
-        (
-          previous -
-          touch.clientY
-        ) *
-        1.25;
+      frameRef.current =
+        requestAnimationFrame(
+          applyProgress
+        );
+    }
 
-      touchYRef.current =
-        touch.clientY;
 
-      window.parent.postMessage(
-        {
-          source:
-            "500-ngay-dem",
+    /* =====================================================
+       POINTER FROM WIX
+    ===================================================== */
 
-          type:
-            "COORD_WHEEL",
+    function applyExternalPointer(
+      rawX: unknown,
+      rawY: unknown
+    ) {
+      const x =
+        clamp(
+          Number(
+            rawX
+          ) || 0.5
+        );
 
-          deltaY,
-        },
-        "*"
+
+      const y =
+        clamp(
+          Number(
+            rawY
+          ) || 0.5
+        );
+
+
+      const hero =
+        document.getElementById(
+          "opening"
+        );
+
+
+      if (!hero) {
+        return;
+      }
+
+
+      const pointerEvent =
+        new PointerEvent(
+          "pointermove",
+          {
+            bubbles:
+              true,
+
+            pointerType:
+              "mouse",
+
+            clientX:
+              x *
+              window.innerWidth,
+
+            clientY:
+              y *
+              window.innerHeight,
+          }
+        );
+
+
+      hero.dispatchEvent(
+        pointerEvent
       );
     }
 
 
-    function handleTouchEnd() {
-      touchYRef.current =
-        null;
-    }
+    /* =====================================================
+       MESSAGE
+    ===================================================== */
 
-
-    /* =============================================
-       INITIAL STATE
-    ============================================== */
-
-    if (
-      "scrollRestoration" in
-      history
+    function handleMessage(
+      event: MessageEvent
     ) {
-      history.scrollRestoration =
-        "manual";
-    }
+      const data =
+        event.data;
 
-    window.scrollTo(
-      0,
-      0
-    );
+
+      if (
+        !data ||
+        data.source !==
+          SOURCE
+      ) {
+        return;
+      }
+
+
+      if (
+        data.type ===
+          "COORD_PROGRESS"
+      ) {
+        setExternalProgress(
+          Number(
+            data.progress
+          ) || 0
+        );
+
+        return;
+      }
+
+
+      if (
+        data.type ===
+          "COORD_POINTER"
+      ) {
+        applyExternalPointer(
+          data.x,
+          data.y
+        );
+      }
+    }
 
 
     window.addEventListener(
@@ -235,49 +247,25 @@ export default function CoordinatesEmbedPage() {
       handleMessage
     );
 
-    window.addEventListener(
-      "wheel",
-      handleWheel,
-      {
-        passive: false,
-      }
-    );
-
-    window.addEventListener(
-      "touchstart",
-      handleTouchStart,
-      {
-        passive: true,
-      }
-    );
-
-    window.addEventListener(
-      "touchmove",
-      handleTouchMove,
-      {
-        passive: false,
-      }
-    );
-
-    window.addEventListener(
-      "touchend",
-      handleTouchEnd
-    );
-
 
     /*
-     * Báo cho Wix biết iframe đã sẵn sàng.
+     * Báo wrapper iframe đã load.
      */
-    window.parent.postMessage(
-      {
-        source:
-          "500-ngay-dem",
+    const readyFrame =
+      requestAnimationFrame(
+        () => {
+          window.parent.postMessage(
+            {
+              source:
+                SOURCE,
 
-        type:
-          "COORD_READY",
-      },
-      "*"
-    );
+              type:
+                "COORD_READY",
+            },
+            "*"
+          );
+        }
+      );
 
 
     return () => {
@@ -286,25 +274,20 @@ export default function CoordinatesEmbedPage() {
         handleMessage
       );
 
-      window.removeEventListener(
-        "wheel",
-        handleWheel
+
+      cancelAnimationFrame(
+        readyFrame
       );
 
-      window.removeEventListener(
-        "touchstart",
-        handleTouchStart
-      );
 
-      window.removeEventListener(
-        "touchmove",
-        handleTouchMove
-      );
-
-      window.removeEventListener(
-        "touchend",
-        handleTouchEnd
-      );
+      if (
+        frameRef.current !==
+        null
+      ) {
+        cancelAnimationFrame(
+          frameRef.current
+        );
+      }
     };
   }, []);
 

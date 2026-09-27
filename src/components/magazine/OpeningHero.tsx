@@ -1731,9 +1731,9 @@ useEffect(() => {
        */
       context.fillStyle =
         `rgba(
-          148,
-          38,
-          31,
+          132,
+          27,
+          42,
           ${
             clamp(
               alpha
@@ -1849,9 +1849,9 @@ useEffect(() => {
          */
         context.fillStyle =
           `rgba(
-            105,
-            21,
-            18,
+            92,
+            16,
+            27,
             ${
               clamp(
                 reveal *

@@ -11,7 +11,12 @@
   margin: 0;
   padding: 0;
 
-  overflow-x: hidden;
+  /*
+   * QUAN TRỌNG:
+   * dùng clip thay hidden để không tạo
+   * scroll container làm hỏng sticky.
+   */
+  overflow-x: clip;
 
   background:
     #050202;
@@ -588,26 +593,23 @@ span {
 
 :global(html),
 :global(body) {
-  width:
-    100%;
-
   margin:
     0 !important;
 
   padding:
     0 !important;
 
+  width:
+    100%;
+
   /*
-   * Document vẫn scroll được bằng JS.
-   *
-   * Người dùng không thấy scrollbar
-   * và không scroll nó trực tiếp.
+   * Body là scroll chính.
    */
   overflow-x:
-    hidden !important;
+    clip !important;
 
   overflow-y:
-    scroll !important;
+    visible !important;
 
   scrollbar-width:
     none !important;
@@ -616,7 +618,7 @@ span {
     none !important;
 
   background:
-    #050202 !important;
+    #0d0202 !important;
 }
 
 
@@ -867,4 +869,439 @@ div[class*="scrollCue"]
 span {
   color:
     rgba(226, 68, 55, 0.90) !important;
+}
+
+
+/* =========================================================
+   FINAL BURGUNDY THEME
+   Deep red / wine red — no orange cast
+========================================================= */
+
+.page,
+.redTheme,
+:global(html),
+:global(body) {
+  background:
+    #080104 !important;
+}
+
+.redTheme {
+  --night:
+    #080104;
+
+  --night-soft:
+    #100207;
+
+  --red:
+    #841b2a;
+
+  /*
+   * OpeningHero gốc dùng các biến green.
+   * Giữ tên biến nhưng chuyển palette sang burgundy.
+   */
+  --green:
+    #841b2a;
+
+  --green-mid:
+    #651522;
+
+  --green-light:
+    #a24350;
+}
+
+
+/* =========================================================
+   SEARCH LIGHT
+========================================================= */
+
+.redTheme
+div[class*="heroSearchBeam"] {
+  background:
+    radial-gradient(
+      circle
+      140px
+      at
+      var(--beam-x)
+      var(--beam-y),
+
+      rgba(
+        110,
+        14,
+        35,
+        0.02
+      )
+      0%,
+
+      rgba(
+        91,
+        10,
+        29,
+        0.08
+      )
+      38%,
+
+      rgba(
+        48,
+        3,
+        17,
+        0.44
+      )
+      68%,
+
+      rgba(
+        8,
+        1,
+        4,
+        0.95
+      )
+      100%
+    ) !important;
+}
+
+
+.redTheme
+div[class*="heroSearchBeam"]::before {
+  border-color:
+    rgba(
+      132,
+      27,
+      42,
+      0.72
+    ) !important;
+
+  box-shadow:
+    0
+    0
+    36px
+    rgba(
+      92,
+      16,
+      27,
+      0.34
+    ) !important;
+}
+
+
+.redTheme
+div[class*="heroSearchBeam"]::after {
+  color:
+    #96303e !important;
+}
+
+
+/* =========================================================
+   TOP
+========================================================= */
+
+.redTheme
+div[class*="heroChrome"] {
+  color:
+    rgba(
+      162,
+      57,
+      72,
+      0.82
+    ) !important;
+}
+
+
+/* =========================================================
+   OPENING
+========================================================= */
+
+.redTheme
+div[class*="heroOpeningStatement"]
+span {
+  color:
+    #913341 !important;
+}
+
+
+.redTheme
+div[class*="heroOpeningStatement"]
+strong {
+  color:
+    #841b2a !important;
+
+  text-shadow:
+    0
+    0
+    46px
+    rgba(
+      92,
+      16,
+      27,
+      0.40
+    ) !important;
+}
+
+
+/* =========================================================
+   COORDINATE
+========================================================= */
+
+.redTheme
+div[class*="heroCoordinate"] {
+  color:
+    #9b3544 !important;
+
+  text-shadow:
+    0
+    0
+    20px
+    rgba(
+      91,
+      14,
+      31,
+      0.36
+    ) !important;
+}
+
+
+/* =========================================================
+   DAY COUNTER
+========================================================= */
+
+.redTheme
+div[class*="heroDayCounter"]
+span {
+  color:
+    #8f3340 !important;
+}
+
+
+.redTheme
+div[class*="heroDayCounter"]
+strong {
+  color:
+    #841b2a !important;
+
+  text-shadow:
+    0
+    0
+    46px
+    rgba(
+      91,
+      14,
+      31,
+      0.38
+    ) !important;
+}
+
+
+/* =========================================================
+   STAGE WORD
+========================================================= */
+
+.redTheme
+div[class*="heroStageWord"] {
+  color:
+    rgba(
+      132,
+      27,
+      42,
+      0.14
+    ) !important;
+}
+
+
+/* =========================================================
+   500
+========================================================= */
+
+.redTheme
+div[class*="hero500Title"]
+> span {
+  -webkit-text-stroke:
+    1px
+    rgba(
+      132,
+      27,
+      42,
+      0.28
+    ) !important;
+}
+
+
+.redTheme
+div[class*="hero500Title"]
+strong {
+  color:
+    #841b2a !important;
+
+  text-shadow:
+    0
+    0
+    50px
+    rgba(
+      92,
+      16,
+      27,
+      0.42
+    ) !important;
+}
+
+
+.redTheme
+div[class*="hero500Title"]
+p {
+  color:
+    #9d555e !important;
+}
+
+
+/* =========================================================
+   FINAL 1.863
+========================================================= */
+
+.redTheme
+div[class*="heroFinalStat"]
+> p {
+  color:
+    #9b4551 !important;
+}
+
+
+.redTheme
+div[class*="heroFinalStat"]
+> span {
+  color:
+    #841b2a !important;
+
+  text-shadow:
+    0
+    0
+    100px
+    rgba(
+      92,
+      16,
+      27,
+      0.48
+    ) !important;
+}
+
+
+.redTheme
+div[class*="heroFinalStat"]
+> strong {
+  color:
+    #96303e !important;
+}
+
+
+.redTheme
+div[class*="heroFinalStat"]
+> small {
+  color:
+    #9f515c !important;
+}
+
+
+.redTheme
+div[class*="heroFinalStat"]
+> i {
+  color:
+    rgba(
+      158,
+      78,
+      91,
+      0.78
+    ) !important;
+}
+
+
+/* =========================================================
+   SCROLL CUE
+========================================================= */
+
+.redTheme
+div[class*="scrollCue"],
+.redTheme
+div[class*="scrollCue"]
+span {
+  color:
+    #90303e !important;
+}
+
+
+/* =========================================================
+   KEEP STICKY WORKING
+========================================================= */
+
+.page {
+  overflow-x:
+    clip !important;
+
+  overflow-y:
+    visible !important;
+}
+
+
+.redTheme {
+  overflow:
+    visible !important;
+}
+
+
+.redTheme
+section[class*="heroScene"] {
+  position:
+    relative !important;
+
+  height:
+    560vh !important;
+
+  overflow:
+    visible !important;
+}
+
+
+.redTheme
+div[class*="heroSticky"] {
+  position:
+    sticky !important;
+
+  top:
+    0 !important;
+
+  width:
+    100% !important;
+
+  height:
+    100vh !important;
+
+  height:
+    100svh !important;
+
+  overflow:
+    hidden !important;
+}
+
+
+:global(html),
+:global(body) {
+  margin:
+    0 !important;
+
+  padding:
+    0 !important;
+
+  overflow-x:
+    clip !important;
+
+  background:
+    #080104 !important;
+
+  scrollbar-width:
+    none !important;
+
+  -ms-overflow-style:
+    none !important;
+}
+
+
+:global(html::-webkit-scrollbar),
+:global(body::-webkit-scrollbar) {
+  display:
+    none !important;
 }
