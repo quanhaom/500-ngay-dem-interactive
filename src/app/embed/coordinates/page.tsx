@@ -1,12 +1,19 @@
 "use client";
 
-import { useEffect } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import OpeningHero from "../../../components/magazine/OpeningHero";
 import magazineStyles from "../../../components/magazine/MagazineExperience.module.css";
 import styles from "./page.module.css";
 
-const SOURCE = "500-ngay-dem";
+
+const SOURCE =
+  "500-ngay-dem";
+
 
 function clamp(
   value: number,
@@ -15,51 +22,103 @@ function clamp(
 ) {
   return Math.min(
     max,
-    Math.max(min, value)
+    Math.max(
+      min,
+      value
+    )
   );
 }
 
+
 export default function CoordinatesEmbedPage() {
+  const [
+    wixMode,
+    setWixMode,
+  ] =
+    useState(false);
+
+  const [
+    progress,
+    setProgress,
+  ] =
+    useState(0);
+
+  const touchYRef =
+    useRef<number | null>(
+      null
+    );
+
+  const wheelDeltaRef =
+    useRef(0);
+
+  const wheelFrameRef =
+    useRef<number | null>(
+      null
+    );
+
+
   useEffect(() => {
     const params =
       new URLSearchParams(
         window.location.search
       );
 
-    const wixMode =
-      params.get("wix") === "1";
+    const isWix =
+      params.get("wix") ===
+      "1";
+
+    setWixMode(
+      isWix
+    );
+
 
     /*
-     * Mở trực tiếp:
+     * =====================================================
+     * DIRECT MODE
+     *
      * /embed/coordinates/
      *
-     * -> hoạt động như page chính.
+     * OpeningHero tự scroll như page chính.
+     * =====================================================
      */
-    if (!wixMode) {
+
+    if (!isWix) {
       return;
     }
 
-    function getMaxScroll() {
-      const documentHeight =
-        Math.max(
-          document.documentElement.scrollHeight,
-          document.body.scrollHeight
-        );
-
-      return Math.max(
-        0,
-        documentHeight -
-          window.innerHeight
-      );
-    }
 
     /*
-     * Wix chỉ gửi progress.
+     * =====================================================
+     * WIX MODE
      *
-     * KHÔNG bắt wheel.
-     * KHÔNG preventDefault.
-     * KHÔNG gửi scroll ngược ra Wix.
+     * Iframe là viewport duy nhất 100vh.
+     * Không có document scroll bên trong.
+     * =====================================================
      */
+
+    const html =
+      document.documentElement;
+
+    const body =
+      document.body;
+
+    const oldHtmlOverflow =
+      html.style.overflow;
+
+    const oldBodyOverflow =
+      body.style.overflow;
+
+    html.style.overflow =
+      "hidden";
+
+    body.style.overflow =
+      "hidden";
+
+
+    /* =====================================================
+       MESSAGE FROM WIX
+    ===================================================== */
+
     function handleMessage(
       event: MessageEvent
     ) {
@@ -68,41 +127,292 @@ export default function CoordinatesEmbedPage() {
 
       if (
         !data ||
-        data.source !== SOURCE ||
-        data.type !== "COORD_PROGRESS"
+        data.source !==
+          SOURCE
       ) {
         return;
       }
 
-      const progress =
-        clamp(
-          Number(data.progress) || 0
+      if (
+        data.type ===
+          "COORD_PROGRESS"
+      ) {
+        setProgress(
+          clamp(
+            Number(
+              data.progress
+            ) || 0
+          )
+        );
+      }
+    }
+
+
+    /* =====================================================
+       SEND WHEEL TO WIX
+    ===================================================== */
+
+    function flushWheel() {
+      wheelFrameRef.current =
+        null;
+
+      let delta =
+        wheelDeltaRef.current;
+
+      wheelDeltaRef.current =
+        0;
+
+      delta =
+        Math.max(
+          -240,
+          Math.min(
+            240,
+            delta
+          )
         );
 
-      const maxScroll =
-        getMaxScroll();
+      if (
+        Math.abs(delta) <
+        0.1
+      ) {
+        return;
+      }
 
-      window.scrollTo({
-        top:
-          progress *
-          maxScroll,
-        left: 0,
-        behavior: "auto",
-      });
+      window.parent.postMessage(
+        {
+          source:
+            SOURCE,
+
+          type:
+            "COORD_WHEEL",
+
+          deltaY:
+            delta,
+        },
+        "*"
+      );
     }
+
+
+    function scheduleWheel() {
+      if (
+        wheelFrameRef.current !==
+        null
+      ) {
+        return;
+      }
+
+      wheelFrameRef.current =
+        requestAnimationFrame(
+          flushWheel
+        );
+    }
+
+
+    function handleWheel(
+      event: WheelEvent
+    ) {
+      /*
+       * Iframe KHÔNG scroll.
+       *
+       * Wheel được chuyển cho
+       * trang Wix bên ngoài.
+       */
+      event.preventDefault();
+
+      let delta =
+        event.deltaY;
+
+      if (
+        event.deltaMode ===
+        1
+      ) {
+        delta *= 18;
+      }
+
+      if (
+        event.deltaMode ===
+        2
+      ) {
+        delta *=
+          window.innerHeight;
+      }
+
+      wheelDeltaRef.current +=
+        delta;
+
+      scheduleWheel();
+    }
+
+
+    /* =====================================================
+       TOUCH
+    ===================================================== */
+
+    function handleTouchStart(
+      event: TouchEvent
+    ) {
+      touchYRef.current =
+        event.touches[0]
+          ?.clientY ??
+        null;
+    }
+
+
+    function handleTouchMove(
+      event: TouchEvent
+    ) {
+      const touch =
+        event.touches[0];
+
+      const previous =
+        touchYRef.current;
+
+      if (
+        !touch ||
+        previous === null
+      ) {
+        return;
+      }
+
+      event.preventDefault();
+
+      const delta =
+        previous -
+        touch.clientY;
+
+      touchYRef.current =
+        touch.clientY;
+
+      wheelDeltaRef.current +=
+        delta *
+        1.25;
+
+      scheduleWheel();
+    }
+
+
+    function handleTouchEnd() {
+      touchYRef.current =
+        null;
+    }
+
 
     window.addEventListener(
       "message",
       handleMessage
     );
 
+    window.addEventListener(
+      "wheel",
+      handleWheel,
+      {
+        passive: false,
+      }
+    );
+
+    window.addEventListener(
+      "touchstart",
+      handleTouchStart,
+      {
+        passive: true,
+      }
+    );
+
+    window.addEventListener(
+      "touchmove",
+      handleTouchMove,
+      {
+        passive: false,
+      }
+    );
+
+    window.addEventListener(
+      "touchend",
+      handleTouchEnd
+    );
+
+
+    /* =====================================================
+       READY
+    ===================================================== */
+
+    let secondFrame =
+      0;
+
+    const firstFrame =
+      requestAnimationFrame(
+        () => {
+          secondFrame =
+            requestAnimationFrame(
+              () => {
+                window.parent.postMessage(
+                  {
+                    source:
+                      SOURCE,
+
+                    type:
+                      "COORD_READY",
+                  },
+                  "*"
+                );
+              }
+            );
+        }
+      );
+
+
     return () => {
       window.removeEventListener(
         "message",
         handleMessage
       );
+
+      window.removeEventListener(
+        "wheel",
+        handleWheel
+      );
+
+      window.removeEventListener(
+        "touchstart",
+        handleTouchStart
+      );
+
+      window.removeEventListener(
+        "touchmove",
+        handleTouchMove
+      );
+
+      window.removeEventListener(
+        "touchend",
+        handleTouchEnd
+      );
+
+      cancelAnimationFrame(
+        firstFrame
+      );
+
+      cancelAnimationFrame(
+        secondFrame
+      );
+
+      if (
+        wheelFrameRef.current !==
+        null
+      ) {
+        cancelAnimationFrame(
+          wheelFrameRef.current
+        );
+      }
+
+      html.style.overflow =
+        oldHtmlOverflow;
+
+      body.style.overflow =
+        oldBodyOverflow;
     };
   }, []);
+
 
   return (
     <main
@@ -110,9 +420,19 @@ export default function CoordinatesEmbedPage() {
         magazineStyles.magazine,
         styles.page,
         styles.redTheme,
+
+        wixMode
+          ? styles.wixMode
+          : "",
       ].join(" ")}
     >
-      <OpeningHero />
+      <OpeningHero
+        externalProgress={
+          wixMode
+            ? progress
+            : undefined
+        }
+      />
     </main>
   );
 }

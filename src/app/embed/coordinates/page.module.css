@@ -1522,3 +1522,99 @@ div[class*="heroSticky"] {
   width: 0 !important;
   height: 0 !important;
 }
+/* =========================================================
+   WIX CONTROLLED SCROLL MODE
+========================================================= */
+
+.wixMode {
+  position: relative;
+
+  width: 100vw;
+  height: 100vh;
+
+  min-width: 100vw;
+  min-height: 100vh;
+
+  margin: 0;
+  padding: 0;
+
+  overflow: hidden !important;
+
+  background:
+    #080104 !important;
+}
+
+
+/*
+ * QUAN TRỌNG:
+ *
+ * Trong Wix mode,
+ * OpeningHero KHÔNG còn là section 560vh.
+ *
+ * Timeline được điều khiển bởi
+ * externalProgress.
+ */
+.wixMode
+section[class*="heroScene"] {
+  position: relative !important;
+
+  width: 100vw !important;
+  height: 100vh !important;
+
+  min-width: 100vw !important;
+  min-height: 100vh !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  overflow: hidden !important;
+
+  background:
+    #080104 !important;
+}
+
+
+/*
+ * Không cần sticky nội bộ nữa.
+ *
+ * Wix sticky iframe ở bên ngoài.
+ */
+.wixMode
+div[class*="heroSticky"] {
+  position: relative !important;
+
+  top: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+
+  width: 100vw !important;
+  height: 100vh !important;
+
+  min-width: 100vw !important;
+  min-height: 100vh !important;
+
+  max-width: none !important;
+  max-height: none !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  overflow: hidden !important;
+
+  background:
+    #080104 !important;
+}
+
+
+/*
+ * Wix iframe phải là viewport duy nhất.
+ */
+.wixMode,
+.wixMode
+section[class*="heroScene"],
+.wixMode
+div[class*="heroSticky"] {
+  box-sizing:
+    border-box !important;
+}

@@ -13,6 +13,7 @@ import type {
 
 import styles from "./MagazineExperience.module.css";
 
+
 /* =========================================================
    CONSTANTS
 ========================================================= */
@@ -22,13 +23,12 @@ const TRACE_COUNT = 500;
 const FINAL_PARTICLE_COUNT =
   1863;
 
+
 /*
-  Bounds mainland Việt Nam dùng cho visual.
-
-  Không dùng như dữ liệu địa lý chính xác
-  cho marker/tọa độ thực tế.
-*/
-
+ * Chỉ dùng cho visual searchlight/map.
+ *
+ * Không dùng như dữ liệu marker địa lý chính xác.
+ */
 const MAINLAND_BOUNDS = {
   minLng: 102,
   maxLng: 110.8,
@@ -36,6 +36,7 @@ const MAINLAND_BOUNDS = {
   minLat: 8,
   maxLat: 23.6,
 };
+
 
 /* =========================================================
    TYPES
@@ -46,11 +47,26 @@ type Point = {
   y: number;
 };
 
+
 type HeroData = {
   traces: Point[];
   number500: Point[];
   finalField: Point[];
 };
+
+
+type OpeningHeroProps = {
+  /*
+   * undefined:
+   * dùng scroll của page chính.
+   *
+   * number 0 → 1:
+   * progress được điều khiển từ ngoài,
+   * ví dụ Wix.
+   */
+  externalProgress?: number;
+};
+
 
 /* =========================================================
    HELPERS
@@ -70,6 +86,7 @@ function clamp(
   );
 }
 
+
 function phase(
   value: number,
   start: number,
@@ -81,13 +98,13 @@ function phase(
   );
 }
 
+
 /*
-  Deterministic PRNG.
-
-  Không dùng Math.random() khi tạo
-  layout để tránh hydration mismatch.
-*/
-
+ * Deterministic PRNG.
+ *
+ * Không dùng Math.random() để tránh
+ * hydration/layout thay đổi.
+ */
 function seededRandom(
   seed: number
 ) {
@@ -123,9 +140,6 @@ function seededRandom(
     4294967296;
 }
 
-/* =========================================================
-   EASING
-========================================================= */
 
 function easeInOutCubic(
   value: number
@@ -146,8 +160,22 @@ function easeInOutCubic(
           2;
 }
 
+
+function lerp(
+  a: number,
+  b: number,
+  amount: number
+) {
+  return (
+    a +
+    (b - a) *
+      amount
+  );
+}
+
+
 /* =========================================================
-   GEOJSON RING EXTRACTION
+   GEOJSON
 ========================================================= */
 
 function collectCoordinates(
@@ -159,7 +187,8 @@ function collectCoordinates(
     "Polygon"
   ) {
     for (
-      const ring of geometry.coordinates
+      const ring of
+      geometry.coordinates
     ) {
       output.push(
         ring as number[][]
@@ -169,15 +198,18 @@ function collectCoordinates(
     return;
   }
 
+
   if (
     geometry.type ===
     "MultiPolygon"
   ) {
     for (
-      const polygon of geometry.coordinates
+      const polygon of
+      geometry.coordinates
     ) {
       for (
-        const ring of polygon
+        const ring of
+        polygon
       ) {
         output.push(
           ring as number[][]
@@ -188,12 +220,14 @@ function collectCoordinates(
     return;
   }
 
+
   if (
     geometry.type ===
     "GeometryCollection"
   ) {
     for (
-      const child of geometry.geometries
+      const child of
+      geometry.geometries
     ) {
       collectCoordinates(
         child,
@@ -202,6 +236,7 @@ function collectCoordinates(
     }
   }
 }
+
 
 /* =========================================================
    PROJECT GEO COORDINATE
@@ -221,6 +256,7 @@ function projectLngLat(
       MAINLAND_BOUNDS.minLng
     );
 
+
   const y =
     1 -
     (
@@ -232,14 +268,16 @@ function projectLngLat(
       MAINLAND_BOUNDS.minLat
     );
 
+
   return {
     x,
     y,
   };
 }
 
+
 /* =========================================================
-   BUILD TRACE POINTS
+   BUILD TRACE
 ========================================================= */
 
 function buildTracePoints(
@@ -247,6 +285,7 @@ function buildTracePoints(
 ) {
   const candidates:
     Point[] = [];
+
 
   for (
     const ring of rings
@@ -259,6 +298,7 @@ function buildTracePoints(
       const coordinate =
         ring[i];
 
+
       if (
         !coordinate ||
         coordinate.length < 2
@@ -266,11 +306,13 @@ function buildTracePoints(
         continue;
       }
 
+
       const lng =
         coordinate[0];
 
       const lat =
         coordinate[1];
+
 
       if (
         lng <
@@ -285,6 +327,7 @@ function buildTracePoints(
         continue;
       }
 
+
       candidates.push(
         projectLngLat(
           lng,
@@ -294,6 +337,10 @@ function buildTracePoints(
     }
   }
 
+
+  /*
+   * Fallback nếu GeoJSON không load.
+   */
   if (
     candidates.length === 0
   ) {
@@ -302,7 +349,11 @@ function buildTracePoints(
         length:
           TRACE_COUNT,
       },
-      (_, index) => ({
+
+      (
+        _,
+        index
+      ) => ({
         x:
           0.35 +
           seededRandom(
@@ -320,12 +371,17 @@ function buildTracePoints(
     );
   }
 
+
   return Array.from(
     {
       length:
         TRACE_COUNT,
     },
-    (_, index) => {
+
+    (
+      _,
+      index
+    ) => {
       const source =
         candidates[
           Math.floor(
@@ -338,6 +394,7 @@ function buildTracePoints(
             candidates.length
         ];
 
+
       const jitterX =
         (
           seededRandom(
@@ -347,6 +404,7 @@ function buildTracePoints(
         ) *
         0.012;
 
+
       const jitterY =
         (
           seededRandom(
@@ -355,6 +413,7 @@ function buildTracePoints(
           0.5
         ) *
         0.012;
+
 
       return {
         x:
@@ -369,8 +428,9 @@ function buildTracePoints(
   );
 }
 
+
 /* =========================================================
-   BUILD 500 TARGET FROM OFFSCREEN CANVAS
+   BUILD 500 TARGET
 ========================================================= */
 
 function build500Target() {
@@ -379,17 +439,24 @@ function build500Target() {
       "canvas"
     );
 
-  canvas.width = 1200;
-  canvas.height = 600;
+
+  canvas.width =
+    1200;
+
+  canvas.height =
+    600;
+
 
   const context =
     canvas.getContext(
       "2d"
     );
 
+
   if (!context) {
     return [];
   }
+
 
   context.clearRect(
     0,
@@ -398,8 +465,10 @@ function build500Target() {
     canvas.height
   );
 
+
   context.fillStyle =
     "#ffffff";
+
 
   context.textAlign =
     "center";
@@ -407,14 +476,17 @@ function build500Target() {
   context.textBaseline =
     "middle";
 
+
   context.font =
     "800 430px Arial";
+
 
   context.fillText(
     "500",
     canvas.width / 2,
     canvas.height / 2
   );
+
 
   const image =
     context.getImageData(
@@ -424,10 +496,13 @@ function build500Target() {
       canvas.height
     );
 
+
   const candidates:
     Point[] = [];
 
+
   const step = 7;
+
 
   for (
     let y = 0;
@@ -450,8 +525,10 @@ function build500Target() {
           3
         ];
 
+
       if (
-        alpha > 120
+        alpha >
+        120
       ) {
         candidates.push({
           x:
@@ -466,27 +543,36 @@ function build500Target() {
     }
   }
 
+
   if (
     candidates.length === 0
   ) {
     return [];
   }
 
+
   return Array.from(
     {
       length:
         TRACE_COUNT,
     },
-    (_, index) => {
+
+    (
+      _,
+      index
+    ) => {
       const source =
         candidates[
           Math.floor(
             seededRandom(
-              index * 31 + 5
+              index *
+                31 +
+                5
             ) *
               candidates.length
           )
         ];
+
 
       return {
         x:
@@ -503,6 +589,7 @@ function build500Target() {
   );
 }
 
+
 /* =========================================================
    FINAL 1.863 FIELD
 ========================================================= */
@@ -513,13 +600,18 @@ function buildFinalField() {
       length:
         FINAL_PARTICLE_COUNT,
     },
-    (_, index) => {
+
+    (
+      _,
+      index
+    ) => {
       const angle =
         seededRandom(
           index * 47 + 3
         ) *
         Math.PI *
         2;
+
 
       const radius =
         Math.sqrt(
@@ -528,10 +620,6 @@ function buildFinalField() {
           )
         );
 
-      /*
-        Elliptical field:
-        particles disperse across viewport.
-      */
 
       const x =
         0.5 +
@@ -541,6 +629,7 @@ function buildFinalField() {
           radius *
           0.58;
 
+
       const y =
         0.5 +
         Math.sin(
@@ -548,6 +637,7 @@ function buildFinalField() {
         ) *
           radius *
           0.44;
+
 
       return {
         x,
@@ -557,86 +647,85 @@ function buildFinalField() {
   );
 }
 
-/* =========================================================
-   LERP
-========================================================= */
-
-function lerp(
-  a: number,
-  b: number,
-  amount: number
-) {
-  return (
-    a +
-    (b - a) *
-      amount
-  );
-}
 
 /* =========================================================
    COMPONENT
 ========================================================= */
 
-export default function OpeningHero() {
+export default function OpeningHero({
+  externalProgress,
+}: OpeningHeroProps) {
   const sectionRef =
     useRef<HTMLElement | null>(
       null
     );
+
 
   const canvasRef =
     useRef<HTMLCanvasElement | null>(
       null
     );
 
+
   const beamRef =
     useRef<HTMLDivElement | null>(
       null
     );
+
 
   const coordinateRef =
     useRef<HTMLDivElement | null>(
       null
     );
 
+
   const openingRef =
     useRef<HTMLDivElement | null>(
       null
     );
+
 
   const dayRef =
     useRef<HTMLDivElement | null>(
       null
     );
 
+
   const dayNumberRef =
     useRef<HTMLElement | null>(
       null
     );
+
 
   const stageWordRef =
     useRef<HTMLDivElement | null>(
       null
     );
 
+
   const title500Ref =
     useRef<HTMLDivElement | null>(
       null
     );
+
 
   const finalStatRef =
     useRef<HTMLDivElement | null>(
       null
     );
 
+
   const finalNumberRef =
     useRef<HTMLSpanElement | null>(
       null
     );
 
+
   const scrollCueRef =
     useRef<HTMLDivElement | null>(
       null
     );
+
 
   const heroDataRef =
     useRef<HeroData>({
@@ -645,8 +734,42 @@ export default function OpeningHero() {
       finalField: [],
     });
 
+
+  /*
+   * Progress được canvas dùng trực tiếp.
+   */
   const progressRef =
     useRef(0);
+
+
+  /*
+   * null:
+   * page chính tự tính từ scroll.
+   *
+   * number:
+   * Wix điều khiển.
+   */
+  const externalProgressRef =
+    useRef<number | null>(
+      typeof externalProgress ===
+        "number"
+        ? clamp(
+            externalProgress
+          )
+        : null
+    );
+
+
+  /*
+   * Cho phép externalProgress ép
+   * phần DOM cập nhật ngay.
+   */
+  const forceProgressUpdateRef =
+    useRef<
+      (() => void) |
+        null
+    >(null);
+
 
   const pointerRef =
     useRef({
@@ -654,10 +777,38 @@ export default function OpeningHero() {
       y: 0.5,
     });
 
+
   const [
     ready,
     setReady,
-  ] = useState(false);
+  ] =
+    useState(false);
+
+
+  /* =======================================================
+     EXTERNAL PROGRESS
+  ======================================================= */
+
+  useEffect(() => {
+    externalProgressRef.current =
+      typeof externalProgress ===
+        "number"
+        ? clamp(
+            externalProgress
+          )
+        : null;
+
+
+    /*
+     * Update text / opacity /
+     * DAY counter ngay khi Wix
+     * gửi progress mới.
+     */
+    forceProgressUpdateRef.current?.();
+  }, [
+    externalProgress,
+  ]);
+
 
   /* =======================================================
      BUILD HERO DATA
@@ -667,12 +818,14 @@ export default function OpeningHero() {
     let cancelled =
       false;
 
+
     async function build() {
       try {
         const response =
           await fetch(
             "/data/map/vietnam-provinces.geojson"
           );
+
 
         const geojson =
           (
@@ -681,11 +834,14 @@ export default function OpeningHero() {
             Geometry
           >;
 
+
         const rings:
           number[][][] = [];
 
+
         for (
-          const feature of geojson.features
+          const feature of
+          geojson.features
         ) {
           if (
             feature.geometry
@@ -697,25 +853,30 @@ export default function OpeningHero() {
           }
         }
 
-        if (cancelled) {
+
+        if (
+          cancelled
+        ) {
           return;
         }
 
-        heroDataRef.current =
-          {
-            traces:
-              buildTracePoints(
-                rings
-              ),
 
-            number500:
-              build500Target(),
+        heroDataRef.current = {
+          traces:
+            buildTracePoints(
+              rings
+            ),
 
-            finalField:
-              buildFinalField(),
-          };
+          number500:
+            build500Target(),
+
+          finalField:
+            buildFinalField(),
+        };
+
 
         setReady(true);
+
       } catch (
         error
       ) {
@@ -724,42 +885,51 @@ export default function OpeningHero() {
           error
         );
 
-        heroDataRef.current =
-          {
-            traces:
-              buildTracePoints(
-                []
-              ),
 
-            number500:
-              build500Target(),
+        heroDataRef.current = {
+          traces:
+            buildTracePoints(
+              []
+            ),
 
-            finalField:
-              buildFinalField(),
-          };
+          number500:
+            build500Target(),
+
+          finalField:
+            buildFinalField(),
+        };
+
 
         setReady(true);
       }
     }
 
+
     build();
 
+
     return () => {
-      cancelled = true;
+      cancelled =
+        true;
     };
   }, []);
 
+
   /* =======================================================
-     POINTER SEARCHLIGHT
+     POINTER / SEARCHLIGHT
   ======================================================= */
 
   useEffect(() => {
     const section =
       sectionRef.current;
 
-    if (!section) {
+
+    if (
+      !section
+    ) {
       return;
     }
+
 
     function updatePointer(
       clientX: number,
@@ -771,17 +941,19 @@ export default function OpeningHero() {
             window.innerWidth
         );
 
+
       const y =
         clamp(
           clientY /
             window.innerHeight
         );
 
-      pointerRef.current =
-        {
-          x,
-          y,
-        };
+
+      pointerRef.current = {
+        x,
+        y,
+      };
+
 
       if (
         beamRef.current
@@ -791,20 +963,17 @@ export default function OpeningHero() {
           `${clientX}px`
         );
 
+
         beamRef.current.style.setProperty(
           "--beam-y",
           `${clientY}px`
         );
       }
 
+
       if (
         coordinateRef.current
       ) {
-        /*
-          Visual mapping only.
-          Không phải tọa độ marker thực.
-        */
-
         const lng =
           lerp(
             MAINLAND_BOUNDS.minLng,
@@ -812,12 +981,14 @@ export default function OpeningHero() {
             x
           );
 
+
         const lat =
           lerp(
             MAINLAND_BOUNDS.maxLat,
             MAINLAND_BOUNDS.minLat,
             y
           );
+
 
         coordinateRef.current.textContent =
           `${lat.toFixed(
@@ -828,6 +999,7 @@ export default function OpeningHero() {
       }
     }
 
+
     function handlePointerMove(
       event: PointerEvent
     ) {
@@ -837,10 +1009,12 @@ export default function OpeningHero() {
       );
     }
 
+
     section.addEventListener(
       "pointermove",
       handlePointerMove
     );
+
 
     return () => {
       section.removeEventListener(
@@ -850,54 +1024,94 @@ export default function OpeningHero() {
     };
   }, []);
 
+
   /* =======================================================
-     SCROLL UI
+     PROGRESS → UI
   ======================================================= */
 
   useEffect(() => {
     const section =
       sectionRef.current;
 
-    if (!section) {
+
+    if (
+      !section
+    ) {
       return;
     }
 
-    let frame = 0;
+
+    let frame =
+      0;
+
 
     function update() {
       cancelAnimationFrame(
         frame
       );
 
+
       frame =
         requestAnimationFrame(
           () => {
-            const rect =
-              section.getBoundingClientRect();
+            /*
+             * =================================================
+             * CONTROLLED MODE:
+             * dùng progress từ Wix.
+             *
+             * NORMAL MODE:
+             * dùng scroll position như cũ.
+             * =================================================
+             */
 
-            const travel =
-              Math.max(
-                section.offsetHeight -
-                  window.innerHeight,
-                1
-              );
+            let progress:
+              number;
 
-            const progress =
+
+            if (
+              externalProgressRef.current !==
+              null
+            ) {
+              progress =
+                externalProgressRef.current;
+
+            } else {
+              const rect =
+                section.getBoundingClientRect();
+
+
+              const travel =
+                Math.max(
+                  section.offsetHeight -
+                    window.innerHeight,
+                  1
+                );
+
+
+              progress =
+                clamp(
+                  -rect.top /
+                    travel
+                );
+            }
+
+
+            progress =
               clamp(
-                -rect.top /
-                  travel
+                progress
               );
 
+
+            /*
+             * Canvas đọc cùng progress này.
+             */
             progressRef.current =
               progress;
 
-            /* ===========================================
-               OPENING STATEMENT
 
-               Hiện ở đầu.
-               Fade sớm.
-               Biến mất HOÀN TOÀN trước DAY 500 / visual 500.
-            ============================================ */
+            /* ===============================================
+               OPENING
+            =============================================== */
 
             const openingFade =
               phase(
@@ -906,6 +1120,7 @@ export default function OpeningHero() {
                 0.36
               );
 
+
             if (
               openingRef.current
             ) {
@@ -913,10 +1128,12 @@ export default function OpeningHero() {
                 1 -
                 openingFade;
 
+
               openingRef.current.style.opacity =
                 String(
                   opacity
                 );
+
 
               openingRef.current.style.transform =
                 `
@@ -932,6 +1149,7 @@ export default function OpeningHero() {
                   )
                 `;
 
+
               openingRef.current.style.visibility =
                 opacity <
                 0.01
@@ -939,9 +1157,10 @@ export default function OpeningHero() {
                   : "visible";
             }
 
-            /* ===========================================
+
+            /* ===============================================
                DAY 001 → DAY 500
-            ============================================ */
+            =============================================== */
 
             const dayProgress =
               phase(
@@ -950,11 +1169,13 @@ export default function OpeningHero() {
                 0.49
               );
 
+
             const day =
               Math.max(
                 1,
                 Math.min(
                   500,
+
                   Math.round(
                     1 +
                     dayProgress *
@@ -962,6 +1183,7 @@ export default function OpeningHero() {
                   )
                 )
               );
+
 
             if (
               dayNumberRef.current
@@ -975,6 +1197,7 @@ export default function OpeningHero() {
                 );
             }
 
+
             if (
               dayRef.current
             ) {
@@ -982,8 +1205,9 @@ export default function OpeningHero() {
                 phase(
                   progress,
                   0.045,
-                  0.1
+                  0.10
                 );
+
 
               const fadeOut =
                 phase(
@@ -991,6 +1215,7 @@ export default function OpeningHero() {
                   0.46,
                   0.53
                 );
+
 
               dayRef.current.style.opacity =
                 String(
@@ -1002,15 +1227,17 @@ export default function OpeningHero() {
                 );
             }
 
-            /* ===========================================
-               SEARCH PHASE WORD
-            ============================================ */
+
+            /* ===============================================
+               STAGE WORD
+            =============================================== */
 
             if (
               stageWordRef.current
             ) {
               let word =
                 "TÌM KIẾM";
+
 
               if (
                 dayProgress >
@@ -1020,6 +1247,7 @@ export default function OpeningHero() {
                   "QUY TẬP";
               }
 
+
               if (
                 dayProgress >
                 0.74
@@ -1028,8 +1256,10 @@ export default function OpeningHero() {
                   "DANH TÍNH";
               }
 
+
               stageWordRef.current.textContent =
                 word;
+
 
               stageWordRef.current.style.opacity =
                 String(
@@ -1049,9 +1279,10 @@ export default function OpeningHero() {
                 );
             }
 
-            /* ===========================================
+
+            /* ===============================================
                500 TITLE
-            ============================================ */
+            =============================================== */
 
             const title500In =
               phase(
@@ -1060,12 +1291,14 @@ export default function OpeningHero() {
                 0.60
               );
 
+
             const title500Out =
               phase(
                 progress,
                 0.68,
                 0.76
               );
+
 
             if (
               title500Ref.current
@@ -1077,10 +1310,12 @@ export default function OpeningHero() {
                   title500Out
                 );
 
+
               title500Ref.current.style.opacity =
                 String(
                   opacity
                 );
+
 
               title500Ref.current.style.transform =
                 `
@@ -1095,9 +1330,10 @@ export default function OpeningHero() {
                 `;
             }
 
-            /* ===========================================
+
+            /* ===============================================
                FINAL 1.863
-            ============================================ */
+            =============================================== */
 
             const finalIn =
               phase(
@@ -1106,6 +1342,7 @@ export default function OpeningHero() {
                 0.89
               );
 
+
             if (
               finalStatRef.current
             ) {
@@ -1113,6 +1350,7 @@ export default function OpeningHero() {
                 String(
                   finalIn
                 );
+
 
               finalStatRef.current.style.transform =
                 `
@@ -1127,6 +1365,7 @@ export default function OpeningHero() {
                 `;
             }
 
+
             if (
               finalNumberRef.current
             ) {
@@ -1139,27 +1378,39 @@ export default function OpeningHero() {
                   )
                 );
 
-              const formattedFinalNumber =
-                displayed >= 1000
-                  ? `${Math.floor(
-                      displayed / 1000
-                    )}\u2009.\u2009${String(
-                      displayed % 1000
-                    ).padStart(
-                      3,
-                      "0"
-                    )}`
+
+              const formatted =
+                displayed >=
+                1000
+
+                  ? `${
+                      Math.floor(
+                        displayed /
+                          1000
+                      )
+                    }\u2009.\u2009${
+                      String(
+                        displayed %
+                          1000
+                      ).padStart(
+                        3,
+                        "0"
+                      )
+                    }`
+
                   : String(
                       displayed
                     );
 
+
               finalNumberRef.current.textContent =
-                formattedFinalNumber;
+                formatted;
             }
 
-            /* ===========================================
-               SEARCHLIGHT VISIBILITY
-            ============================================ */
+
+            /* ===============================================
+               SEARCHLIGHT
+            =============================================== */
 
             if (
               beamRef.current
@@ -1175,6 +1426,7 @@ export default function OpeningHero() {
                 );
             }
 
+
             if (
               coordinateRef.current
             ) {
@@ -1189,9 +1441,10 @@ export default function OpeningHero() {
                 );
             }
 
-            /* ===========================================
+
+            /* ===============================================
                SCROLL CUE
-            ============================================ */
+            =============================================== */
 
             if (
               scrollCueRef.current
@@ -1210,8 +1463,25 @@ export default function OpeningHero() {
         );
     }
 
+
+    /*
+     * Cho externalProgress effect
+     * ép update UI.
+     */
+    forceProgressUpdateRef.current =
+      update;
+
+
     update();
 
+
+    /*
+     * Giữ listener để page chính
+     * hoạt động như trước.
+     *
+     * Khi externalProgress có giá trị,
+     * update() sẽ ưu tiên nó.
+     */
     window.addEventListener(
       "scroll",
       update,
@@ -1220,20 +1490,28 @@ export default function OpeningHero() {
       }
     );
 
+
     window.addEventListener(
       "resize",
       update
     );
+
 
     return () => {
       cancelAnimationFrame(
         frame
       );
 
+
+      forceProgressUpdateRef.current =
+        null;
+
+
       window.removeEventListener(
         "scroll",
         update
       );
+
 
       window.removeEventListener(
         "resize",
@@ -1242,591 +1520,449 @@ export default function OpeningHero() {
     };
   }, []);
 
-/* =======================================================
-   CANVAS RENDER LOOP
-   DARK RED PARTICLE VERSION
-======================================================= */
 
-useEffect(() => {
-  if (!ready) {
-    return;
-  }
+  /* =======================================================
+     CANVAS
+  ======================================================= */
 
-  const canvas =
-    canvasRef.current;
-
-  if (!canvas) {
-    return;
-  }
-
-  const context =
-    canvas.getContext(
-      "2d"
-    );
-
-  if (!context) {
-    return;
-  }
-
-  let animationFrame =
-    0;
-
-  let width =
-    0;
-
-  let height =
-    0;
-
-  let dpr =
-    1;
-
-
-  /* =====================================================
-     RESIZE
-
-     Giảm DPR từ 2 xuống 1.35
-     để canvas nhẹ hơn khi nhúng Wix.
-  ===================================================== */
-
-  function resize() {
-    width =
-      window.innerWidth;
-
-    height =
-      window.innerHeight;
-
-    dpr =
-      Math.min(
-        window.devicePixelRatio ||
-          1,
-        1.35
-      );
-
-    canvas.width =
-      Math.round(
-        width *
-          dpr
-      );
-
-    canvas.height =
-      Math.round(
-        height *
-          dpr
-      );
-
-    canvas.style.width =
-      `${width}px`;
-
-    canvas.style.height =
-      `${height}px`;
-
-    context.setTransform(
-      dpr,
-      0,
-      0,
-      dpr,
-      0,
-      0
-    );
-  }
-
-
-  resize();
-
-
-  /* =====================================================
-     RENDER
-  ===================================================== */
-
-  function render(
-    time: number
-  ) {
-    const {
-      traces,
-      number500,
-      finalField,
-    } =
-      heroDataRef.current;
-
-
-    const progress =
-      progressRef.current;
-
-
-    context.clearRect(
-      0,
-      0,
-      width,
-      height
-    );
-
-
-    /* ===================================================
-       CHƯA CUỘN → KHÔNG VẼ PARTICLE
-    =================================================== */
-
+  useEffect(() => {
     if (
-      progress <=
-      0.025
+      !ready
     ) {
-      animationFrame =
-        requestAnimationFrame(
-          render
-        );
-
       return;
     }
 
 
-    /* ===================================================
-       PARTICLE FADE IN
-    =================================================== */
-
-    const particleReveal =
-      easeInOutCubic(
-        phase(
-          progress,
-          0.025,
-          0.10
-        )
-      );
-
-
-    /* ===================================================
-       PHASES
-    =================================================== */
-
-    const mapPhase =
-      phase(
-        progress,
-        0.055,
-        0.48
-      );
-
-
-    const morph500 =
-      easeInOutCubic(
-        phase(
-          progress,
-          0.49,
-          0.67
-        )
-      );
-
-
-    const dissolve =
-      easeInOutCubic(
-        phase(
-          progress,
-          0.70,
-          0.90
-        )
-      );
-
-
-    /* ===================================================
-       MAP SIZE
-    =================================================== */
-
-    const mapWidth =
-      Math.min(
-        width *
-          0.43,
-        470
-      );
-
-
-    const mapHeight =
-      Math.min(
-        height *
-          0.74,
-        720
-      );
-
-
-    const mapLeft =
-      width *
-        0.5 -
-      mapWidth /
-        2;
-
-
-    const mapTop =
-      height *
-        0.5 -
-      mapHeight /
-        2;
-
-
-    const pointer =
-      pointerRef.current;
-
-
-    /* ===================================================
-       TRACE PARTICLES
-       500 PARTICLES
-
-       MAIN DARK RED
-       #94261F
-    =================================================== */
-
-    for (
-      let i =
-        0;
-      i <
-      TRACE_COUNT;
-      i++
-    ) {
-      const source =
-        traces[i];
-
-
-      if (!source) {
-        continue;
-      }
-
-
-      const target500 =
-        number500[i] ||
-        source;
-
-
-      const targetFinal =
-        finalField[i] ||
-        target500;
-
-
-      /* ===============================================
-         INITIAL POSITION
-      =============================================== */
-
-      const initialX =
-        mapLeft +
-        source.x *
-          mapWidth;
-
-
-      const initialY =
-        mapTop +
-        source.y *
-          mapHeight;
-
-
-      /* ===============================================
-         500 POSITION
-      =============================================== */
-
-      const numberX =
-        target500.x *
-        width;
-
-
-      const numberY =
-        target500.y *
-        height;
-
-
-      /* ===============================================
-         FINAL POSITION
-      =============================================== */
-
-      const finalX =
-        targetFinal.x *
-        width;
-
-
-      const finalY =
-        targetFinal.y *
-        height;
-
-
-      /* ===============================================
-         MAP → 500
-      =============================================== */
-
-      let x =
-        lerp(
-          initialX,
-          numberX,
-          morph500
-        );
-
-
-      let y =
-        lerp(
-          initialY,
-          numberY,
-          morph500
-        );
-
-
-      /* ===============================================
-         500 → 1863 FIELD
-      =============================================== */
-
-      x =
-        lerp(
-          x,
-          finalX,
-          dissolve
-        );
-
-
-      y =
-        lerp(
-          y,
-          finalY,
-          dissolve
-        );
-
-
-      /* ===============================================
-         REVEAL
-      =============================================== */
-
-      const revealIndex =
-        i /
-        TRACE_COUNT;
-
-
-      const reveal =
-        clamp(
-          (
-            mapPhase -
-            revealIndex *
-              0.78
-          ) *
-            5
-        );
-
-
-      /* ===============================================
-         PULSE
-      =============================================== */
-
-      const pulse =
-        0.78 +
-        Math.sin(
-          time *
-            0.00125 +
-          i *
-            0.71
-        ) *
-          0.16;
-
-
-      let alpha =
-        reveal *
-        pulse;
-
-
-      /*
-       * Fade particle sau khi người dùng
-       * thực sự bắt đầu cuộn.
-       */
-      alpha *=
-        particleReveal;
-
-
-      /* ===============================================
-         500 OPACITY
-      =============================================== */
-
-      alpha =
-        lerp(
-          alpha,
-          0.72,
-          morph500
-        );
-
-
-      /* ===============================================
-         FINAL OPACITY
-      =============================================== */
-
-      alpha =
-        lerp(
-          alpha,
-          0.28,
-          dissolve
-        );
-
-
-      /* ===============================================
-         SEARCHLIGHT
-      =============================================== */
-
-      const dx =
-        x -
-        pointer.x *
-          width;
-
-
-      const dy =
-        y -
-        pointer.y *
-          height;
-
-
-      const distance =
-        Math.sqrt(
-          dx *
-            dx +
-          dy *
-            dy
-        );
-
-
-      const searchBoost =
-        1 -
-        clamp(
-          distance /
-            190
-        );
-
-
-      alpha +=
-        searchBoost *
-        (
-          1 -
-          morph500
-        ) *
-        0.72 *
-        particleReveal;
-
-
-      /* ===============================================
-         SIZE
-      =============================================== */
-
-      const radius =
-        lerp(
-          1.1,
-          1.8,
-          morph500
-        );
-
-
-      /* ===============================================
-         DRAW
-      =============================================== */
-
-      context.beginPath();
-
-
-      context.arc(
-        x,
-        y,
-        radius,
-        0,
-        Math.PI *
-          2
-      );
-
-
-      /*
-       * ĐỎ ĐẬM CHÍNH
-       *
-       * #94261F
-       */
-      context.fillStyle =
-        `rgba(
-          132,
-          27,
-          42,
-          ${
-            clamp(
-              alpha
-            )
-          }
-        )`;
-
-
-      context.fill();
-    }
-
-
-    /* ===================================================
-       EXTRA PARTICLES
-       500 → 1863
-
-       DARKER RED
-       #691512
-    =================================================== */
-
-    const extraReveal =
-      dissolve;
+    const canvas =
+      canvasRef.current;
 
 
     if (
-      extraReveal >
-      0
+      !canvas
     ) {
+      return;
+    }
+
+
+    const context =
+      canvas.getContext(
+        "2d"
+      );
+
+
+    if (
+      !context
+    ) {
+      return;
+    }
+
+
+    let animationFrame =
+      0;
+
+
+    let width =
+      0;
+
+    let height =
+      0;
+
+    let dpr =
+      1;
+
+
+    /* =====================================================
+       RESIZE
+    ===================================================== */
+
+    function resize() {
+      width =
+        window.innerWidth;
+
+
+      height =
+        window.innerHeight;
+
+
+      /*
+       * Giới hạn DPR để Wix nhẹ hơn.
+       */
+      dpr =
+        Math.min(
+          window.devicePixelRatio ||
+            1,
+          1.35
+        );
+
+
+      canvas.width =
+        Math.round(
+          width *
+            dpr
+        );
+
+
+      canvas.height =
+        Math.round(
+          height *
+            dpr
+        );
+
+
+      canvas.style.width =
+        `${width}px`;
+
+
+      canvas.style.height =
+        `${height}px`;
+
+
+      context.setTransform(
+        dpr,
+        0,
+        0,
+        dpr,
+        0,
+        0
+      );
+    }
+
+
+    resize();
+
+
+    /* =====================================================
+       RENDER
+    ===================================================== */
+
+    function render(
+      time: number
+    ) {
+      const {
+        traces,
+        number500,
+        finalField,
+      } =
+        heroDataRef.current;
+
+
+      const progress =
+        progressRef.current;
+
+
+      context.clearRect(
+        0,
+        0,
+        width,
+        height
+      );
+
+
+      /*
+       * Chưa bắt đầu scroll:
+       * chưa vẽ particle.
+       */
+      if (
+        progress <=
+        0.025
+      ) {
+        animationFrame =
+          requestAnimationFrame(
+            render
+          );
+
+        return;
+      }
+
+
+      /* ===================================================
+         REVEAL
+      =================================================== */
+
+      const particleReveal =
+        easeInOutCubic(
+          phase(
+            progress,
+            0.025,
+            0.10
+          )
+        );
+
+
+      const mapPhase =
+        phase(
+          progress,
+          0.055,
+          0.48
+        );
+
+
+      const morph500 =
+        easeInOutCubic(
+          phase(
+            progress,
+            0.49,
+            0.67
+          )
+        );
+
+
+      const dissolve =
+        easeInOutCubic(
+          phase(
+            progress,
+            0.70,
+            0.90
+          )
+        );
+
+
+      /* ===================================================
+         MAP SIZE
+      =================================================== */
+
+      const mapWidth =
+        Math.min(
+          width *
+            0.43,
+          470
+        );
+
+
+      const mapHeight =
+        Math.min(
+          height *
+            0.74,
+          720
+        );
+
+
+      const mapLeft =
+        width *
+          0.5 -
+        mapWidth /
+          2;
+
+
+      const mapTop =
+        height *
+          0.5 -
+        mapHeight /
+          2;
+
+
+      const pointer =
+        pointerRef.current;
+
+
+      /* ===================================================
+         TRACE 500 PARTICLES
+      =================================================== */
+
       for (
-        let i =
-          TRACE_COUNT;
+        let i = 0;
         i <
-        FINAL_PARTICLE_COUNT;
+        TRACE_COUNT;
         i++
       ) {
-        const point =
-          finalField[i];
-
-
-        if (!point) {
-          continue;
-        }
-
-
-        const threshold =
-          (
-            i -
-            TRACE_COUNT
-          ) /
-          (
-            FINAL_PARTICLE_COUNT -
-            TRACE_COUNT
-          );
-
-
-        const reveal =
-          clamp(
-            (
-              extraReveal -
-              threshold *
-                0.55
-            ) *
-              4
-          );
+        const source =
+          traces[i];
 
 
         if (
-          reveal <=
-          0
+          !source
         ) {
           continue;
         }
 
 
-        const x =
-          point.x *
+        const target500 =
+          number500[i] ||
+          source;
+
+
+        const targetFinal =
+          finalField[i] ||
+          target500;
+
+
+        const initialX =
+          mapLeft +
+          source.x *
+            mapWidth;
+
+
+        const initialY =
+          mapTop +
+          source.y *
+            mapHeight;
+
+
+        const numberX =
+          target500.x *
           width;
 
 
-        const y =
-          point.y *
+        const numberY =
+          target500.y *
           height;
 
 
+        const finalX =
+          targetFinal.x *
+          width;
+
+
+        const finalY =
+          targetFinal.y *
+          height;
+
+
+        /*
+         * Map → 500.
+         */
+        let x =
+          lerp(
+            initialX,
+            numberX,
+            morph500
+          );
+
+
+        let y =
+          lerp(
+            initialY,
+            numberY,
+            morph500
+          );
+
+
+        /*
+         * 500 → 1.863 field.
+         */
+        x =
+          lerp(
+            x,
+            finalX,
+            dissolve
+          );
+
+
+        y =
+          lerp(
+            y,
+            finalY,
+            dissolve
+          );
+
+
+        const revealIndex =
+          i /
+          TRACE_COUNT;
+
+
+        const reveal =
+          clamp(
+            (
+              mapPhase -
+              revealIndex *
+                0.78
+            ) *
+              5
+          );
+
+
         const pulse =
-          0.62 +
+          0.78 +
           Math.sin(
             time *
-              0.001 +
+              0.00125 +
             i *
-              0.42
+              0.71
           ) *
-            0.18;
+            0.16;
+
+
+        let alpha =
+          reveal *
+          pulse;
+
+
+        alpha *=
+          particleReveal;
+
+
+        /*
+         * Khi tạo hình 500.
+         */
+        alpha =
+          lerp(
+            alpha,
+            0.72,
+            morph500
+          );
+
+
+        /*
+         * Khi phân tán final.
+         */
+        alpha =
+          lerp(
+            alpha,
+            0.28,
+            dissolve
+          );
+
+
+        /* ===============================================
+           SEARCHLIGHT BOOST
+        =============================================== */
+
+        const dx =
+          x -
+          pointer.x *
+            width;
+
+
+        const dy =
+          y -
+          pointer.y *
+            height;
+
+
+        const distance =
+          Math.sqrt(
+            dx *
+              dx +
+            dy *
+              dy
+          );
+
+
+        const searchBoost =
+          1 -
+          clamp(
+            distance /
+              190
+          );
+
+
+        alpha +=
+          searchBoost *
+          (
+            1 -
+            morph500
+          ) *
+          0.72 *
+          particleReveal;
+
+
+        const radius =
+          lerp(
+            1.1,
+            1.8,
+            morph500
+          );
 
 
         context.beginPath();
@@ -1835,7 +1971,7 @@ useEffect(() => {
         context.arc(
           x,
           y,
-          1.08,
+          radius,
           0,
           Math.PI *
             2
@@ -1843,20 +1979,18 @@ useEffect(() => {
 
 
         /*
-         * ĐỎ RƯỢU / ĐỎ RẤT ĐẬM
+         * Burgundy main:
          *
-         * #691512
+         * #841B2A
          */
         context.fillStyle =
           `rgba(
-            92,
-            16,
+            132,
             27,
+            42,
             ${
               clamp(
-                reveal *
-                pulse *
-                0.62
+                alpha
               )
             }
           )`;
@@ -1864,54 +1998,164 @@ useEffect(() => {
 
         context.fill();
       }
+
+
+      /* ===================================================
+         EXTRA PARTICLES
+         500 → 1863
+      =================================================== */
+
+      const extraReveal =
+        dissolve;
+
+
+      if (
+        extraReveal >
+        0
+      ) {
+        for (
+          let i =
+            TRACE_COUNT;
+
+          i <
+          FINAL_PARTICLE_COUNT;
+
+          i++
+        ) {
+          const point =
+            finalField[i];
+
+
+          if (
+            !point
+          ) {
+            continue;
+          }
+
+
+          const threshold =
+            (
+              i -
+              TRACE_COUNT
+            ) /
+            (
+              FINAL_PARTICLE_COUNT -
+              TRACE_COUNT
+            );
+
+
+          const reveal =
+            clamp(
+              (
+                extraReveal -
+                threshold *
+                  0.55
+              ) *
+                4
+            );
+
+
+          if (
+            reveal <=
+            0
+          ) {
+            continue;
+          }
+
+
+          const x =
+            point.x *
+            width;
+
+
+          const y =
+            point.y *
+            height;
+
+
+          const pulse =
+            0.62 +
+            Math.sin(
+              time *
+                0.001 +
+              i *
+                0.42
+            ) *
+              0.18;
+
+
+          context.beginPath();
+
+
+          context.arc(
+            x,
+            y,
+            1.08,
+            0,
+            Math.PI *
+              2
+          );
+
+
+          /*
+           * Burgundy dark:
+           *
+           * #5C101B
+           */
+          context.fillStyle =
+            `rgba(
+              92,
+              16,
+              27,
+              ${
+                clamp(
+                  reveal *
+                  pulse *
+                  0.62
+                )
+              }
+            )`;
+
+
+          context.fill();
+        }
+      }
+
+
+      animationFrame =
+        requestAnimationFrame(
+          render
+        );
     }
 
-
-    /* ===================================================
-       NEXT FRAME
-    =================================================== */
 
     animationFrame =
       requestAnimationFrame(
         render
       );
-  }
 
 
-  /* =====================================================
-     START
-  ===================================================== */
-
-  animationFrame =
-    requestAnimationFrame(
-      render
-    );
-
-
-  window.addEventListener(
-    "resize",
-    resize
-  );
-
-
-  /* =====================================================
-     CLEANUP
-  ===================================================== */
-
-  return () => {
-    cancelAnimationFrame(
-      animationFrame
-    );
-
-
-    window.removeEventListener(
+    window.addEventListener(
       "resize",
       resize
     );
-  };
-}, [
-  ready,
-]);
+
+
+    return () => {
+      cancelAnimationFrame(
+        animationFrame
+      );
+
+
+      window.removeEventListener(
+        "resize",
+        resize
+      );
+    };
+  }, [
+    ready,
+  ]);
+
 
   /* =======================================================
      RENDER
@@ -1930,9 +2174,7 @@ useEffect(() => {
           styles.heroSticky
         }
       >
-        {/* ===============================================
-            PARTICLE CANVAS
-        ================================================ */}
+        {/* PARTICLE */}
 
         <canvas
           ref={canvasRef}
@@ -1942,9 +2184,8 @@ useEffect(() => {
           aria-hidden="true"
         />
 
-        {/* ===============================================
-            SEARCHLIGHT
-        ================================================ */}
+
+        {/* SEARCHLIGHT */}
 
         <div
           ref={beamRef}
@@ -1954,9 +2195,8 @@ useEffect(() => {
           aria-hidden="true"
         />
 
-        {/* ===============================================
-            FILM / ATMOSPHERE
-        ================================================ */}
+
+        {/* ATMOSPHERE */}
 
         <div
           className={
@@ -1965,6 +2205,7 @@ useEffect(() => {
           aria-hidden="true"
         />
 
+
         <div
           className={
             styles.heroVignette
@@ -1972,9 +2213,8 @@ useEffect(() => {
           aria-hidden="true"
         />
 
-        {/* ===============================================
-            TOP CHROME
-        ================================================ */}
+
+        {/* TOP CHROME */}
 
         <div
           className={
@@ -1994,11 +2234,8 @@ useEffect(() => {
           </span>
         </div>
 
-        {/* ===============================================
-            OPENING STATEMENT
 
-            Fade hoàn toàn trước visual 500.
-        ================================================ */}
+        {/* OPENING */}
 
         <div
           ref={openingRef}
@@ -2015,9 +2252,8 @@ useEffect(() => {
           </strong>
         </div>
 
-        {/* ===============================================
-            COORDINATE
-        ================================================ */}
+
+        {/* COORDINATE */}
 
         <div
           ref={coordinateRef}
@@ -2028,9 +2264,8 @@ useEffect(() => {
           21.028° N / 105.834° E
         </div>
 
-        {/* ===============================================
-            DAY
-        ================================================ */}
+
+        {/* DAY */}
 
         <div
           ref={dayRef}
@@ -2051,12 +2286,13 @@ useEffect(() => {
           </strong>
         </div>
 
-        {/* ===============================================
-            STAGE WORD
-        ================================================ */}
+
+        {/* STAGE WORD */}
 
         <div
-          ref={stageWordRef}
+          ref={
+            stageWordRef
+          }
           className={
             styles.heroStageWord
           }
@@ -2065,12 +2301,13 @@ useEffect(() => {
           TÌM KIẾM
         </div>
 
-        {/* ===============================================
-            500
-        ================================================ */}
+
+        {/* 500 */}
 
         <div
-          ref={title500Ref}
+          ref={
+            title500Ref
+          }
           className={
             styles.hero500Title
           }
@@ -2093,12 +2330,13 @@ useEffect(() => {
           </p>
         </div>
 
-        {/* ===============================================
-            1.863
-        ================================================ */}
+
+        {/* FINAL */}
 
         <div
-          ref={finalStatRef}
+          ref={
+            finalStatRef
+          }
           className={
             styles.heroFinalStat
           }
@@ -2129,12 +2367,13 @@ useEffect(() => {
           </i>
         </div>
 
-        {/* ===============================================
-            SCROLL
-        ================================================ */}
+
+        {/* SCROLL CUE */}
 
         <div
-          ref={scrollCueRef}
+          ref={
+            scrollCueRef
+          }
           className={
             styles.scrollCue
           }
