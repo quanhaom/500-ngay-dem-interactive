@@ -2,7 +2,6 @@
 
 import {
   useEffect,
-  useState,
 } from "react";
 
 import OpeningHero from "../../../components/magazine/OpeningHero";
@@ -30,13 +29,6 @@ function clamp(
 
 
 export default function CoordinatesEmbedPage() {
-  const [
-    wixMode,
-    setWixMode,
-  ] =
-    useState(false);
-
-
   useEffect(() => {
     const params =
       new URLSearchParams(
@@ -44,38 +36,22 @@ export default function CoordinatesEmbedPage() {
       );
 
 
-    const isWix =
+    const wixMode =
       params.get("wix") ===
       "1";
 
 
-    setWixMode(
-      isWix
-    );
-
-
     /*
-     * Route thường:
+     * Direct route:
      *
      * /embed/coordinates/
      *
-     * KHÔNG làm gì.
-     * OpeningHero scroll tự nhiên
-     * giống page chính.
+     * giữ nguyên scroll tự nhiên
+     * giống web chính.
      */
-    if (!isWix) {
+    if (!wixMode) {
       return;
     }
-
-
-    /*
-     * Wix mode:
-     *
-     * Không bắt wheel.
-     * Không gửi COORD_WHEEL.
-     *
-     * Chỉ nhận progress từ Wix.
-     */
 
 
     function getMaxScroll() {
@@ -127,16 +103,10 @@ export default function CoordinatesEmbedPage() {
         getMaxScroll();
 
 
-      /*
-       * OpeningHero gốc đang dùng
-       * window.scroll để tính progress.
-       *
-       * Ta giữ nguyên OpeningHero.
-       */
       window.scrollTo({
         top:
-          maxScroll *
-          progress,
+          progress *
+          maxScroll,
 
         left:
           0,
@@ -168,10 +138,6 @@ export default function CoordinatesEmbedPage() {
         magazineStyles.magazine,
         styles.page,
         styles.redTheme,
-
-        wixMode
-          ? styles.wixMode
-          : "",
       ].join(" ")}
     >
       <OpeningHero />
