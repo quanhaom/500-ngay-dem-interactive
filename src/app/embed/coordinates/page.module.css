@@ -1470,3 +1470,152 @@ div[class*="heroSticky"] {
   isolation:
     isolate;
 }
+
+/* =========================================================
+   FINAL SCROLLYTELLING SCENE
+   DO NOT MIX WITH OLD .wixMode
+========================================================= */
+
+.sceneMode {
+  position: relative !important;
+
+  width: 100% !important;
+  height: 100vh !important;
+
+  min-width: 0 !important;
+  min-height: 100vh !important;
+
+  max-width: none !important;
+  max-height: 100vh !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  overflow: hidden !important;
+
+  overscroll-behavior:
+    none !important;
+
+  background:
+    #080104 !important;
+}
+
+
+/*
+ * externalProgress điều khiển timeline.
+ *
+ * Hero không còn cần 560vh
+ * trong Wix mode.
+ */
+.sceneMode
+section[class*="heroScene"] {
+  position:
+    relative !important;
+
+  width:
+    100% !important;
+
+  height:
+    100vh !important;
+
+  min-height:
+    100vh !important;
+
+  max-height:
+    100vh !important;
+
+  margin:
+    0 !important;
+
+  padding:
+    0 !important;
+
+  overflow:
+    hidden !important;
+
+  background:
+    #080104 !important;
+}
+
+
+/*
+ * Không sticky nội bộ.
+ *
+ * Scene đứng yên vì Wix page
+ * không di chuyển trong lúc
+ * progress 0 → 1.
+ */
+.sceneMode
+div[class*="heroSticky"] {
+  position:
+    relative !important;
+
+  inset:
+    auto !important;
+
+  top:
+    auto !important;
+
+  right:
+    auto !important;
+
+  bottom:
+    auto !important;
+
+  left:
+    auto !important;
+
+  width:
+    100% !important;
+
+  height:
+    100vh !important;
+
+  min-height:
+    100vh !important;
+
+  max-height:
+    100vh !important;
+
+  margin:
+    0 !important;
+
+  padding:
+    0 !important;
+
+  overflow:
+    hidden !important;
+
+  background:
+    #080104 !important;
+
+  isolation:
+    isolate !important;
+}
+
+
+/*
+ * Full canvas.
+ */
+.sceneMode
+canvas[class*="heroCanvas"] {
+  width:
+    100% !important;
+
+  height:
+    100% !important;
+}
+
+
+/*
+ * Không để parent tạo
+ * internal scrolling.
+ */
+.sceneMode,
+.sceneMode
+section[class*="heroScene"],
+.sceneMode
+div[class*="heroSticky"] {
+  box-sizing:
+    border-box !important;
+}
