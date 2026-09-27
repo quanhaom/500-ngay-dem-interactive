@@ -1225,17 +1225,28 @@ span {
 
 
 /* =========================================================
-   KEEP STICKY WORKING
+   FINAL COORDINATE LAYOUT
 ========================================================= */
 
 .page {
-  overflow-x:
-    clip !important;
+  position: relative;
 
-  overflow-y:
-    visible !important;
+  width: 100%;
+  min-height: 100vh;
+
+  margin: 0;
+  padding: 0;
+
+  overflow-x: clip;
+
+  background:
+    #080104 !important;
 }
 
+
+/* =========================================================
+   NORMAL / DIRECT MODE
+========================================================= */
 
 .redTheme {
   overflow:
@@ -1248,11 +1259,20 @@ section[class*="heroScene"] {
   position:
     relative !important;
 
+  width:
+    100% !important;
+
   height:
+    560vh !important;
+
+  min-height:
     560vh !important;
 
   overflow:
     visible !important;
+
+  background:
+    #080104 !important;
 }
 
 
@@ -1270,16 +1290,32 @@ div[class*="heroSticky"] {
   height:
     100vh !important;
 
-  height:
-    100svh !important;
+  min-height:
+    100vh !important;
+
+  max-height:
+    100vh !important;
 
   overflow:
     hidden !important;
+
+  background:
+    #080104 !important;
+
+  isolation:
+    isolate;
 }
 
 
+/* =========================================================
+   DOCUMENT
+========================================================= */
+
 :global(html),
 :global(body) {
+  width:
+    100%;
+
   margin:
     0 !important;
 
@@ -1293,89 +1329,39 @@ div[class*="heroSticky"] {
     #080104 !important;
 
   scrollbar-width:
-    none !important;
+    none;
 
   -ms-overflow-style:
-    none !important;
+    none;
 }
 
 
 :global(html::-webkit-scrollbar),
 :global(body::-webkit-scrollbar) {
   display:
-    none !important;
-}
-
-/* =========================================================
-   WIX EMBED MODE
-   Outer Wix page owns the scroll.
-========================================================= */
-
-.wixMode {
-  position:
-    relative;
+    none;
 
   width:
-    100%;
-
-  min-height:
-    560vh;
-
-  overflow:
-    visible !important;
-
-  background:
-    #080104 !important;
-}
-
-
-/*
- * Giữ document 560vh để OpeningHero
- * vẫn tính progress giống page chính.
- */
-.wixMode
-section[class*="heroScene"] {
-  position:
-    relative !important;
+    0;
 
   height:
-    560vh !important;
-
-  overflow:
-    visible !important;
-
-  background:
-    #080104 !important;
+    0;
 }
 
 
+/* =========================================================
+   WIX CONTROLLED MODE
+========================================================= */
+
 /*
- * CỰC KỲ QUAN TRỌNG.
+ * Wix section bên ngoài mới là
+ * scroll track.
  *
- * Trong Wix không dùng sticky nội bộ nữa.
- *
- * Wix bên ngoài đã sticky cả iframe.
- * Bên trong iframe chỉ cần viewport cố định.
- *
- * Điều này loại bỏ hoàn toàn lỗi:
- *
- * DAY 034
- * --------
- * màn hình đen phía dưới
+ * Iframe chỉ là viewport 100vh.
  */
-.wixMode
-div[class*="heroSticky"] {
+.wixMode {
   position:
-    fixed !important;
-
-  inset:
-    0 !important;
-
-  top:
-    0 !important;
-
-  left:
-    0 !important;
+    relative !important;
 
   width:
     100% !important;
@@ -1383,11 +1369,14 @@ div[class*="heroSticky"] {
   height:
     100vh !important;
 
-  height:
-    100dvh !important;
-
   min-height:
     100vh !important;
+
+  margin:
+    0 !important;
+
+  padding:
+    0 !important;
 
   overflow:
     hidden !important;
@@ -1398,176 +1387,34 @@ div[class*="heroSticky"] {
 
 
 /*
- * Không xuất scrollbar trong iframe.
- */
-.wixMode::-webkit-scrollbar {
-  display:
-    none;
-}
-
-
-/* =========================================================
-   BURGUNDY BACKGROUND
-========================================================= */
-
-.wixMode,
-.wixMode
-section[class*="heroScene"],
-.wixMode
-div[class*="heroSticky"] {
-  background:
-    #080104 !important;
-}
-
-/* =========================================================
-   EMBED STICKY — DIRECT ROUTE
-========================================================= */
-
-.page {
-  position: relative;
-
-  width: 100%;
-
-  min-height: 100vh;
-
-  margin: 0;
-  padding: 0;
-
-  overflow-x: clip !important;
-  overflow-y: visible !important;
-
-  background: #080104 !important;
-}
-
-
-.redTheme {
-  overflow: visible !important;
-}
-
-
-/*
- * OpeningHero vẫn phải có đủ quãng 560vh
- * để progress 0 -> 1 hoạt động.
- */
-.redTheme
-section[class*="heroScene"] {
-  position: relative !important;
-
-  width: 100% !important;
-
-  height: 560vh !important;
-
-  min-height: 560vh !important;
-
-  overflow: visible !important;
-
-  background: #080104 !important;
-}
-
-
-/*
- * Đây là phần sửa lỗi trong ảnh:
- *
- * DAY 044
- * + nửa dưới thành màu đen.
- *
- * Sticky phải luôn phủ đúng toàn iframe viewport.
- */
-.redTheme
-div[class*="heroSticky"] {
-  position: sticky !important;
-
-  top: 0 !important;
-  left: 0 !important;
-
-  width: 100% !important;
-
-  height: 100vh !important;
-  min-height: 100vh !important;
-  max-height: 100vh !important;
-
-  overflow: hidden !important;
-
-  background: #080104 !important;
-
-  isolation: isolate;
-}
-
-
-/*
- * Không dùng 100svh ở route iframe.
- * Wix có thể scale viewport khiến svh
- * không khớp chiều cao element hiển thị.
- */
-:global(html),
-:global(body) {
-  width: 100% !important;
-
-  margin: 0 !important;
-  padding: 0 !important;
-
-  overflow-x: clip !important;
-
-  background: #080104 !important;
-
-  scrollbar-width: none !important;
-  -ms-overflow-style: none !important;
-}
-
-
-:global(html::-webkit-scrollbar),
-:global(body::-webkit-scrollbar) {
-  display: none !important;
-
-  width: 0 !important;
-  height: 0 !important;
-}
-/* =========================================================
-   WIX CONTROLLED SCROLL MODE
-========================================================= */
-
-.wixMode {
-  position: relative;
-
-  width: 100vw;
-  height: 100vh;
-
-  min-width: 100vw;
-  min-height: 100vh;
-
-  margin: 0;
-  padding: 0;
-
-  overflow: hidden !important;
-
-  background:
-    #080104 !important;
-}
-
-
-/*
- * QUAN TRỌNG:
- *
- * Trong Wix mode,
- * OpeningHero KHÔNG còn là section 560vh.
- *
- * Timeline được điều khiển bởi
- * externalProgress.
+ * externalProgress điều khiển timeline,
+ * nên heroScene KHÔNG cần 560vh.
  */
 .wixMode
 section[class*="heroScene"] {
-  position: relative !important;
+  position:
+    relative !important;
 
-  width: 100vw !important;
-  height: 100vh !important;
+  width:
+    100% !important;
 
-  min-width: 100vw !important;
-  min-height: 100vh !important;
+  height:
+    100vh !important;
 
-  margin: 0 !important;
-  padding: 0 !important;
+  min-height:
+    100vh !important;
 
-  overflow: hidden !important;
+  max-height:
+    100vh !important;
+
+  margin:
+    0 !important;
+
+  padding:
+    0 !important;
+
+  overflow:
+    hidden !important;
 
   background:
     #080104 !important;
@@ -1575,46 +1422,51 @@ section[class*="heroScene"] {
 
 
 /*
- * Không cần sticky nội bộ nữa.
+ * Không sticky nội bộ.
  *
- * Wix sticky iframe ở bên ngoài.
+ * iframe Wix bên ngoài đã sticky.
  */
 .wixMode
 div[class*="heroSticky"] {
-  position: relative !important;
+  position:
+    relative !important;
 
-  top: auto !important;
-  right: auto !important;
-  bottom: auto !important;
-  left: auto !important;
+  top:
+    auto !important;
 
-  width: 100vw !important;
-  height: 100vh !important;
+  right:
+    auto !important;
 
-  min-width: 100vw !important;
-  min-height: 100vh !important;
+  bottom:
+    auto !important;
 
-  max-width: none !important;
-  max-height: none !important;
+  left:
+    auto !important;
 
-  margin: 0 !important;
-  padding: 0 !important;
+  width:
+    100% !important;
 
-  overflow: hidden !important;
+  height:
+    100vh !important;
+
+  min-height:
+    100vh !important;
+
+  max-height:
+    100vh !important;
+
+  margin:
+    0 !important;
+
+  padding:
+    0 !important;
+
+  overflow:
+    hidden !important;
 
   background:
     #080104 !important;
-}
 
-
-/*
- * Wix iframe phải là viewport duy nhất.
- */
-.wixMode,
-.wixMode
-section[class*="heroScene"],
-.wixMode
-div[class*="heroSticky"] {
-  box-sizing:
-    border-box !important;
+  isolation:
+    isolate;
 }
