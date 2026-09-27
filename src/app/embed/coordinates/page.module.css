@@ -1418,3 +1418,107 @@ div[class*="heroSticky"] {
   background:
     #080104 !important;
 }
+
+/* =========================================================
+   EMBED STICKY — DIRECT ROUTE
+========================================================= */
+
+.page {
+  position: relative;
+
+  width: 100%;
+
+  min-height: 100vh;
+
+  margin: 0;
+  padding: 0;
+
+  overflow-x: clip !important;
+  overflow-y: visible !important;
+
+  background: #080104 !important;
+}
+
+
+.redTheme {
+  overflow: visible !important;
+}
+
+
+/*
+ * OpeningHero vẫn phải có đủ quãng 560vh
+ * để progress 0 -> 1 hoạt động.
+ */
+.redTheme
+section[class*="heroScene"] {
+  position: relative !important;
+
+  width: 100% !important;
+
+  height: 560vh !important;
+
+  min-height: 560vh !important;
+
+  overflow: visible !important;
+
+  background: #080104 !important;
+}
+
+
+/*
+ * Đây là phần sửa lỗi trong ảnh:
+ *
+ * DAY 044
+ * + nửa dưới thành màu đen.
+ *
+ * Sticky phải luôn phủ đúng toàn iframe viewport.
+ */
+.redTheme
+div[class*="heroSticky"] {
+  position: sticky !important;
+
+  top: 0 !important;
+  left: 0 !important;
+
+  width: 100% !important;
+
+  height: 100vh !important;
+  min-height: 100vh !important;
+  max-height: 100vh !important;
+
+  overflow: hidden !important;
+
+  background: #080104 !important;
+
+  isolation: isolate;
+}
+
+
+/*
+ * Không dùng 100svh ở route iframe.
+ * Wix có thể scale viewport khiến svh
+ * không khớp chiều cao element hiển thị.
+ */
+:global(html),
+:global(body) {
+  width: 100% !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  overflow-x: clip !important;
+
+  background: #080104 !important;
+
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+
+:global(html::-webkit-scrollbar),
+:global(body::-webkit-scrollbar) {
+  display: none !important;
+
+  width: 0 !important;
+  height: 0 !important;
+}
