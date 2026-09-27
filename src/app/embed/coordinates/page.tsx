@@ -14,15 +14,27 @@ import styles from "./page.module.css";
 const SOURCE =
   "500-ngay-dem";
 
+
 /*
- * Tổng lượng wheel cần để chạy
- * progress 0 → 1.
+ * Tổng wheel delta để đi
+ * từ progress 0 → 1.
  *
- * Tăng = hiệu ứng chậm hơn.
- * Giảm = nhanh hơn.
+ * 2400 = nhanh hơn
+ * 2800 = chậm hơn
  */
 const SCENE_SCROLL_DISTANCE =
-  2600;
+  2500;
+
+
+type ReleaseSide =
+  | "top"
+  | "bottom"
+  | null;
+
+
+type CaptureDirection =
+  | "from-top"
+  | "from-bottom";
 
 
 function clamp(
@@ -59,16 +71,44 @@ export default function CoordinatesEmbedPage() {
     useRef(0);
 
 
+  /*
+   * Scene hiện đang giữ wheel?
+   */
   const capturedRef =
     useRef(false);
 
 
+  /*
+   * Đang chờ Wix căn iframe
+   * vào viewport?
+   */
   const capturePendingRef =
     useRef(false);
 
 
+  /*
+   * Scene đã thoát ở phía nào?
+   *
+   * bottom:
+   * user vừa đi qua cuối scene.
+   *
+   * top:
+   * user vừa đi ngược qua đầu scene.
+   */
+  const releasedSideRef =
+    useRef<ReleaseSide>(
+      null
+    );
+
+
   const pendingDeltaRef =
     useRef(0);
+
+
+  const pendingDirectionRef =
+    useRef<CaptureDirection>(
+      "from-top"
+    );
 
 
   const touchYRef =
@@ -78,7 +118,7 @@ export default function CoordinatesEmbedPage() {
 
 
   /* =======================================================
-     KEEP REF SYNCED
+     PROGRESS
   ======================================================= */
 
   function commitProgress(
@@ -87,8 +127,10 @@ export default function CoordinatesEmbedPage() {
     const next =
       clamp(value);
 
+
     progressRef.current =
       next;
+
 
     setProgress(
       next
@@ -113,12 +155,12 @@ export default function CoordinatesEmbedPage() {
 
 
     /*
-     * Direct route:
+     * Mở trực tiếp:
      *
      * /embed/coordinates/
      *
-     * giữ nguyên behavior
-     * như page chính.
+     * OpeningHero vẫn dùng
+     * native scroll như page chính.
      */
     if (!wixRequested) {
       return;
@@ -132,6 +174,7 @@ export default function CoordinatesEmbedPage() {
     const html =
       document.documentElement;
 
+
     const body =
       document.body;
 
@@ -139,12 +182,13 @@ export default function CoordinatesEmbedPage() {
     const oldHtmlOverflow =
       html.style.overflow;
 
+
     const oldBodyOverflow =
       body.style.overflow;
 
 
     /* =====================================================
-       POST MESSAGE
+       POST
     ===================================================== */
 
     function post(
@@ -166,7 +210,7 @@ export default function CoordinatesEmbedPage() {
 
 
     /* =====================================================
-       ACTIVATE WIX MODE
+       ACTIVATE
     ===================================================== */
 
     function activateBridge() {
@@ -182,13 +226,12 @@ export default function CoordinatesEmbedPage() {
 
 
       /*
-       * Iframe không còn document scroll.
-       *
-       * Scroll gesture sẽ điều khiển
-       * timeline trực tiếp.
+       * Không cho iframe tạo
+       * internal document scroll.
        */
       html.style.overflow =
         "hidden";
+
 
       body.style.overflow =
         "hidden";
@@ -208,67 +251,116 @@ export default function CoordinatesEmbedPage() {
 
 
     /* =====================================================
-       APPLY WHEEL DELTA TO SCENE
+       SCROLL WIX PAGE
     ===================================================== */
 
-    function applyDelta(
+    function passToWix(
+      delta: number
+    ) {
+      post({
+        type:
+          "COORD_PAGE_SCROLL",
+
+        deltaY:
+          delta,
+      });
+    }
+
+
+    /* =====================================================
+       RELEASE SCENE
+    ===================================================== */
+
+    function releaseBottom(
+      delta: number
+    ) {
+      capturedRef.current =
+        false;
+
+
+      capturePendingRef.current =
+        false;
+
+
+      releasedSideRef.current =
+        "bottom";
+
+
+      /*
+       * KHÔNG nhảy 1 viewport.
+       *
+       * Chỉ truyền đúng wheel hiện tại
+       * về Wix.
+       */
+      passToWix(
+        delta
+      );
+    }
+
+
+    function releaseTop(
+      delta: number
+    ) {
+      capturedRef.current =
+        false;
+
+
+      capturePendingRef.current =
+        false;
+
+
+      releasedSideRef.current =
+        "top";
+
+
+      passToWix(
+        delta
+      );
+    }
+
+
+    /* =====================================================
+       APPLY DELTA TO ANIMATION
+    ===================================================== */
+
+    function applySceneDelta(
       delta: number
     ) {
       const current =
         progressRef.current;
 
 
-      /*
-       * ĐÃ Ở CUỐI + scroll xuống
-       *
-       * → thả scroll cho Wix.
-       */
+      /* -----------------------------------------------
+         ĐÃ HOÀN THÀNH + vẫn scroll xuống
+         → Wix tiếp tục.
+      ------------------------------------------------ */
+
       if (
         current >=
           0.9999 &&
         delta > 0
       ) {
-        capturedRef.current =
-          false;
-
-        post({
-          type:
-            "COORD_RELEASE",
-
-          direction:
-            "down",
-
-          deltaY:
-            delta,
-        });
+        releaseBottom(
+          delta
+        );
 
         return;
       }
 
 
-      /*
-       * ĐÃ Ở ĐẦU + scroll lên
-       *
-       * → quay lại nội dung Wix trước.
-       */
+      /* -----------------------------------------------
+         ĐÃ VỀ ĐẦU + vẫn scroll lên
+         → Wix quay về content trước.
+      ------------------------------------------------ */
+
       if (
         current <=
           0.0001 &&
         delta < 0
       ) {
-        capturedRef.current =
-          false;
-
-        post({
-          type:
-            "COORD_RELEASE",
-
-          direction:
-            "up",
-
-          deltaY:
-            delta,
-        });
+        releaseTop(
+          delta
+        );
 
         return;
       }
@@ -287,19 +379,25 @@ export default function CoordinatesEmbedPage() {
 
 
     /* =====================================================
-       CAPTURE SCENE
+       REQUEST CAPTURE
     ===================================================== */
 
     function requestCapture(
-      delta: number
+      delta: number,
+      direction:
+        CaptureDirection
     ) {
       pendingDeltaRef.current =
         clamp(
           pendingDeltaRef.current +
             delta,
-          -500,
-          500
+          -600,
+          600
         );
+
+
+      pendingDirectionRef.current =
+        direction;
 
 
       if (
@@ -313,14 +411,162 @@ export default function CoordinatesEmbedPage() {
         true;
 
 
-      /*
-       * Yêu cầu Wix căn iframe
-       * chính xác lên đầu viewport.
-       */
       post({
         type:
           "COORD_CAPTURE",
+
+        direction:
+          direction,
       });
+    }
+
+
+    /* =====================================================
+       INPUT STATE MACHINE
+    ===================================================== */
+
+    function handleInputDelta(
+      rawDelta: number
+    ) {
+      let delta =
+        rawDelta;
+
+
+      /*
+       * Trackpad có thể tạo spike lớn.
+       */
+      delta =
+        Math.max(
+          -220,
+          Math.min(
+            220,
+            delta
+          )
+        );
+
+
+      if (
+        Math.abs(delta) <
+        0.01
+      ) {
+        return;
+      }
+
+
+      /* ===============================================
+         ĐÃ THOÁT PHÍA DƯỚI
+      =============================================== */
+
+      if (
+        releasedSideRef.current ===
+        "bottom"
+      ) {
+        /*
+         * Vẫn đi xuống:
+         *
+         * không capture lại.
+         * cứ để Wix scroll.
+         */
+        if (
+          delta > 0
+        ) {
+          passToWix(
+            delta
+          );
+
+          return;
+        }
+
+
+        /*
+         * ĐẢO CHIỀU:
+         *
+         * user scroll lên.
+         *
+         * capture lại scene ở
+         * trạng thái cuối.
+         */
+        releasedSideRef.current =
+          null;
+
+
+        requestCapture(
+          delta,
+          "from-bottom"
+        );
+
+
+        return;
+      }
+
+
+      /* ===============================================
+         ĐÃ THOÁT PHÍA TRÊN
+      =============================================== */
+
+      if (
+        releasedSideRef.current ===
+        "top"
+      ) {
+        /*
+         * Vẫn scroll lên:
+         * pass về Wix.
+         */
+        if (
+          delta < 0
+        ) {
+          passToWix(
+            delta
+          );
+
+          return;
+        }
+
+
+        /*
+         * Đảo chiều xuống:
+         * capture lại từ đầu.
+         */
+        releasedSideRef.current =
+          null;
+
+
+        requestCapture(
+          delta,
+          "from-top"
+        );
+
+
+        return;
+      }
+
+
+      /* ===============================================
+         SCENE ĐANG CAPTURE
+      =============================================== */
+
+      if (
+        capturedRef.current
+      ) {
+        applySceneDelta(
+          delta
+        );
+
+        return;
+      }
+
+
+      /* ===============================================
+         SCENE CHƯA CAPTURE
+      =============================================== */
+
+      requestCapture(
+        delta,
+
+        delta < 0
+          ? "from-bottom"
+          : "from-top"
+      );
     }
 
 
@@ -345,7 +591,7 @@ export default function CoordinatesEmbedPage() {
 
 
       /* -----------------------------------------------
-         Wix ready
+         HANDSHAKE
       ------------------------------------------------ */
 
       if (
@@ -359,7 +605,7 @@ export default function CoordinatesEmbedPage() {
 
 
       /* -----------------------------------------------
-         Wix đã căn scene full viewport.
+         CAPTURE COMPLETE
       ------------------------------------------------ */
 
       if (
@@ -369,8 +615,58 @@ export default function CoordinatesEmbedPage() {
         capturePendingRef.current =
           false;
 
+
         capturedRef.current =
           true;
+
+
+        const direction =
+          (
+            data.direction ===
+            "from-bottom"
+          )
+            ? "from-bottom"
+            : pendingDirectionRef.current;
+
+
+        /*
+         * Quan trọng cho reverse scroll.
+         *
+         * Nếu vào scene từ phía dưới
+         * thì scene phải bắt đầu tại
+         * progress = 1.
+         */
+        if (
+          direction ===
+            "from-bottom"
+        ) {
+          /*
+           * Nếu đang ở 0 do reload/state reset,
+           * đưa thẳng về final frame.
+           */
+          if (
+            progressRef.current <
+            0.001
+          ) {
+            commitProgress(
+              1
+            );
+          }
+
+        } else {
+          /*
+           * Nếu vào từ phía trên mà
+           * progress vô tình đang ở 1.
+           */
+          if (
+            progressRef.current >
+            0.999
+          ) {
+            commitProgress(
+              0
+            );
+          }
+        }
 
 
         const delta =
@@ -383,12 +679,13 @@ export default function CoordinatesEmbedPage() {
 
         if (
           Math.abs(delta) >
-          0.1
+          0.01
         ) {
-          applyDelta(
+          applySceneDelta(
             delta
           );
         }
+
 
         return;
       }
@@ -403,11 +700,10 @@ export default function CoordinatesEmbedPage() {
       event: WheelEvent
     ) {
       /*
-       * Nếu Wix chưa ACK,
-       * không chặn browser.
-       *
        * Fail-safe:
-       * iframe không thể khóa trang.
+       *
+       * Wix chưa handshake
+       * → không khóa browser.
        */
       if (!connected) {
         return;
@@ -422,8 +718,7 @@ export default function CoordinatesEmbedPage() {
 
 
       if (
-        event.deltaMode ===
-        1
+        event.deltaMode === 1
       ) {
         delta *=
           18;
@@ -431,39 +726,14 @@ export default function CoordinatesEmbedPage() {
 
 
       if (
-        event.deltaMode ===
-        2
+        event.deltaMode === 2
       ) {
         delta *=
           window.innerHeight;
       }
 
 
-      /*
-       * Clamp trackpad spike.
-       */
-      delta =
-        Math.max(
-          -220,
-          Math.min(
-            220,
-            delta
-          )
-        );
-
-
-      if (
-        capturedRef.current
-      ) {
-        applyDelta(
-          delta
-        );
-
-        return;
-      }
-
-
-      requestCapture(
+      handleInputDelta(
         delta
       );
     }
@@ -515,25 +785,14 @@ export default function CoordinatesEmbedPage() {
           previous -
           touch.clientY
         ) *
-        1.2;
+        1.25;
 
 
       touchYRef.current =
         touch.clientY;
 
 
-      if (
-        capturedRef.current
-      ) {
-        applyDelta(
-          delta
-        );
-
-        return;
-      }
-
-
-      requestCapture(
+      handleInputDelta(
         delta
       );
     }
@@ -589,7 +848,7 @@ export default function CoordinatesEmbedPage() {
 
 
     /* =====================================================
-       READY HANDSHAKE
+       READY
     ===================================================== */
 
     function sendReady() {
@@ -603,10 +862,6 @@ export default function CoordinatesEmbedPage() {
     sendReady();
 
 
-    /*
-     * Retry để tránh Wix/Vercel
-     * load khác thời điểm.
-     */
     const readyTimer =
       window.setInterval(
         () => {
@@ -663,6 +918,7 @@ export default function CoordinatesEmbedPage() {
       html.style.overflow =
         oldHtmlOverflow;
 
+
       body.style.overflow =
         oldBodyOverflow;
     };
@@ -686,11 +942,6 @@ export default function CoordinatesEmbedPage() {
       ].join(" ")}
     >
       <OpeningHero
-        key={
-          bridgeReady
-            ? "wix-controlled"
-            : "native"
-        }
         externalProgress={
           bridgeReady
             ? progress
